@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 
 <head>
@@ -50,7 +50,7 @@
 
         .idc-hero {
             background-color: var(--footer-bg);
-            padding: 100px 0 100px;
+            padding: 80px 0;
             text-align: center;
             position: relative;
         }
@@ -65,7 +65,7 @@
         }
 
         .idc-hero h1 {
-            font-size: 4rem;
+            font-size: 42px;
             font-weight: 900;
             color: white;
             line-height: 1.1;
@@ -74,7 +74,7 @@
         }
 
         .idc-hero p {
-            font-size: 1.35rem;
+            font-size: 18px;
             color: #94a3b8;
             max-width: 800px;
             margin: 0 auto;
@@ -83,7 +83,7 @@
         }
 
         .idc-section {
-            padding: 100px 0;
+            padding: 80px 0;
             border-top: 1px solid var(--border-light);
         }
 
@@ -340,7 +340,14 @@
     <div class="idc-wrapper">
         <section class="idc-hero">
             <div class="idc-container">
-                <h2>Server Hosting</h2>
+                <!-- Standardized Hero -->
+                <div style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 20px;">
+                    IDC 서비스 <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 8px;"></i> 서버호스팅
+                </div>
+                <div
+                    style="width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fas fa-server" style="font-size: 30px; color: white;"></i>
+                </div>
                 <h1>서버호스팅</h1>
                 <p>고성능 전용 서버를 단독으로 사용하여<br>타협 없는 최고의 퍼포먼스를 경험하세요.</p>
             </div>
@@ -355,13 +362,80 @@
                 </div>
 
                 <!-- Dynamic Product Container -->
-                <div class="pricing-grid" id="pricing-container">
+                <div class="pricing-grid compact-pricing" id="pricing-container">
                     <!-- Loading State -->
                     <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #94a3b8;">
                         <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>상품 정보를 불러오는 중입니다...
                     </div>
                 </div>
 
+            </div>
+        </section>
+
+        <!-- NEW: What is Server Hosting Section -->
+        <section class="idc-section bg-gray">
+            <div class="idc-container">
+                <div class="idc-sec-header" style="margin-bottom: 50px;">
+                    <h2 class="idc-sec-title" style="font-size: 2rem;">서버호스팅이란?</h2>
+                    <p class="idc-sec-desc" style="max-width: 800px; margin-bottom: 30px;">
+                        "나만의 단독 주택을 갖는 것과 같습니다"
+                    </p>
+
+                    <!-- Intro Key Points (Box Layout) -->
+                    <div class="intro-key-points">
+                        <div class="intro-point-box">
+                            <div class="intro-point-icon"><i class="fas fa-home"></i></div>
+                            <div class="intro-point-title">단독 사용</div>
+                            <div class="intro-point-desc">
+                                쉐어하우스(웹호스팅)와 달리<br>서버 한 대를 통째로 사용합니다.
+                            </div>
+                        </div>
+                        <div class="intro-point-box">
+                            <div class="intro-point-icon"><i class="fas fa-user-shield"></i></div>
+                            <div class="intro-point-title">완벽한 독립성</div>
+                            <div class="intro-point-desc">
+                                타인의 간섭이나 소음 없이<br>모든 자원을 독점합니다.
+                            </div>
+                        </div>
+                        <div class="intro-point-box">
+                            <div class="intro-point-icon"><i class="fas fa-smile"></i></div>
+                            <div class="intro-point-title">쾌적하고 안전</div>
+                            <div class="intro-point-desc">
+                                독립된 환경으로 보안이 뛰어나며<br>성능 저하가 없습니다.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Infographic Image Section -->
+                <div class="server-diagram-box"
+                    style="padding: 40px; background: transparent; border: none; box-shadow: none;">
+                    <img src="images/server_hosting_intro_final.png" alt="Server Hosting Comparison Infographic"
+                        style="width: 100%; max-width: 900px; margin: 0 auto; display: block; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1)); border-radius: 20px;">
+                </div>
+
+                <div style="margin-top: 60px;">
+                    <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">이런
+                        고객에게 서버호스팅을 추천합니다</h3>
+                    <ul
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; list-style: none; padding: 0;">
+                        <li
+                            style="background: white; padding: 20px; border-radius: 10px; border: 1px solid var(--border-light); display: flex; align-items: center; gap: 15px;">
+                            <i class="fas fa-check-circle" style="color: var(--accent); font-size: 1.2rem;"></i>
+                            <span style="color: var(--text-sub);">타사와 서버 자원을 공유하지 않는 단독 환경 필요</span>
+                        </li>
+                        <li
+                            style="background: white; padding: 20px; border-radius: 10px; border: 1px solid var(--border-light); display: flex; align-items: center; gap: 15px;">
+                            <i class="fas fa-check-circle" style="color: var(--accent); font-size: 1.2rem;"></i>
+                            <span style="color: var(--text-sub);">고성능 DB 서버 또는 대용량 트래픽 처리 필요</span>
+                        </li>
+                        <li
+                            style="background: white; padding: 20px; border-radius: 10px; border: 1px solid var(--border-light); display: flex; align-items: center; gap: 15px;">
+                            <i class="fas fa-check-circle" style="color: var(--accent); font-size: 1.2rem;"></i>
+                            <span style="color: var(--text-sub);">보안상 물리적으로 분리된 서버 환경 필요</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </section>
 
@@ -374,7 +448,11 @@
                     <p style="color: var(--text-sub); margin-bottom: 2rem;">GPU 서버, 고용량 스토리지 서버 등 특수 목적 서버 견적을 받아보세요.
                     </p>
                     <div class="cta-btn-wrap">
-                        <a href="sub_support.html" class="cta-btn-main">견적 문의하기 <i class="fas fa-chevron-right"></i></a>
+                        <div class="cta-btn-wrap">
+                            <button onclick="openAppModal('서버호스팅 상담', 'hosting', '')" class="cta-btn-main"
+                                style="border:none; cursor:pointer;">견적 문의하기 <i
+                                    class="fas fa-chevron-right"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -100,7 +100,12 @@
         if (pageTitle) document.title = pageTitle;
 
         if (pushState) {
-            history.pushState({ fileName: fileName }, '', fileName);
+            try {
+                history.pushState({ fileName: fileName }, '', fileName);
+            } catch (e) {
+                console.warn('PushState failed, falling back to location.href', e);
+                window.location.href = fileName;
+            }
         }
     }
 

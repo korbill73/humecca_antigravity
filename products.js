@@ -91,7 +91,7 @@ async function loadProducts(categorySlug, containerId) {
 
         // 3. 플랜 카드 렌더링
         container.innerHTML = `
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+            <div class="pricing-grid compact-pricing" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
                 ${plans.map(plan => renderPlanCard(plan)).join('')}
             </div>
         `;
@@ -113,91 +113,70 @@ async function loadProducts(categorySlug, containerId) {
 /**
  * 플랜 카드 HTML 생성
  */
+/**
+ * 플랜 카드 HTML 생성
+ */
 function renderPlanCard(plan) {
     const features = plan.features ? plan.features.split('\n').filter(f => f.trim()) : [];
     const hasSpecs = plan.cpu || plan.ram || plan.storage || plan.traffic;
     const hasVpnSpecs = plan.speed || plan.sites || plan.users;
 
-    return `
-        <div class="product-card" style="
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: all 0.3s;
-            position: relative;
-            ${plan.popular ? 'border: 2px solid #EF4444;' : 'border: 1px solid #e5e7eb;'}
-        ">
-            ${plan.badge ? `
-                <div style="
-                    position: absolute;
-                    top: 15px;
-                    right: 15px;
-                    background: ${plan.popular ? '#EF4444' : '#3B82F6'};
-                    color: white;
-                    padding: 4px 12px;
-                    border-radius: 20px;
-                    font-size: 11px;
-                    font-weight: 600;
-                ">${plan.badge}</div>
-            ` : ''}
-            
-            <h3 style="font-size: 1.5rem; margin-bottom: 10px; color: #1a1a2e;">${plan.plan_name}</h3>
-            
-            ${plan.summary ? `
-                <p style="color: #666; font-size: 0.9rem; margin-bottom: 20px;">${plan.summary}</p>
-            ` : ''}
-            
-            <div style="margin-bottom: 25px;">
-                <span style="font-size: 2rem; font-weight: 700; color: #EF4444;">${plan.price || '문의'}</span>
-                ${plan.price ? `<span style="color: #999; font-size: 0.9rem;">원 / ${plan.period || '월'}</span>` : ''}
+    // Determine button class (Solid for popular, Outline for standard)
+    // Note: styles.css handles colors via CSS variables
+    const btnClass = plan.popular ? 'plan-btn solid' : 'plan-btn outline';
+    const cardClass = plan.popular ? 'plan-card popular' : 'plan-card';
+
+    // Badge HTML
+    let badgeHtml = '';
+    if (plan.badge) {
+        badgeHtml = `<div class="plan-badge">${plan.badge}</div>`;
+    } else if (plan.popular) {
+        badgeHtml = `<div class="plan-badge">인기</div>`;
+    }
+
+    // Spec HTML (Optional, if we want to keep it inside the card body)
+    // We can format this as a special feature list item or a separate block
+    // For now, let's keep it simple or integrate into features
+
+    let specsHtml = '';
+    if (hasSpecs) {
+        specsHtml = `
+            <div style="background: var(--bg-gray-50); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9em;">
+                ${plan.cpu ? `<div style="margin-bottom:5px;"><strong>CPU:</strong> ${plan.cpu}</div>` : ''}
+                ${plan.ram ? `<div style="margin-bottom:5px;"><strong>RAM:</strong> ${plan.ram}</div>` : ''}
+                ${plan.storage ? `<div style="margin-bottom:5px;"><strong>HDD:</strong> ${plan.storage}</div>` : ''}
+                ${plan.traffic ? `<div><strong>Traffic:</strong> ${plan.traffic}</div>` : ''}
             </div>
+        `;
+    }
 
-            ${hasSpecs ? `
-                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px; font-weight: 600;">서버 스펙</h4>
-                    ${plan.cpu ? `<div style="margin-bottom: 5px;"><i class="fas fa-microchip" style="width: 20px; color: #EF4444;"></i> ${plan.cpu}</div>` : ''}
-                    ${plan.ram ? `<div style="margin-bottom: 5px;"><i class="fas fa-memory" style="width: 20px; color: #EF4444;"></i> ${plan.ram}</div>` : ''}
-                    ${plan.storage ? `<div style="margin-bottom: 5px;"><i class="fas fa-hdd" style="width: 20px; color: #EF4444;"></i> ${plan.storage}</div>` : ''}
-                    ${plan.traffic ? `<div><i class="fas fa-exchange-alt" style="width: 20px; color: #EF4444;"></i> ${plan.traffic}</div>` : ''}
-                </div>
-            ` : ''}
+    // Features HTML
+    let featuresHtml = '';
+    if (features.length > 0) {
+        featuresHtml = `<ul class="plan-features">`;
+        features.forEach(f => {
+            featuresHtml += `<li><i class="fas fa-check"></i> ${f}</li>`;
+        });
+        featuresHtml += `</ul>`;
+    }
 
-            ${hasVpnSpecs ? `
-                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px; font-weight: 600;">VPN 스펙</h4>
-                    ${plan.speed ? `<div style="margin-bottom: 5px;"><i class="fas fa-tachometer-alt" style="width: 20px; color: #EF4444;"></i> ${plan.speed}</div>` : ''}
-                    ${plan.sites ? `<div style="margin-bottom: 5px;"><i class="fas fa-map-marker-alt" style="width: 20px; color: #EF4444;"></i> ${plan.sites}</div>` : ''}
-                    ${plan.users ? `<div><i class="fas fa-users" style="width: 20px; color: #EF4444;"></i> ${plan.users}</div>` : ''}
-                </div>
-            ` : ''}
+    // Price Display
+    // Assuming plan.price is a number string like "30,000"
+    const priceDisplay = plan.price ?
+        `<span class="amount">${plan.price}</span> <span class="period">원 / ${plan.period || '월'}</span>` :
+        `<span class="amount">문의</span>`;
 
-            ${features.length > 0 ? `
-                <div style="margin-bottom: 25px;">
-                    <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; color: #333;">주요 기능</h4>
-                    <ul style="list-style: none; padding: 0; margin: 0;">
-                        ${features.map(feature => `
-                            <li style="padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; color: #555;">
-                                <i class="fas fa-check" style="color: #10b981; margin-right: 8px;"></i>
-                                ${feature}
-                            </li>
-                        `).join('')}
-                    </ul>
-                </div>
-            ` : ''}
+    return `
+        <div class="${cardClass}">
+            ${badgeHtml}
+            <h3 class="plan-title">${plan.plan_name}</h3>
+            <div class="plan-price">${priceDisplay}</div>
+            <div class="plan-summary">${plan.summary || ''}</div>
+            
+            ${specsHtml}
+            ${featuresHtml}
 
-            <button onclick="contactUs('${plan.plan_name}')" style="
-                width: 100%;
-                padding: 14px;
-                background: ${plan.popular ? '#EF4444' : '#1a1a2e'};
-                color: white;
-                border: none;
-                border-radius: 8px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.3s;
-                font-size: 1rem;
-            " onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+            <button onclick="contactUs('${plan.plan_name}')" class="${btnClass}">
                 상담 신청하기
             </button>
         </div>

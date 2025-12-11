@@ -16,31 +16,30 @@ const cloudPages = [
 
 // New sidebar menu HTML (without active class - will be added per page)
 const newSidebarMenu = `<ul class="sidebar-menu">
+                <li><a href="sub_cloud_intro.html" {INTRO_ACTIVE}><i class="fas fa-info-circle"></i> 서비스 개요</a></li>
                 <li><a href="sub_cloud_server.html" {SERVER_ACTIVE}><i class="fas fa-server"></i> Server</a></li>
                 <li><a href="sub_cloud_db.html" {DB_ACTIVE}><i class="fas fa-database"></i> 데이터베이스</a></li>
                 <li><a href="sub_cloud_storage.html" {STORAGE_ACTIVE}><i class="fas fa-hdd"></i> 스토리지/CDN</a></li>
-                <li><a href="sub_security.html" {SECURITY_ACTIVE}><i class="fas fa-shield-alt"></i> 보안</a></li>
                 <li><a href="sub_cloud_network.html" {NETWORK_ACTIVE}><i class="fas fa-network-wired"></i> 네트워크</a></li>
                 <li><a href="sub_cloud_management.html" {MANAGEMENT_ACTIVE}><i class="fas fa-tasks"></i> 매니지먼트</a></li>
                 <li><a href="sub_cloud_vdi.html" {VDI_ACTIVE}><i class="fas fa-desktop"></i> VDI</a></li>
                 <li><a href="sub_cloud_private.html" {PRIVATE_ACTIVE}><i class="fas fa-lock"></i> Private Cloud</a></li>
-                <li><a href="sub_cloud_limits.html" {LIMITS_ACTIVE}><i class="fas fa-info-circle"></i> 서비스별 제한사항</a></li>
+                <li><a href="sub_cloud_limits.html" {LIMITS_ACTIVE}><i class="fas fa-ban"></i> 서비스별 제한사항</a></li>
             </ul>`;
 
 // Map page to active placeholder
 const pageActiveMap = {
+    'sub_cloud_intro.html': 'INTRO_ACTIVE',
     'sub_cloud_server.html': 'SERVER_ACTIVE',
     'sub_cloud_db.html': 'DB_ACTIVE',
     'sub_cloud_storage.html': 'STORAGE_ACTIVE',
-    'sub_security.html': 'SECURITY_ACTIVE',
     'sub_cloud_network.html': 'NETWORK_ACTIVE',
     'sub_cloud_management.html': 'MANAGEMENT_ACTIVE',
     'sub_cloud_vdi.html': 'VDI_ACTIVE',
     'sub_cloud_private.html': 'PRIVATE_ACTIVE',
     'sub_cloud_limits.html': 'LIMITS_ACTIVE',
     'sub_cloud_monitoring.html': 'SERVER_ACTIVE', // monitoring doesn't have its own menu item
-    'sub_cloud_managed.html': 'SERVER_ACTIVE', // managed doesn't have its own menu item
-    'sub_cloud_intro.html': 'SERVER_ACTIVE' // intro doesn't have its own menu item
+    'sub_cloud_managed.html': 'SERVER_ACTIVE' // managed doesn't have its own menu item
 };
 
 const basePath = 'f:/onedrive/OneDrive - 휴메카/08. homepage';

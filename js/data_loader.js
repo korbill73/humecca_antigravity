@@ -108,24 +108,35 @@ function renderAddon(container, plans) {
         const features = parseFeatures(plan.features);
         let featureListHtml = '';
         features.forEach(f => {
-            if (f.trim()) featureListHtml += `<li><i class="fas fa-check-circle"></i> ${f.trim()}</li>`;
+            if (f.trim()) featureListHtml += `<li><i class="fas fa-check"></i> ${f.trim()}</li>`;
         });
 
         // Determine Badge
         let badgeHtml = '';
-        if (plan.badge) badgeHtml = `<div class="badge-rec">${plan.badge}</div>`;
-        else if (plan.popular) badgeHtml = `<div class="badge-rec">인기</div>`;
+        if (plan.badge) badgeHtml = `<div class="plan-badge">${plan.badge}</div>`;
+        else if (plan.popular) badgeHtml = `<div class="plan-badge">인기</div>`;
 
         const priceDisplay = formatPrice(plan.price, plan.period);
+
+        // Addon Detail String
+        let addonDetails = plan.summary || '';
+        if (!addonDetails && features.length > 0) addonDetails = features.slice(0, 2).join(', ');
+
+        const escName = escapeHtml(plan.plan_name);
+        const escDetails = escapeHtml(addonDetails);
+
         const cardHtml = `
-            <div class="price-card ${plan.popular ? 'recommended' : ''}">
+            <div class="plan-card ${plan.popular ? 'popular' : ''}">
                 ${badgeHtml}
-                <div class="plan-name">${plan.plan_name}</div>
+                <div class="plan-title">${plan.plan_name}</div>
                 <div class="plan-price">${priceDisplay}</div>
-                <ul class="feature-list">
+                <div class="plan-summary" style="font-size:0.9em; color:#666; margin-bottom:15px; min-height:24px;">${plan.summary || ''}</div>
+                <ul class="plan-features">
                     ${featureListHtml}
                 </ul>
-                <a href="sub_support.html" class="btn-price">신청하기</a>
+                <button class="plan-btn ${plan.popular ? 'solid' : 'outline'} js-open-modal" 
+                    data-name="${escName}" data-type="addon" data-details="${escDetails}"
+                    style="width:100%; border:none; cursor:pointer;">신청하기</button>
             </div>
         `;
         container.innerHTML += cardHtml;
@@ -153,6 +164,17 @@ function renderHosting(container, plans) {
 
         const displayPrice = formatPrice(p.price, p.period || '월');
 
+        // Spec string construction
+        let specStr = '';
+        if (p.cpu) specStr += `CPU: ${p.cpu} / `;
+        if (p.ram) specStr += `RAM: ${p.ram} / `;
+        if (p.storage) specStr += `SSD: ${p.storage} / `;
+        if (p.traffic) specStr += `Traffic: ${p.traffic}`;
+        specStr = specStr.replace(/ \/ $/, ''); // Trim trailing slash
+
+        const escName = escapeHtml(p.plan_name);
+        const escSpec = escapeHtml(specStr);
+
         const html = `
             <div class="plan-card ${p.popular ? 'popular' : ''}">
                 ${p.badge ? `<span class="plan-badge">${p.badge}</span>` : ''}
@@ -163,7 +185,10 @@ function renderHosting(container, plans) {
                 <div class="specs-list">${specHtml}</div>
 
                 <ul class="plan-features">${featureHtml}</ul>
-                <a href="sub_support.html" class="plan-btn ${p.popular ? 'solid' : 'outline'}">신청하기</a>
+
+                <button class="plan-btn ${p.popular ? 'solid' : 'outline'} js-open-modal" 
+                    data-name="${escName}" data-type="hosting" data-details="${escSpec}"
+                    style="width:100%; border:none; cursor:pointer;">신청하기</button>
             </div>
         `;
         container.innerHTML += html;
@@ -172,29 +197,27 @@ function renderHosting(container, plans) {
 
 function renderVpn(container, plans) {
     plans.forEach(p => {
-        const isPopular = p.popular;
-        const cardClass = isPopular ? 'vpn-plan-card popular' : 'vpn-plan-card';
-        const badgeHtml = p.badge ? `<span class="vpn-badge">${p.badge}</span>` : '';
         const displayPrice = formatPrice(p.price, p.period);
-
         const features = parseFeatures(p.features);
         const featureHtml = features.map(f => `<li><i class="fas fa-check"></i> ${f}</li>`).join('');
 
+
+        const escName = escapeHtml(p.plan_name);
+        const escSummary = escapeHtml(p.summary || p.speed || 'VPN Service');
+
         const html = `
-            <div class="${cardClass}">
-                ${badgeHtml}
-                <div class="vpn-plan-header">
-                    <h3 style="font-size:24px; font-weight:700; color:#111827;">${p.plan_name}</h3>
-                    <div class="vpn-price">${displayPrice}</div>
-                    ${p.summary ? `<p style="font-size:14px; color:#6b7280; margin-top:12px;">${p.summary}</p>` : ''}
-                </div>
-                <ul class="vpn-specs">
-                    ${featureHtml}
-                </ul>
-                <a href="sub_support.html" class="btn-apply">신청하기</a>
+            <div class="plan-card ${p.popular ? 'popular' : ''}">
+                ${p.badge ? `<span class="plan-badge">${p.badge}</span>` : ''}
+                <h3 class="plan-title">${p.plan_name}</h3>
+                <div class="plan-summary" style="font-size:0.9em; color:#666; margin-bottom:15px; min-height:24px;">${p.summary || ''}</div>
+                <div class="plan-price">${displayPrice}</div>
+                <ul class="plan-features">${featureHtml}</ul>
+                <button class="plan-btn ${p.popular ? 'solid' : 'outline'} js-open-modal"
+                    data-name="${escName}" data-type="vpn" data-details="${escSummary}"
+                    style="width:100%; border:none; cursor:pointer;">신청하기</button>
             </div>
         `;
-        container.insertAdjacentHTML('beforeend', html);
+        container.innerHTML += html;
     });
 }
 
@@ -204,13 +227,19 @@ function renderColocation(container, plans) {
         const features = parseFeatures(p.features);
         const featureHtml = features.map(f => `<li><i class="fas fa-check"></i> ${f}</li>`).join('');
 
+
+        const escName = escapeHtml(p.plan_name);
+        const escSummary = escapeHtml(p.summary || '상면 임대 서비스');
+
         const html = `
             <div class="plan-card ${p.popular ? 'popular' : ''}">
                 ${p.badge ? `<span class="plan-badge">${p.badge}</span>` : ''}
                 <h3 class="plan-title">${p.plan_name}</h3>
                 <div class="plan-price">${displayPrice}</div>
                 <ul class="plan-features">${featureHtml}</ul>
-                <a href="sub_support.html" class="plan-btn ${p.popular ? 'solid' : 'outline'}">신청하기</a>
+                <button class="plan-btn ${p.popular ? 'solid' : 'outline'} js-open-modal"
+                    data-name="${escName}" data-type="colocation" data-details="${escSummary}"
+                    style="width:100%; border:none; cursor:pointer;">신청하기</button>
             </div>
         `;
         container.innerHTML += html;
@@ -218,6 +247,17 @@ function renderColocation(container, plans) {
 }
 
 // Helpers
+// Simple HTML Attribute Escaping (for data-attributes)
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 function parseFeatures(features) {
     if (!features) return [];
     return typeof features === 'string' ? features.split('\n') : (Array.isArray(features) ? features : []);
@@ -228,5 +268,5 @@ function formatPrice(price, period) {
     // If number
     const num = Number(price.toString().replace(/,/g, ''));
     if (isNaN(num)) return `<span class="amount">${price}</span>`;
-    return `<span class="amount">₩${num.toLocaleString()}</span><span class="period">/${period || '월'}</span>`;
+    return `<span class="amount">₩${num.toLocaleString()}</span> <span class="period">/${period || '월'}</span>`;
 }

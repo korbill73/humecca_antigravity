@@ -41,6 +41,29 @@
     src: local('Pretendard Light'), url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/web/static/woff2/Pretendard-Light.woff2') format('woff2');
 }
 
+/* CSS Variables */
+:root {
+    --bg-white: #ffffff;
+    --bg-gray-50: #f8fafc;
+    --text-main: #0f172a;
+    --text-sub: #475569;
+    --accent: #E94D36;
+    --accent-hover: #d93d2b;
+    --border-light: #e2e8f0;
+    --footer-bg: #0f172a;
+}
+
+/* Theme Color Overrides */
+.theme-green {
+    --accent: #03C75A;
+    --accent-hover: #02b351;
+}
+
+.theme-blue {
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+}
+
 /* Reset & Base */
 * {
     margin: 0;
@@ -187,8 +210,10 @@ body {
 .dropdown-menu {
     position: absolute;
     top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    /* Left aligned as requested */
+    transform: none;
+    /* Remove center transform */
     background: white;
     border: 1px solid var(--border-gray);
     border-radius: 12px;
@@ -202,6 +227,20 @@ body {
     transition: opacity 0.2s ease, visibility 0.2s ease;
     min-width: 280px;
     z-index: 10000;
+    margin-top: 10px;
+    /* Spacing from header */
+}
+
+/* Invisible bridge to prevent menu from disappearing */
+.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    /* Extend upwards to overlap with nav-item */
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: transparent;
 }
 
 /* Show dropdown on hover */
@@ -286,8 +325,129 @@ body {
 
 /* Mega Menu (Cloud) */
 .mega-menu {
-    min-width: 400px;
-    /* Removed max-width to prevents content clipping */
+    min-width: 500px;
+    /* Increased by ~20% */
+}
+
+/* ... (Existing Mega Menu styles) ... */
+
+/* Hero Arrow Styles */
+/* Hero Arrow Styles - Updated for Flex Layout */
+.hero-arrow {
+    position: static;
+    /* No longer absolute */
+    width: 32px;
+    /* Small size */
+    height: 32px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    margin: 0;
+}
+
+.hero-arrow:hover {
+    background: white;
+    color: var(--primary-red);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Remove absolute positioning classes as they are no longer needed */
+.hero-arrow.prev,
+.hero-arrow.next {
+    left: auto;
+    right: auto;
+}
+
+/* Term Modal Styles (More Premium) */
+.term-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 20000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.term-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.term-modal {
+    background: white;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+}
+
+.term-modal-overlay.active .term-modal {
+    transform: translateY(0);
+}
+
+.term-header {
+    background: white;
+    padding: 24px 30px;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.term-header h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.term-body {
+    padding: 30px;
+    overflow-y: auto;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #4b5563;
+    background: #f9fafb;
+}
+
+.term-close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #4b5563;
+}
+
+.term-close-btn:hover {
+    background: #e5e7eb;
+    color: #111827;
 }
 
 .mega-section-title {
@@ -993,12 +1153,7 @@ body {
 /* --- Styles from sub_cloud_intro.html --- */
 
 /* Cloud Sub-Page Layout */
-.cloud-hero {
-    background: #fff5f5;
-    padding: 16px 0 14px;
-    margin-top: 0;
-    border-bottom: 1px solid #fecaca;
-}
+/* Old Cloud Hero Removed */
 
 .cloud-hero .container {
     max-width: 1400px;
@@ -1305,7 +1460,10 @@ body {
 }
 
 /* Icon Styling */
-.feature-card .icon {
+.feature-card .icon,
+.process-icon-box,
+.gen-card img {
+    /* Added gen-card img */
     width: 64px;
     height: 64px;
     background: #fef2f2;
@@ -1317,13 +1475,65 @@ body {
     margin: 0 auto 20px;
     color: #dc2626;
     font-size: 24px;
-    transition: transform 0.3s;
+    transition: transform 0.6s ease-in-out, background 0.3s ease, color 0.3s ease;
+    /* Smooth 3D spin */
 }
 
-.feature-card:hover .icon {
-    transform: scale(1.1) rotate(5deg);
+/* Override specifics for Gen Card Images causing size issues */
+.gen-card img {
+    width: auto !important;
+    height: 100px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    margin-bottom: 15px !important;
+}
+
+.feature-card .icon i,
+.process-icon-box i {
+    transition: color 0.3s ease;
+    /* Ensure icon color animates smoothly */
+}
+
+.feature-card:hover .icon,
+.feature-card:hover .process-icon-box,
+.process-step:hover .process-icon-box,
+.gen-card:hover img {
+    /* added hover target */
+    transform: rotateY(360deg) scale(1.1);
+    /* 3D Spin Effect */
     background: #dc2626;
-    color: white;
+    color: white !important;
+    /* Force White Icon */
+}
+
+/* Additional Global Rotation Rules for non-standard structures */
+.feature-card:hover i,
+.info-card:hover i {
+    transform: rotateY(360deg);
+    transition: transform 0.6s ease;
+    display: inline-block;
+    /* Ensure transform works */
+}
+
+/* IDC Page Icon Rotations */
+.infra-card:hover .infra-icon,
+.sec-box:hover h4 i,
+.cert-item:hover .cert-icon,
+.svc-card:hover .svc-icon {
+    transform: rotateY(360deg);
+    transition: transform 0.6s ease;
+    display: inline-block;
+}
+
+/* FIX: Gen Card Image shouldn't get red background */
+.gen-card:hover img {
+    background: transparent !important;
+}
+
+.feature-card:hover .icon i,
+.process-step:hover .process-icon-box i {
+    color: white !important;
+    /* Explicitly target child icon */
 }
 
 /* Typography for Features */
@@ -1568,12 +1778,16 @@ body {
    ========================================= */
 
 /* Sticky Hero Section - REMOVED sticky to allow scrolling */
+/* Sticky Hero Section - REMOVED sticky to allow scrolling */
 .cloud-hero {
     position: relative;
-    /* was sticky top: 80px */
+    padding: 24px 0 !important;
+    /* Explicitly Compact like Right Ref */
+    min-height: 0 !important;
     z-index: 1;
-    /* Reduced z-index */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    background: #fff5f5;
+    /* Pinkish background restored */
+    border-bottom: 1px solid #fecaca;
 }
 
 /* Hero Container - Left aligned, indented 1.5cm */
@@ -1584,11 +1798,112 @@ body {
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
+    position: relative;
+    /* Enabled for absolute positioning of hero button */
+}
+
+/* Hide Icon Box (2nd div) only */
+.cloud-hero .container>div:nth-of-type(2) {
+    display: none;
+}
+
+/* KT Cloud Partner Text (1st Element) */
+.cloud-badgetext {
+    font-size: 13px;
+    /* Smaller badge */
+    font-weight: 700;
+    color: #EF4444;
+    /* Red Color */
+    margin-bottom: 8px;
+    /* Tight gap */
+    display: block !important;
+    /* Unhide */
 }
 
 /* Hero Text Elements - Ensure left alignment */
-.cloud-hero h1,
-.cloud-hero p,
+.cloud-hero h1 {
+    text-align: left;
+    margin-left: 0;
+    align-self: flex-start;
+    font-size: 28px;
+    /* Compact Title (was 38px) */
+    margin-bottom: 8px;
+    /* Tight margin */
+    font-weight: 800;
+    color: #1f2937;
+    /* Dark Slate */
+    line-height: 1.2;
+}
+
+/* --- SHORTCUT BUTTONS --- */
+.sidebar-shortcut {
+    display: block;
+    margin-top: 20px;
+    background: #dc2626;
+    color: white !important;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(220, 38, 38, 0.2);
+}
+
+.sidebar-shortcut:hover {
+    background: #b91c1c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(220, 38, 38, 0.3);
+}
+
+.hero-shortcut {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: 1px solid #dc2626;
+    color: #dc2626;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.hero-shortcut:hover {
+    background: #dc2626;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .sidebar-shortcut {
+        margin-bottom: 20px;
+    }
+
+    .hero-shortcut {
+        position: static;
+        margin-top: 15px;
+        transform: none;
+        display: inline-flex;
+    }
+}
+
+.cloud-hero p {
+    text-align: left;
+    margin-left: 0;
+    align-self: flex-start;
+    font-size: 18px;
+    color: #64748b;
+    /* Gray-500 per screenshot */
+    font-weight: 400;
+    max-width: 800px;
+}
+
 .cloud-hero .badge {
     text-align: left;
     margin-left: 0;
@@ -1614,45 +1929,111 @@ body {
     /* Adjusted for static hero: Header (80px) + Gap (20px) */
 }
 
-.cloud-sidebar .sidebar-menu {
+/* Sidebar Navigation - Updated Style */
+.sidebar-menu {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.cloud-sidebar .sidebar-menu li {
-    margin-bottom: 4px;
+.sidebar-menu li {
+    margin-bottom: 8px;
+    /* Spacing between items */
 }
 
-.cloud-sidebar .sidebar-menu a {
+.sidebar-menu a {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    color: #1e293b;
+    padding: 12px 16px;
+    color: #4b5563;
+    /* Gray text */
     text-decoration: none;
-    font-size: 15px;
+    border-radius: 8px;
+    /* Rounded corners */
     font-weight: 500;
-    border-radius: 10px;
-    transition: all 0.2s ease;
+    font-size: 15px;
+    transition: all 0.2s;
+    background: transparent;
 }
 
-.cloud-sidebar .sidebar-menu a:hover {
-    background: #f8fafc;
-    color: #1e293b;
-}
-
-.cloud-sidebar .sidebar-menu a.active {
-    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-    color: white;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
-}
-
-.cloud-sidebar .sidebar-menu a i {
-    width: 20px;
+.sidebar-menu a i {
+    width: 24px;
+    /* Fixed width for icon alignment */
+    margin-right: 10px;
+    color: #6b7280;
+    /* Lighter gray for icon */
+    font-size: 16px;
     text-align: center;
-    font-size: 14px;
+}
+
+.sidebar-menu a:hover {
+    background-color: #f3f4f6;
+    /* Light gray hover */
+    color: #111827;
+}
+
+.sidebar-menu a:hover i {
+    color: #111827;
+}
+
+/* Active State - Red Background */
+.sidebar-menu a.active {
+    background-color: #EF4444;
+    /* Red background */
+    color: white;
+    /* White text */
+    font-weight: 600;
+    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+}
+
+.sidebar-menu a.active i {
+    color: white;
+    /* White icon */
+}
+
+/* Sidebar Section Container */
+.cloud-sidebar {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+/* Dropdown Menu Positioning Fix */
+.nav-item {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    /* Align left edge with parent item, but offset slightly to avoid edge clipping */
+    left: 0;
+    transform: none;
+    /* Remove center transform */
+    margin-top: 10px;
+    /* Spacing from header */
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    z-index: 1000;
+    min-width: 240px;
+}
+
+/* For specific mega menus or wider menus, we can still use specific widths */
+.mega-menu {
+    left: 0;
+    transform: none;
+}
+
+/* Fix for right-side items overflow */
+.nav-item:nth-last-child(1) .dropdown-menu,
+.nav-item:nth-last-child(2) .dropdown-menu {
+    left: auto;
+    right: 0;
 }
 
 /* Main Content Area */
@@ -2107,5 +2488,629 @@ main.sub-content {
 
     .sw-hero p {
         font-size: 16px;
+    }
+}
+
+/* HUMECCA Website - Complete Replit Clone */
+/* ... (Existing content preserved via append, effectively) ... */
+
+/* MEGA MENU STYLES (Added for Cloud Menu Layout) */
+.mega-menu {
+    padding: 24px !important;
+}
+
+.mega-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 Columns as requested */
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.mega-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+}
+
+.mega-cta {
+    margin-top: 24px;
+    padding-top: 0;
+    border-top: none;
+    text-align: center;
+}
+
+.mega-cta a {
+    display: flex;
+    width: 100%;
+    height: 48px;
+    background-color: #EF4444;
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.2s;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+}
+
+.mega-cta a i {
+    color: white;
+    /* White Icon */
+}
+
+.mega-cta a:hover {
+    background-color: #DC2626;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
+    color: white;
+}
+
+.mega-cta a:hover {
+    text-decoration: underline;
+}
+
+/* Ensure Titles don't wrap */
+.dropdown-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* =========================================
+   RESTORED CONTENT STYLES (Grid & Cards)
+   ========================================= */
+
+/* Feature Grid (for "Key Features" with Icons) */
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.feature-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 32px 24px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+    border-color: #fca5a5;
+    /* Red tint border */
+}
+
+/* Generation Grid (for "Server Generation") */
+.gen-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* Exactly 3 columns for 3 generations */
+    gap: 30px;
+    margin-top: 20px;
+}
+
+@media (max-width: 992px) {
+    .gen-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+}
+
+.gen-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.gen-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.gen-card h4 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 10px 0;
+}
+
+/* Process Grid (for "Service Process") */
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.process-step {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.process-step:hover {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+}
+
+.process-step h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #334155;
+    margin: 15px 0 10px;
+}
+
+.process-step p {
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* --- Server Hosting Page Improvements --- */
+
+/* Base Pricing Styles (Migrated from sub_hosting.html) */
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 32px;
+    align-items: start;
+}
+
+@media (min-width: 900px) {
+    .pricing-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.plan-card {
+    background: white;
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.plan-card:hover {
+    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    border-color: var(--border-light);
+}
+
+.plan-card.popular {
+    border: 2px solid var(--accent);
+    transform: scale(1.05);
+    z-index: 2;
+    box-shadow: 0 20px 40px -5px rgba(233, 77, 54, 0.15);
+}
+
+.plan-card.popular:hover {
+    transform: scale(1.05) translateY(-5px);
+}
+
+.plan-badge {
+    background: var(--accent);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    white-space: nowrap;
+}
+
+.plan-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 24px;
+}
+
+.plan-summary {
+    font-size: 0.95rem;
+    color: #64748b;
+    margin-bottom: 24px;
+    min-height: 24px;
+}
+
+.plan-price {
+    margin-bottom: 32px;
+    color: var(--accent);
+}
+
+.amount {
+    font-size: 2.5rem;
+    font-weight: 800;
+}
+
+.period {
+    font-size: 1rem;
+    color: var(--text-sub);
+    font-weight: 400;
+}
+
+.specs-list {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    text-align: left;
+}
+
+.spec-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.spec-item:last-child {
+    margin-bottom: 0;
+}
+
+.spec-label {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.spec-value {
+    color: #0f172a;
+    font-weight: 700;
+}
+
+.plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px;
+    text-align: left;
+}
+
+.plan-features li {
+    padding: 12px 0;
+    border-bottom: 1px solid #f8fafc;
+    color: var(--text-sub);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.plan-features li:last-child {
+    border-bottom: none;
+}
+
+.plan-features i {
+    color: var(--accent);
+    font-size: 0.9rem;
+}
+
+.plan-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.plan-btn.outline {
+    border: 1px solid var(--border-light);
+    color: var(--text-main);
+    background: white;
+}
+
+.plan-btn.outline:hover {
+    border-color: var(--text-main);
+    background: #f8fafc;
+}
+
+.plan-btn.solid {
+    background: var(--accent);
+    color: white;
+    border: none;
+}
+
+.plan-btn.solid:hover {
+    background: #d93d2b;
+}
+
+/* 1. Compact Pricing Grid */
+.compact-pricing {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 30px !important;
+    /* Increased horizontal gap */
+    row-gap: 60px !important;
+    /* Increased vertical gap to prevent badge overlap */
+    max-width: 1200px;
+    /* Increased overall width by ~20% */
+    margin: 0 auto;
+}
+
+.compact-pricing .plan-card {
+    padding: 30px 20px;
+    transition: all 0.3s ease;
+}
+
+.compact-pricing .plan-title {
+    font-size: 1.3rem;
+}
+
+.compact-pricing .amount {
+    font-size: 2rem;
+}
+
+.compact-pricing .specs-list {
+    padding: 15px;
+    font-size: 0.85rem;
+}
+
+/* Hover Effect: Color Inversion */
+.compact-pricing .plan-card:hover {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-8px);
+}
+
+.compact-pricing .plan-card:hover .plan-title,
+.compact-pricing .plan-card:hover .plan-summary,
+.compact-pricing .plan-card:hover .plan-price,
+.compact-pricing .plan-card:hover .amount,
+.compact-pricing .plan-card:hover .period,
+.compact-pricing .plan-card:hover .spec-label,
+.compact-pricing .plan-card:hover .spec-value,
+.compact-pricing .plan-card:hover .plan-features li {
+    color: white !important;
+}
+
+.compact-pricing .plan-card:hover .specs-list {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.compact-pricing .plan-card:hover .plan-features li {
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.compact-pricing .plan-card:hover .plan-features i {
+    color: white !important;
+}
+
+.compact-pricing .plan-card:hover .plan-btn.outline {
+    background-color: white;
+    color: var(--accent) !important;
+    border-color: white;
+}
+
+.compact-pricing .plan-card:hover .plan-btn.solid {
+    background-color: white;
+    color: var(--accent) !important;
+}
+
+.compact-pricing .plan-badge {
+    z-index: 20;
+    white-space: nowrap;
+    /* Prevent badge text wrapping */
+}
+
+/* 2. Server Hosting Intro Diagram */
+.server-diagram-box {
+    background: white;
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 60px 40px;
+    margin: 40px 0;
+    text-align: center;
+    position: relative;
+}
+
+.diagram-flow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.diagram-node {
+    flex: 1;
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.diagram-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: #f8fafc;
+    border: 3px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s;
+}
+
+.diagram-circle:hover {
+    transform: scale(1.05);
+    border-color: var(--accent);
+}
+
+.diagram-circle i {
+    font-size: 40px;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+.diagram-circle span {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-main);
+}
+
+.diagram-text {
+    font-size: 0.95rem;
+    color: var(--text-sub);
+    line-height: 1.5;
+}
+
+.diagram-arrow {
+    flex: 0 0 100px;
+    height: 2px;
+    background: #cbd5e1;
+    position: relative;
+}
+
+.diagram-arrow::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -4px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid #cbd5e1;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+}
+
+.diagram-arrow-text {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.85rem;
+    color: #64748b;
+
+    font-weight: 500;
+}
+
+/* 3. Server Hosting Intro Key Points */
+.intro-key-points {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.intro-point-box {
+    background: #f8fafc;
+    border: 1px solid var(--border-light);
+    border-radius: 15px;
+    padding: 25px 20px;
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.intro-point-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    background: white;
+    border-color: var(--accent);
+}
+
+.intro-point-icon {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    color: var(--accent);
+    font-size: 24px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.intro-point-icon i {
+    transition: transform 0.6s ease;
+    display: inline-block;
+}
+
+.intro-point-box:hover .intro-point-icon i {
+    transform: rotateY(360deg);
+}
+
+.intro-point-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 10px;
+}
+
+.intro-point-desc {
+    font-size: 0.95rem;
+    color: var(--text-sub);
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .diagram-flow {
+        flex-direction: column;
+        gap: 60px;
+    }
+
+    .diagram-arrow {
+        width: 2px;
+        height: 50px;
+        flex: 0 0 50px;
+    }
+
+    .diagram-arrow::after {
+        top: auto;
+        bottom: 0;
+        right: -3px;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 8px solid #cbd5e1;
+    }
+
+    .diagram-arrow-text {
+        top: 50%;
+        left: 20px;
+        transform: translateY(-50%);
     }
 }

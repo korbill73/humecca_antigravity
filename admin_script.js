@@ -286,6 +286,115 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // ===========================
+// 5. Application Management (NEW)
+// ===========================
+async function loadApplications() {
+    const listEl = document.getElementById('app-list-body');
+    if (!listEl) return;
+
+    listEl.innerHTML = '<tr><td colspan="7" align="center"><i class="fas fa-spinner fa-spin"></i> 로딩중...</td></tr>';
+
+    // Fetch data joined with nothing (Applications has all info self-contained)
+    const { data, error } = await supabase.from('applications')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error(error);
+        listEl.innerHTML = '<tr><td colspan="7" align="center" style="color:red;">데이터 로딩 실패</td></tr>';
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        listEl.innerHTML = '<tr><td colspan="7" align="center" style="padding:20px;">접수된 신청 내역이 없습니다.</td></tr>';
+        return;
+    }
+
+    listEl.innerHTML = '';
+
+    data.forEach(item => {
+        // Status Badge Style
+        let statusBadge = '';
+        switch (item.status) {
+            case 'pending': statusBadge = '<span class="badge badge-red">접수대기</span>'; break;
+            case 'contacting': statusBadge = '<span class="badge badge-yellow">상담중</span>'; break;
+            case 'completed': statusBadge = '<span class="badge badge-green">처리완료</span>'; break;
+            case 'cancelled': statusBadge = '<span class="badge badge-gray">취소됨</span>'; break;
+            default: statusBadge = `<span class="badge">${item.status}</span>`;
+        }
+
+        // Product Badge (Type)
+        let typeLabel = item.product_type;
+        if (typeLabel === 'hosting') typeLabel = '호스팅';
+        else if (typeLabel === 'vpn') typeLabel = 'VPN';
+
+        const dateStr = new Date(item.created_at).toLocaleString('ko-KR', {
+            year: '2-digit', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit'
+        });
+
+        listEl.innerHTML += `
+            <tr>
+                <td style="font-size:0.9em; color:#666;">${dateStr}</td>
+                <td>${statusBadge}</td>
+                <td>
+                    <span style="font-weight:bold; color:#1e293b;">${item.product_name || '-'}</span><br>
+                    <small style="color:#64748b;">${typeLabel}</small>
+                </td>
+                <td>
+                    <strong>${item.company_name || '-'}</strong><br>
+                    ${item.contact_person}
+                </td>
+                <td>
+                    ${item.phone}<br>
+                    <span style="font-size:0.85em; color:#888;">${item.email || ''}</span>
+                </td>
+                <td>
+                    <div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${item.memo || ''}">
+                        ${item.memo || '-'}
+                    </div>
+                </td>
+                <td>
+                    <select onchange="updateApplicationStatus(${item.id}, this.value)" style="padding:4px; border:1px solid #ddd; border-radius:4px; font-size:12px; margin-bottom:4px; width:100%;">
+                        <option value="pending" ${item.status === 'pending' ? 'selected' : ''}>접수대기</option>
+                        <option value="contacting" ${item.status === 'contacting' ? 'selected' : ''}>상담중</option>
+                        <option value="completed" ${item.status === 'completed' ? 'selected' : ''}>완료</option>
+                        <option value="cancelled" ${item.status === 'cancelled' ? 'selected' : ''}>취소</option>
+                    </select>
+                    <button class="delete-btn" onclick="deleteApplication(${item.id})" style="width:100%;">삭제</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+window.updateApplicationStatus = async (id, newStatus) => {
+    if (!confirm('상태를 변경하시겠습니까?')) {
+        loadApplications(); // Revert UI
+        return;
+    }
+
+    const { error } = await supabase.from('applications').update({ status: newStatus }).eq('id', id);
+    if (error) {
+        alert('변경 실패: ' + error.message);
+    } else {
+        // alert('변경되었습니다.'); // Too noisy
+        // Just reload
+    }
+    loadApplications();
+};
+
+window.deleteApplication = async (id) => {
+    if (confirm('정말 이 신청 내역을 삭제하시겠습니까? (복구 불가)')) {
+        const { error } = await supabase.from('applications').delete().eq('id', id);
+        if (error) alert('삭제 실패: ' + error.message);
+        else loadApplications();
+    }
+};
+
+window.loadApplications = loadApplications; // Expose global
+
+// ===========================
 // Tab Logic
 // ===========================
 window.showTab = async (tabId) => {
@@ -315,6 +424,7 @@ window.showTab = async (tabId) => {
         if (tabId === 'terms') await loadTermEditor(currentTermType);
         if (tabId === 'inquiry') await renderInquiries();
         if (tabId === 'faq') await renderFaqs();
+        if (tabId === 'application') await loadApplications();
     } catch (err) { console.error(err); }
 }
 
@@ -376,8 +486,10 @@ document.getElementById('notice-form')?.addEventListener('submit', async (e) => 
     const id = document.getElementById('notice-edit-id').value;
     const title = document.getElementById('notice-title').value;
     const content = document.getElementById('notice-content').value;
+    const author = document.getElementById('notice-author').value;
     const is_pinned = document.getElementById('notice-pinned').checked;
-    const payload = { title, content, is_pinned };
+    const active = document.getElementById('notice-active').checked;
+    const payload = { title, content, author, is_pinned, active };
 
     if (id) await supabase.from('notices').update(payload).eq('id', id);
     else await supabase.from('notices').insert([payload]);
@@ -393,7 +505,9 @@ window.editNotice = async (id) => {
     document.getElementById('notice-edit-id').value = data.id;
     document.getElementById('notice-title').value = data.title;
     document.getElementById('notice-content').value = data.content;
+    if (document.getElementById('notice-author')) document.getElementById('notice-author').value = data.author || '관리자';
     document.getElementById('notice-pinned').checked = data.is_pinned;
+    document.getElementById('notice-active').checked = data.active;
     document.getElementById('notice-form').scrollIntoView({ behavior: 'smooth' });
 };
 window.resetNoticeForm = () => { document.getElementById('notice-form').reset(); document.getElementById('notice-edit-id').value = ''; };
@@ -778,21 +892,82 @@ async function renderAnalytics() {
 async function renderCustomers() {
     const el = document.getElementById('customer-list');
     if (!el) return;
-    const { data } = await supabase.from('customers').select('*').order('sort_order');
+    const { data } = await supabase.from('customers').select('*').order('sort_order', { ascending: true }); // Default sort by sort_order
     el.innerHTML = '';
+
+    // Sort logic fallback if needed, but DB order is best. 
+    // If no sort_order column, it might error, but assuming it exists or ignore.
+    // Ideally user probably wants to sort by ID descending or similar if no order.
+    // Let's assume ID desc for now if sort_order is null
+
     data?.forEach(c => {
-        el.innerHTML += `<div class="customer-card" style="position:relative;">
-            <div style="font-weight:bold;">${c.name}</div>
-            ${c.logo_url ? `<img src="${c.logo_url}" style="height:40px;">` : ''}
-            <button class="delete-btn" onclick="deleteCustomer(${c.id})" style="position:absolute;top:5px;right:5px;"><i class="fas fa-times"></i></button>
+        el.innerHTML += `<div class="customer-card" style="position:relative; display:flex; flex-direction:column; align-items:center; gap:10px;">
+            <div style="font-weight:bold; font-size:1.1rem;">${c.name}</div>
+            ${c.logo_url ? `<img src="${c.logo_url}" style="height:50px; object-fit:contain; margin:10px 0;">` : '<div style="height:50px; display:flex; align-items:center; color:#ccc;">No Logo</div>'}
+            
+            <div style="display:flex; gap:8px; margin-top:auto; width:100%;">
+                 <button class="btn btn-secondary" onclick="editCustomer(${c.id})" style="flex:1; padding:6px; font-size:12px;">수정</button>
+                 <button class="delete-btn" onclick="deleteCustomer(${c.id})" style="flex:1; padding:6px; font-size:12px; height:auto; width:auto; background:#fee2e2; color:#dc2626; border:1px solid #fecaca;"><i class="fas fa-trash"></i> 삭제</button>
+            </div>
         </div>`;
     });
 }
-window.deleteCustomer = async (id) => { if (confirm('Delete?')) { await supabase.from('customers').delete().eq('id', id); renderCustomers(); } };
+
+window.deleteCustomer = async (id) => {
+    if (confirm('정말 삭제하시겠습니까?')) {
+        await supabase.from('customers').delete().eq('id', id);
+        renderCustomers();
+    }
+};
+
+window.editCustomer = async (id) => {
+    const { data } = await supabase.from('customers').select('*').eq('id', id).single();
+    if (!data) return;
+
+    document.getElementById('customer-name').value = data.name;
+    document.getElementById('customer-logo').value = data.logo_url || '';
+    document.getElementById('cust-id-hidden').value = data.id;
+
+    document.getElementById('cust-form-title').innerText = "고객사 정보 수정";
+    document.getElementById('cust-submit-btn').innerText = "수정 저장";
+
+    document.getElementById('customer-form').scrollIntoView({ behavior: 'smooth' });
+};
+
+window.resetCustomerForm = () => {
+    document.getElementById('customer-form').reset();
+    document.getElementById('cust-id-hidden').value = '';
+    document.getElementById('cust-form-title').innerText = "고객사 추가";
+    document.getElementById('cust-submit-btn').innerText = "추가";
+};
+
 document.getElementById('customer-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    await supabase.from('customers').insert([{ name: document.getElementById('customer-name').value, logo_url: document.getElementById('customer-logo').value }]);
-    e.target.reset(); renderCustomers();
+
+    const id = document.getElementById('cust-id-hidden').value;
+    const name = document.getElementById('customer-name').value;
+    let logo_url = document.getElementById('customer-logo').value.trim();
+
+    // URL Logic: If not empty and doesn't start with http/https, prepend https://
+    if (logo_url && !/^https?:\/\//i.test(logo_url)) {
+        logo_url = 'https://' + logo_url;
+    }
+
+    if (id) {
+        // Update
+        const { error } = await supabase.from('customers').update({ name, logo_url }).eq('id', id);
+        if (error) { alert('수정 실패: ' + error.message); return; }
+        alert('고객사 정보가 수정되었습니다.');
+    } else {
+        // Insert
+        // Get max sort_order to append? Or just insert.
+        const { error } = await supabase.from('customers').insert([{ name, logo_url }]);
+        if (error) { alert('추가 실패:' + error.message); return; }
+        alert('추가되었습니다.');
+    }
+
+    resetCustomerForm();
+    renderCustomers();
 });
 
 async function renderFaqs() {

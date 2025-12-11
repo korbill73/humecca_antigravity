@@ -99,19 +99,33 @@ async function loadProductPrices(containerId, productCode) {
                 }
             }
 
+            // 스펙 문자열 생성
+            let specDetails = '';
+            if (plan.cpu) specDetails += `CPU: ${plan.cpu}, `;
+            if (plan.ram) specDetails += `RAM: ${plan.ram}, `;
+            if (plan.storage) specDetails += `Disk: ${plan.storage}`;
+            if (!specDetails && plan.summary) specDetails = plan.summary;
+
+            const escName = escapeHtml(plan.plan_name);
+            const escDetails = escapeHtml(specDetails);
+
             // 카드 HTML 생성
             html += `
-            <div class="price-card ${recClass}">
-                ${badgeHtml}
-                <div class="plan-name">${plan.plan_name}</div>
-                <div class="plan-price">${priceDisplay}${periodDisplay}</div>
+            <div class="plan-card ${isRec ? 'popular' : ''}">
+                ${badgeHtml ? `<div class="plan-badge">${plan.badge}</div>` : ''}
+                <div class="plan-title">${plan.plan_name}</div>
+                <div class="plan-price" style="font-size: 1.8rem; font-weight: 800; color: var(--accent); margin-bottom: 20px;">
+                    ${priceDisplay}${periodDisplay}
+                </div>
                 <div class="plan-desc" style="min-height: 24px; font-size: 0.9em; color: #666; margin-bottom: 15px;">
                     ${plan.summary || ''}
                 </div>
-                <ul class="feature-list">
+                <ul class="plan-features">
                     ${featuresHtml}
                 </ul>
-                <a href="sub_support.html" class="btn-price">견적 신청</a>
+                <button class="plan-btn solid js-open-modal"
+                    data-name="${escName}" data-type="${productCode}" data-details="${escDetails}"
+                    style="width:100%; border:none; cursor:pointer;">견적 신청</button>
             </div>
             `;
         });
@@ -122,4 +136,15 @@ async function loadProductPrices(containerId, productCode) {
         console.error('[PriceLoader] Error:', e);
         container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #ef4444;">정보를 불러오는 중 오류가 발생했습니다.</div>';
     }
+}
+
+// Helper to escape quotes for HTML attributes (Simple version)
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }

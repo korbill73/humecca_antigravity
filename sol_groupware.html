@@ -3,182 +3,147 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HUMECCA - 서버 호스팅</title>
+    <title>HUMECCA - NAVER WORKS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="styles.css?v=2.0">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
 </head>
 
-<body>
+<body class="theme-green">
     <!-- Header -->
-    <header class="header">
-        <div class="header-container container">
-            <a href="index.html" class="logo">
-                <img src="./logo.png" alt="HUMECCA" id="logo-img">
-            </a>
+    <!-- ========== HEADER PLACEHOLDER (Loaded via loader.js) ========== -->
+    <div id="header-placeholder"></div>
 
-            <nav class="nav">
-                <ul class="nav-list">
-                    <li class="nav-item has-dropdown">
-                        <a href="index.html#idc" class="nav-link">IDC <i class="fas fa-chevron-down arrow-icon"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="idc_hosting.html" class="dropdown-item">서버 호스팅</a>
-                            <a href="idc_colocation.html" class="dropdown-item">코로케이션</a>
-                            <a href="idc_network.html" class="dropdown-item">IDC 네트워크</a>
-                        </div>
-                    </li>
-                    <li class="nav-item has-dropdown">
-                        <a href="index.html#cloud" class="nav-link">클라우드 <i
-                                class="fas fa-chevron-down arrow-icon"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="cloud_kt.html" class="dropdown-item">KT 클라우드</a>
-                            <a href="cloud_storage.html" class="dropdown-item">클라우드 스토리지</a>
-                            <a href="cloud_os.html" class="dropdown-item">다양한 OS 지원</a>
-                        </div>
-                    </li>
-                    <li class="nav-item has-dropdown">
-                        <a href="index.html#vpn" class="nav-link">VPN 전용선 <i
-                                class="fas fa-chevron-down arrow-icon"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="vpn_service.html" class="dropdown-item">VPN 서비스</a>
-                            <a href="vpn_line.html" class="dropdown-item">전용선</a>
-                            <a href="vpn_monitoring.html" class="dropdown-item">네트워크 모니터링</a>
-                        </div>
-                    </li>
-                    <li class="nav-item has-dropdown">
-                        <a href="index.html#security" class="nav-link">보안 <i
-                                class="fas fa-chevron-down arrow-icon"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="sec_monitoring.html" class="dropdown-item">보안 모니터링</a>
-                            <a href="sec_ddos.html" class="dropdown-item">DDoS 방어</a>
-                            <a href="sec_ssl.html" class="dropdown-item">SSL/방화벽</a>
-                        </div>
-                    </li>
-                    <li class="nav-item has-dropdown">
-                        <a href="index.html#additional" class="nav-link">부가서비스 <i
-                                class="fas fa-chevron-down arrow-icon"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="add_server.html" class="dropdown-item">서버 관리 대행</a>
-                            <a href="add_backup.html" class="dropdown-item">백업 & 복구</a>
-                            <a href="add_ha.html" class="dropdown-item">HA 호스팅</a>
-                        </div>
-                    </li>
-                    <li class="nav-item has-dropdown">
-                        <a href="index.html#solutions" class="nav-link">기업솔루션 <i
-                                class="fas fa-chevron-down arrow-icon"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="sol_home.html" class="dropdown-item">맞춤형 홈페이지</a>
-                            <a href="sol_groupware.html" class="dropdown-item">그룹웨어</a>
-                            <a href="sol_ebiz.html" class="dropdown-item">e-Business 솔루션</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a href="index.html#about" class="nav-link">회사소개</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="index.html#support" class="nav-link">고객센터</a>
-                    </li>
-                </ul>
-            </nav>
 
-            <div class="header-utils">
-                <a href="#" class="util-link"><i class="fas fa-calculator"></i> 요금계산</a>
-                <a href="#" class="util-link">회원가입</a>
-                <a href="#" class="btn-login">로그인</a>
-                <button class="mobile-menu-btn" id="mobile-menu-btn">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    style="background: white; padding: 60px; border-radius: 20px; box-shadow: 0 10px 40px
-                    rgba(0,0,0,0.05); text-align: center; max-width: 900px; margin: 0 auto;">
-                    <div class="icon-box" style="font-size: 4rem; color: #E94D36; margin-bottom: 30px;">
-                        <i class="fas fa-server"></i>
-                    </div>
-                    <h2 style="font-size: 2.5rem; margin-bottom: 30px; font-weight: 700;">서비스 준비중입니다</h2>
-                    <p style="font-size: 1.1rem; color: #666; line-height: 1.8; margin-bottom: 50px;">
-                        현재 페이지의 상세 콘텐츠를 업데이트하고 있습니다.<br>
-                        고객님게 더 나은 서비스를 제공하기 위해 노력하겠습니다.<br>
-                        문의사항은 고객센터를 이용해 주시기 바랍니다.
-                    </p>
-                    <div class="btn-group" style="display: flex; gap: 20px; justify-content: center;">
-                        <a href="index.html" class="btn btn-outline" style="border-color: #ddd; color: #333;">메인으로
-                            돌아가기</a>
-                        <a href="index.html#support" class="btn btn-primary">고객센터 문의하기</a>
-                    </div>
+    <!-- Hero -->
+    <section class="sw-hero"
+        style="background-image: linear-gradient(rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.8)), url('images/hero_mail.jpg');">
+        <div class="container">
+            <!-- Breadcrumb (Standardized) -->
+            <div style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 20px;">
+                기업솔루션 <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 8px;"></i> NAVER WORKS
+            </div>
+
+            <!-- Icon Box (Standardized) -->
+            <div
+                style="width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; border: 1px solid rgba(255,255,255,0.2);">
+                <i class="fas fa-comments" style="font-size: 30px; color: #03C75A;"></i> <!-- Naver Works Green Icon -->
+            </div>
+
+            <h1>NAVER WORKS</h1>
+            <p style="max-width: 800px; color: rgba(255,255,255,0.8); line-height: 1.6;">네이버의 기술력으로 완성된 올인원 비즈니스 협업 플랫폼
+            </p>
+        </div>
+    </section>
+
+    <div class="container" style="padding: 80px 15px;">
+        <div class="section-header">
+            <h2>업무가 쉬워지는 협업 도구</h2>
+            <p>메일, 메신저, 화상회의, 드라이브까지 하나의 앱에서 해결하세요.<br>친숙한 사용성으로 별도의 교육 없이 바로 사용할 수 있습니다.</p>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-item">
+                <i class="fas fa-comments feature-icon" style="color:#03C75A;"></i>
+                <h3>메시지 (Message)</h3>
+                <p>LINE과 유사한 친숙한 UI<br>메시지 읽음 확인 및 회수 기능</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-envelope feature-icon" style="color:#03C75A;"></i>
+                <h3>네이버 메일 (Mail)</h3>
+                <p>강력한 스팸 차단 및 보안<br>파파고 실시간 번역 지원</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-calendar-alt feature-icon" style="color:#03C75A;"></i>
+                <h3>캘린더 (Calendar)</h3>
+                <p>팀원 일정 공유 및 빈 시간 찾기<br>회의실 예약 연동</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-cloud feature-icon" style="color:#03C75A;"></i>
+                <h3>드라이브 (Drive)</h3>
+                <p>랜섬웨어 걱정 없는 안전한 보관<br>사내/외 파일 공유 링크 생성</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-video feature-icon" style="color:#03C75A;"></i>
+                <h3>화상회의 (Video)</h3>
+                <p>별도 설치 없는 고화질 화상회의<br>최대 200명 동시 참여</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-robot feature-icon" style="color:#03C75A;"></i>
+                <h3>AI 비서 (WORKS AI)</h3>
+                <p>메일 요약 및 답장 추천<br>중요 메시지 자동 알림 (CLOVA)</p>
             </div>
         </div>
-        </section>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="container">
-                <div class="footer-content">
-                    <div class="footer-section">
-                        <h3>HUMECCA</h3>
-                        <p>믿을 수 있는 IDC 파트너</p>
-                        <p class="footer-copyright">© 2024 HUMECCA. All rights reserved.</p>
-                    </div>
-                    <div class="footer-section">
-                        <h4>서비스</h4>
-                        <ul>
-                            <li><a href="idc_hosting.html">서버 호스팅</a></li>
-                            <li><a href="idc_colocation.html">코로케이션</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4>솔루션</h4>
-                        <ul>
-                            <li><a href="sol_home.html">홈페이지 제작</a></li>
-                            <li><a href="sol_groupware.html">그룹웨어</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4>회사</h4>
-                        <ul>
-                            <li><a href="index.html#about">회사소개</a></li>
-                            <li><a href="index.html#support">문의하기</a></li>
-                        </ul>
-                    </div>
+        <div class="section-header" style="margin-top:80px;">
+            <h2>서비스 요금제</h2>
+            <p>기업의 규모와 필요에 맞는 최적의 플랜을 선택하세요.</p>
+        </div>
+
+        <div class="pricing-grid compact-pricing">
+            <!-- Lite -->
+            <div class="plan-card">
+                <h3 class="plan-title">Lite</h3>
+                <div class="plan-price">
+                    <span class="amount">3,000</span> <span class="period">원 / 월</span>
                 </div>
+                <div class="plan-summary">(연간 계약 기준, 1인)</div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> <strong>메시지/홈/설문</strong></li>
+                    <li><i class="fas fa-check"></i> 캘린더/주소록/할 일</li>
+                    <li><i class="fas fa-check"></i> 화상회의 (최대 200명)</li>
+                    <li><i class="fas fa-check"></i> 공용 용량 10GB (인당)</li>
+                </ul>
+                <button onclick="openAppModal('Naver Works - Lite', 'sol-groupware')" class="plan-btn outline"
+                    style="width:100%; border:none; cursor:pointer; font-family:inherit;">도입 문의</button>
             </div>
-        </footer>
 
-        <script src="./script.js"></script>
+            <!-- Standard -->
+            <div class="plan-card popular">
+                <div class="plan-badge">BEST</div>
+                <h3 class="plan-title">Standard</h3>
+                <div class="plan-price">
+                    <span class="amount">7,000</span> <span class="period">원 / 월</span>
+                </div>
+                <div class="plan-summary">(연간 계약 기준, 1인)</div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> <strong>Lite 기능 전체 포함</strong></li>
+                    <li><i class="fas fa-check"></i> <strong>기업용 메일</strong> (보안/아카이빙)</li>
+                    <li><i class="fas fa-check"></i> 드라이브 (1TB 대용량)</li>
+                    <li><i class="fas fa-check"></i> 메일 용량 100GB (인당)</li>
+                </ul>
+                <button onclick="openAppModal('Naver Works - Standard', 'sol-groupware')" class="plan-btn solid"
+                    style="width:100%; border:none; cursor:pointer; font-family:inherit;">도입 문의</button>
+            </div>
 
+            <!-- Standard Plus -->
+            <div class="plan-card">
+                <h3 class="plan-title">Standard Plus</h3>
+                <div class="plan-price">
+                    <span class="amount">11,000</span> <span class="period">원 / 월</span>
+                </div>
+                <div class="plan-summary">(연간 계약 기준, 1인)</div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> <strong>Standard 기능 전체 포함</strong></li>
+                    <li><i class="fas fa-check"></i> <strong>AI 기능 (CLOVA)</strong> 지원</li>
+                    <li><i class="fas fa-check"></i> 메일 용량 3TB (인당)</li>
+                    <li><i class="fas fa-check"></i> 아카이빙 (10년 보관)</li>
+                </ul>
+                <button onclick="openAppModal('Naver Works - Standard Plus', 'sol-groupware')" class="plan-btn outline"
+                    style="width:100%; border:none; cursor:pointer; font-family:inherit;">도입 문의</button>
+            </div>
+        </div>
 
-        <script>
-            // Improved Menu Interaction
-            document.addEventListener('DOMContentLoaded', () => {
-                const navItems = document.querySelectorAll('.nav-item');
-                navItems.forEach(item => {
-                    const menu = item.querySelector('.dropdown-menu');
-                    if (!menu) return;
+        <div
+            style="margin-top:20px; text-align:center; color:#666; font-size:14px; background:#f9fafb; padding:15px; border-radius:8px;">
+            <i class="fas fa-info-circle"></i> 휴메카는 네이버클라우드 공식 파트너로서, 네이버웍스 도입 컨설팅 및 기술 지원을 제공합니다.
+        </div>
+    </div>
 
-                    // When link inside menu is clicked, hide menu immediately
-                    const links = menu.querySelectorAll('a.dropdown-item');
-                    links.forEach(link => {
-                        link.addEventListener('click', () => {
-                            menu.style.display = 'none'; // Force hide to prevent ghosting
-                        });
-                    });
-
-                    // CRITICAL FIX: When mouse leaves the parent li, reset the inline style 
-                    // This ensures that next time the user hovers, CSS :hover works again.
-                    item.addEventListener('mouseleave', () => {
-                        menu.style.display = '';
-                        menu.style.opacity = '';
-                        menu.style.visibility = '';
-                    });
-
-                    // Safety: Ensure it's clean (visible) when mouse enters
-                    item.addEventListener('mouseenter', () => {
-                        menu.style.display = '';
-                    });
-                });
-            });
-        </script>
-
+    <div id="footer-placeholder"></div>
+    <script src="components/loader.js?v=2.0"></script>
 </body>
 
 </html>

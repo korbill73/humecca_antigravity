@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 
 <head>
@@ -29,6 +29,8 @@
                 style="width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; border: 1px solid rgba(255,255,255,0.2);">
                 <i class="fas fa-server" style="font-size: 30px; color: white;"></i>
             </div>
+
+
             <h1>소프트웨어 임대</h1>
             <p style="max-width: 800px; color: rgba(255,255,255,0.8); line-height: 1.6;">
                 시스템 운영에 필요한 Microsoft Windows Server 및 SQL Server 라이선스를 월 이용료 방식으로<br>
@@ -127,26 +129,10 @@
 
                 <!-- Right Sidebar: Consultation -->
                 <div style="width: 320px; flex-shrink: 0;">
-                    <div
-                        style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 32px; position: sticky; top: 100px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
-                        <h3 style="font-size: 20px; font-weight: 700; color: #111827; margin-bottom: 16px;">무료 상담 신청
-                        </h3>
-                        <p style="font-size: 14px; color: #6b7280; line-height: 1.6; margin-bottom: 24px;">
-                            소프트웨어 임대 서비스에 대해 궁금하신 점이 있으시면 언제든 문의해 주세요.
-                        </p>
-                        <a href="sub_support.html"
-                            style="display: block; width: 100%; height: 48px; background: #EF4444; color: white; border-radius: 6px; font-weight: 600; font-size: 15px; display: flex; align-items: center; justify-content: center; text-decoration: none; margin-bottom: 24px; transition: background 0.2s;">
-                            상담 신청하기 <i class="fas fa-chevron-right" style="margin-left: 8px; font-size: 12px;"></i>
-                        </a>
-                        <div style="text-align: center; border-top: 1px solid #f3f4f6; padding-top: 20px;">
-                            <span style="font-size: 13px; color: #9ca3af; display: block; margin-bottom: 4px;">전화
-                                상담</span>
-                            <span style="font-size: 18px; font-weight: 700; color: #EF4444;">02-418-7766</span>
-                        </div>
+                    <div </div>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
 
     <!-- Pricing Section -->
@@ -168,7 +154,8 @@
                         <li><i class="fas fa-check-circle"></i> 추가 2Core당 10,250원/월</li>
                         <li><i class="fas fa-check-circle"></i> 정품 라이선스</li>
                     </ul>
-                    <a href="sub_support.html" class="btn-price">신청하기</a>
+                    <button onclick="openAppModal('Windows Server Standard', 'software')" class="btn-price"
+                        style="width:100%; border:none; cursor:pointer;">신청하기</button>
                 </div>
 
                 <!-- Card 2 -->
@@ -180,7 +167,8 @@
                         <li><i class="fas fa-check-circle"></i> 추가 2Core당 55,000원/월</li>
                         <li><i class="fas fa-check-circle"></i> 무제한 VM</li>
                     </ul>
-                    <a href="sub_support.html" class="btn-price">신청하기</a>
+                    <button onclick="openAppModal('Windows Server Datacenter', 'software')" class="btn-price"
+                        style="width:100%; border:none; cursor:pointer;">신청하기</button>
                 </div>
 
                 <!-- Card 3 -->
@@ -192,7 +180,8 @@
                         <li><i class="fas fa-check-circle"></i> 추가 2Core당 220,000원/월</li>
                         <li><i class="fas fa-check-circle"></i> 기술 지원 포함</li>
                     </ul>
-                    <a href="sub_support.html" class="btn-price">신청하기</a>
+                    <button onclick="openAppModal('SQL Server Standard', 'software')" class="btn-price"
+                        style="width:100%; border:none; cursor:pointer;">신청하기</button>
                 </div>
 
                 <!-- Card 4 -->
@@ -204,7 +193,8 @@
                         <li><i class="fas fa-check-circle"></i> 추가 2Core당 840,000원/월</li>
                         <li><i class="fas fa-check-circle"></i> 엔터프라이즈 기능</li>
                     </ul>
-                    <a href="sub_support.html" class="btn-price">신청하기</a>
+                    <button onclick="openAppModal('SQL Server Enterprise', 'software')" class="btn-price"
+                        style="width:100%; border:none; cursor:pointer;">신청하기</button>
                 </div>
             </div>
 

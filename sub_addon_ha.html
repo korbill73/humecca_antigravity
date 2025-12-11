@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 
 <head>
@@ -52,6 +52,8 @@
                 style="width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; border: 1px solid rgba(255,255,255,0.2);">
                 <i class="fas fa-layer-group" style="font-size: 30px; color: white;"></i>
             </div>
+
+
             <h1>HA (High Availability)</h1>
             <p style="max-width: 800px; color: rgba(255,255,255,0.8); line-height: 1.6;">
                 장애 발생 시에도 서비스가 중단되지 않도록 고가용성 솔루션을 제공합니다.<br>
@@ -148,10 +150,10 @@
                         <p style="font-size: 14px; color: #6b7280; line-height: 1.6; margin-bottom: 24px;">
                             고가용성(HA) 구성에 대해 궁금하신 점이 있으시면 언제든 문의해 주세요.
                         </p>
-                        <a href="sub_support.html"
-                            style="display: block; width: 100%; height: 48px; background: #EF4444; color: white; border-radius: 6px; font-weight: 600; font-size: 15px; display: flex; align-items: center; justify-content: center; text-decoration: none; margin-bottom: 24px; transition: background 0.2s;">
+                        <button onclick="openAppModal('HA 상담', 'addon-ha')"
+                            style="display: block; width: 100%; height: 48px; background: #EF4444; color: white; border-radius: 6px; font-weight: 600; font-size: 15px; display: flex; align-items: center; justify-content: center; border:none; cursor:pointer; margin-bottom: 24px; transition: background 0.2s; font-family:inherit;">
                             상담 신청하기 <i class="fas fa-chevron-right" style="margin-left: 8px; font-size: 12px;"></i>
-                        </a>
+                        </button>
                         <div style="text-align: center; border-top: 1px solid #f3f4f6; padding-top: 20px;">
                             <span style="font-size: 13px; color: #9ca3af; display: block; margin-bottom: 4px;">전화
                                 상담</span>
@@ -165,20 +167,18 @@
 
     <!-- Pricing / CTA -->
     <!-- Pricing Table -->
-    <section class="pricing-section" style="padding: 100px 0; background: #ffffff;">
+    <section class="pricing-section" style="padding: 80px 0; background: #ffffff;">
         <div class="container">
             <div class="section-header">
                 <h2>서비스 요금 안내</h2>
                 <p>시스템 규모와 요구사항에 맞춘 합리적인 요금제를 제공합니다.</p>
             </div>
 
-            <div id="pricing-grid-ha" class="pricing-grid-custom"
-                style="grid-template-columns: repeat(2, 1fr); max-width: 900px;">
+            <div id="pricing-grid-ha" class="pricing-grid compact-pricing">
                 <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">
-                    <i class="fas fa-spinner fa-spin"></i> 요금 정보를 불러오는 중입니다...
+                    <i class="fas fa-spinner fa-spin"></i> 로딩 중...
                 </div>
             </div>
-
             <div style="margin-top: 40px; background: #f9fafb; padding: 20px; border-radius: 8px; text-align: center;">
                 <p style="margin: 0; color: #666; font-size: 14px;">
                     * 서버 사양 및 OS, SW 라이선스는 별도 요금입니다. 자세한 구성은 상담을 통해 안내드립니다.

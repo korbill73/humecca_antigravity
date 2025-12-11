@@ -11,375 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase_config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        /* Fallback / Critical CSS for Tabs */
-        .tabs {
-            display: flex;
-            gap: 0;
-            border-bottom: 2px solid #e5e7eb;
-            margin-bottom: 25px;
-            margin-top: 10px;
-        }
-
-        .tab {
-            padding: 12px 24px;
-            cursor: pointer;
-            font-weight: 500;
-            color: #6b7280;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-            font-size: 15px;
-            transition: all 0.2s;
-        }
-
-        .tab:hover {
-            color: #1f2937;
-            background-color: #f9fafb;
-        }
-
-        .tab.active {
-            color: #E94D36;
-            border-bottom: 2px solid #E94D36;
-            background-color: transparent;
-            font-weight: 700;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f5f7fa;
-            color: #333;
-        }
-
-        .admin-header {
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 20px 40px;
-        }
-
-        .admin-header h1 {
-            font-size: 20px;
-            font-weight: 600;
-            color: #1a1a2e;
-        }
-
-        .admin-tabs {
-            display: flex;
-            gap: 0;
-            margin-top: 20px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .admin-tab {
-            padding: 12px 24px;
-            background: none;
-            border: none;
-            color: #64748b;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .admin-tab:hover {
-            color: #1a1a2e;
-            background: #f8f9fa;
-        }
-
-        .admin-tab.active {
-            color: #EF4444;
-            font-weight: 600;
-        }
-
-        .admin-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: #EF4444;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .page-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 8px;
-        }
-
-        .page-subtitle {
-            font-size: 14px;
-            color: #64748b;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1a1a2e;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
-            font-size: 14px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #EF4444;
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: #EF4444;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #DC2626;
-        }
-
-        .btn-secondary {
-            background: #f1f5f9;
-            color: #64748b;
-        }
-
-        .btn-secondary:hover {
-            background: #e2e8f0;
-        }
-
-        .btn-dark {
-            background: #1e293b;
-            color: white;
-        }
-
-        .btn-dark:hover {
-            background: #0f172a;
-        }
-
-        /* Customer Grid */
-        .customer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-            margin-top: 24px;
-        }
-
-        .customer-card {
-            background: #f8f9fa;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .customer-card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            border-color: #EF4444;
-        }
-
-        .delete-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            font-size: 12px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .alert {
-            padding: 14px 18px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #6ee7b7;
-        }
-
-        .alert-info {
-            background: #eff6ff;
-            color: #1e3a8a;
-            border: 1px solid #bfdbfe;
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #64748b;
-            text-decoration: none;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .back-link:hover {
-            color: #EF4444;
-        }
-
-        /* Table Styles for Product List */
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        .admin-table th {
-            text-align: left;
-            padding: 12px 16px;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e5e7eb;
-            color: #64748b;
-            font-weight: 600;
-        }
-
-        .admin-table td {
-            padding: 16px;
-            border-bottom: 1px solid #f1f5f9;
-            color: #333;
-            vertical-align: middle;
-        }
-
-        .admin-table tr:hover {
-            background-color: #f8fafc;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .badge-blue {
-            background: #dbeafe;
-            color: #2563eb;
-        }
-
-        .badge-green {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .badge-gray {
-            background: #f1f5f9;
-            color: #64748b;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .grid-4 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 16px;
-        }
-
-        /* Modal Overlay for Export */
-        #export-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal-box {
-            background: white;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 600px;
-            padding: 30px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-    </style>
+    <!-- Inline styles removed to rely on admin_style.css -->
 </head>
 
 <body>
@@ -390,6 +22,7 @@
             <button class="admin-tab" onclick="showTab('faq')">FAQ</button>
             <button class="admin-tab" onclick="showTab('inquiry')">문의 관리</button>
             <button class="admin-tab" onclick="showTab('ticket')">티켓 관리</button>
+            <button class="admin-tab" onclick="showTab('application')">신청 관리</button>
             <button class="admin-tab active" onclick="showTab('product')">상품 관리</button>
             <button class="admin-tab" onclick="showTab('history')">회사 연혁</button>
             <button class="admin-tab" onclick="showTab('customer')">고객사 로고</button>
@@ -410,10 +43,7 @@
                     <h2 class="page-title">상품 및 서비스 관리</h2>
                     <p class="page-subtitle">호스팅, VPN, 보안, 부가서비스 등 모든 상품을 통합 관리합니다.</p>
                 </div>
-                <button class="btn btn-primary" onclick="migrateToSupabase()"
-                    style="background-color: #f59e0b; border-color: #f59e0b;">
-                    <i class="fas fa-database"></i> 데이터 가져오기 (초기화)
-                </button>
+                <!-- Data Import Button removed as per request -->
             </div>
 
             <a href="index.html" class="back-link" style="display:block; margin-bottom: 20px;"><i
@@ -469,15 +99,18 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                             <div class="form-group">
                                 <label>상품명</label>
-                                <input type="text" id="h-name" class="form-control" placeholder="예: 비즈니스" required>
+                                <input type="text" id="h-name" class="form-control" placeholder="상품명 입력" required>
+                                <small>예: 비즈니스</small>
                             </div>
                             <div class="form-group">
                                 <label>고유 ID (영문/숫자)</label>
-                                <input type="text" id="h-id" class="form-control" placeholder="예: biz_01" required>
+                                <input type="text" id="h-id" class="form-control" placeholder="고유 ID 입력" required>
+                                <small>예: biz_01</small>
                             </div>
                             <div class="form-group">
                                 <label>가격 (숫자, 콤마 포함)</label>
-                                <input type="text" id="h-price" class="form-control" placeholder="예: 199,000" required>
+                                <input type="text" id="h-price" class="form-control" placeholder="가격 입력" required>
+                                <small>예: 199,000</small>
                             </div>
                             <div class="form-group">
                                 <label>기간/단위</label>
@@ -489,23 +122,28 @@
                             </div>
                             <div class="form-group">
                                 <label>CPU</label>
-                                <input type="text" id="h-cpu" class="form-control" placeholder="예: Xeon Silver 4210">
+                                <input type="text" id="h-cpu" class="form-control" placeholder="CPU 스펙 입력">
+                                <small>예: Xeon Silver 4210</small>
                             </div>
                             <div class="form-group">
                                 <label>RAM</label>
-                                <input type="text" id="h-ram" class="form-control" placeholder="예: 64GB DDR4">
+                                <input type="text" id="h-ram" class="form-control" placeholder="RAM 스펙 입력">
+                                <small>예: 64GB DDR4</small>
                             </div>
                             <div class="form-group">
                                 <label>Storage</label>
-                                <input type="text" id="h-storage" class="form-control" placeholder="예: 1TB NVMe">
+                                <input type="text" id="h-storage" class="form-control" placeholder="저장공간 입력">
+                                <small>예: 1TB NVMe</small>
                             </div>
                             <div class="form-group">
                                 <label>Traffic</label>
-                                <input type="text" id="h-traffic" class="form-control" placeholder="예: 10Gbps Ready">
+                                <input type="text" id="h-traffic" class="form-control" placeholder="트래픽 입력">
+                                <small>예: 10Gbps Ready</small>
                             </div>
                             <div class="form-group">
                                 <label>뱃지 라벨 (선택)</label>
-                                <input type="text" id="h-badge" class="form-control" placeholder="예: BEST, NEW">
+                                <input type="text" id="h-badge" class="form-control" placeholder="뱃지 라벨 입력">
+                                <small>예: BEST, NEW</small>
                             </div>
                             <div class="form-group">
                                 <label>한줄 요약 (설명)</label>
@@ -572,18 +210,20 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                             <div class="form-group">
                                 <label>상품명</label>
-                                <input type="text" id="v-name" class="form-control" placeholder="예: Standard VPN"
-                                    required>
+                                <input type="text" id="v-name" class="form-control" placeholder="상품명 입력" required>
+                                <small>예: Standard VPN</small>
                             </div>
                             <div class="form-group">
                                 <label>고유 ID (영문/숫자)</label>
-                                <input type="text" id="v-id" class="form-control" placeholder="예: vpn_std" required>
+                                <input type="text" id="v-id" class="form-control" placeholder="고유 ID 입력" required>
+                                <small>예: vpn_std</small>
                             </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top:15px;">
                             <div class="form-group">
                                 <label>가격</label>
-                                <input type="text" id="v-price" class="form-control" placeholder="예: 50,000">
+                                <input type="text" id="v-price" class="form-control" placeholder="가격 입력">
+                                <small>예: 50,000</small>
                             </div>
                             <div class="form-group">
                                 <label>기간/단위</label>
@@ -597,25 +237,29 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top:15px;">
                             <div class="form-group">
                                 <label>속도</label>
-                                <input type="text" id="v-speed" class="form-control" placeholder="100Mbps">
+                                <input type="text" id="v-speed" class="form-control" placeholder="속도 입력">
+                                <small>예: 100Mbps</small>
                             </div>
                             <div class="form-group">
                                 <label>거점 수</label>
-                                <input type="text" id="v-sites" class="form-control" placeholder="5 Site">
+                                <input type="text" id="v-sites" class="form-control" placeholder="거점 수 입력">
+                                <small>예: 5 Site</small>
                             </div>
                             <div class="form-group">
                                 <label>사용자 수</label>
-                                <input type="text" id="v-users" class="form-control" placeholder="50 Users">
+                                <input type="text" id="v-users" class="form-control" placeholder="사용자 수 입력">
+                                <small>예: 50 Users</small>
                             </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top:15px;">
                             <div class="form-group">
                                 <label>뱃지 (선택)</label>
-                                <input type="text" id="v-badge" class="form-control" placeholder="예: BEST">
+                                <input type="text" id="v-badge" class="form-control" placeholder="뱃지 입력">
+                                <small>예: BEST</small>
                             </div>
                             <div class="form-group">
                                 <label>한줄 요약</label>
-                                <input type="text" id="v-summary" class="form-control" placeholder="설명...">
+                                <input type="text" id="v-summary" class="form-control" placeholder="요약 설명 입력">
                             </div>
                         </div>
                         <div class="form-group" style="margin-top:15px;">
@@ -678,17 +322,20 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                             <div class="form-group">
                                 <label>상품명</label>
-                                <input type="text" id="c-name" class="form-control" required placeholder="예: 1U Server">
+                                <input type="text" id="c-name" class="form-control" required placeholder="상품명 입력">
+                                <small>예: 1U Server</small>
                             </div>
                             <div class="form-group">
                                 <label>상품 ID (Slug)</label>
-                                <input type="text" id="c-id" class="form-control" required placeholder="예: colo_1u">
+                                <input type="text" id="c-id" class="form-control" required placeholder="ID 입력">
+                                <small>예: colo_1u</small>
                             </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top:15px;">
                             <div class="form-group">
                                 <label>가격</label>
-                                <input type="text" id="c-price" class="form-control" placeholder="예: 100,000">
+                                <input type="text" id="c-price" class="form-control" placeholder="가격 입력">
+                                <small>예: 100,000</small>
                             </div>
                             <div class="form-group">
                                 <label>기간</label>
@@ -702,18 +349,18 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top:15px;">
                             <div class="form-group">
                                 <label>공간 (Space)</label>
-                                <input type="text" id="c-cpu" class="form-control" placeholder="예: 1U / Quarter Rack">
-                                <!-- Using CPU field for Space -->
+                                <input type="text" id="c-cpu" class="form-control" placeholder="공간 스펙 입력">
+                                <small>예: 1U / Quarter Rack</small>
                             </div>
                             <div class="form-group">
                                 <label>전력 (Power)</label>
-                                <input type="text" id="c-ram" class="form-control" placeholder="예: 1A / 2.2kW">
-                                <!-- Using RAM field for Power -->
+                                <input type="text" id="c-ram" class="form-control" placeholder="전력 스펙 입력">
+                                <small>예: 1A / 2.2kW</small>
                             </div>
                         </div>
                         <div class="form-group" style="margin-top:15px;">
                             <label>요약설명</label>
-                            <input type="text" id="c-summary" class="form-control" placeholder="상품에 대한 간단한 설명">
+                            <input type="text" id="c-summary" class="form-control" placeholder="간단한 설명 입력">
                         </div>
                         <div class="form-group" style="margin-top:15px;">
                             <label>주요 특징 (엔터로 줄바꿈)</label>
@@ -797,36 +444,39 @@
                         <div class="grid-2">
                             <div class="form-group">
                                 <label>상품명</label>
-                                <input type="text" id="sec-name" class="form-control" placeholder="예: Standard"
-                                    required>
+                                <input type="text" id="sec-name" class="form-control" placeholder="상품명 입력" required>
+                                <small>예: Standard</small>
                             </div>
                             <div class="form-group">
                                 <label>상품 ID (유니크)</label>
-                                <input type="text" id="sec-id" class="form-control" placeholder="예: waf-std" required>
+                                <input type="text" id="sec-id" class="form-control" placeholder="ID 입력" required>
+                                <small>예: waf-std</small>
                             </div>
                         </div>
                         <div class="grid-2" style="margin-top:15px;">
                             <div class="form-group">
                                 <label>가격 (숫자, 콤마)</label>
-                                <input type="text" id="sec-price" class="form-control" placeholder="예: 300,000"
-                                    required>
+                                <input type="text" id="sec-price" class="form-control" placeholder="가격 입력" required>
+                                <small>예: 300,000</small>
                             </div>
                             <div class="form-group">
                                 <label>단위 (기간/건)</label>
-                                <input type="text" id="sec-period" class="form-control" placeholder="예: 월, 년, 건"
-                                    required>
+                                <input type="text" id="sec-period" class="form-control" placeholder="단위 입력" required>
+                                <small>예: 월, 년, 건</small>
                             </div>
                         </div>
                         <div style="margin-top:15px;">
                             <div class="form-group">
                                 <label>요약 설명 (부제목)</label>
-                                <input type="text" id="sec-summary" class="form-control" placeholder="리스트에 표시될 짧은 설명">
+                                <input type="text" id="sec-summary" class="form-control" placeholder="설명 입력">
+                                <small>리스트에 표시될 짧은 설명</small>
                             </div>
                         </div>
                         <div class="grid-2" style="margin-top:15px;">
                             <div class="form-group">
                                 <label>뱃지 (인기/추천)</label>
-                                <input type="text" id="sec-badge" class="form-control" placeholder="예: 인기, 추천">
+                                <input type="text" id="sec-badge" class="form-control" placeholder="뱃지 입력">
+                                <small>예: 인기, 추천</small>
                             </div>
                             <div class="form-group">
                                 <label>정렬 순서</label>
@@ -914,20 +564,21 @@
                         <div class="grid-2">
                             <div class="form-group">
                                 <label class="form-label">서비스명</label>
-                                <input type="text" id="s-name" class="form-control" placeholder="예: Windows Server 2019"
-                                    required>
+                                <input type="text" id="s-name" class="form-control" placeholder="서비스명 입력" required>
+                                <small>예: Windows Server 2019</small>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">서비스 ID (유니크)</label>
-                                <input type="text" id="s-id" class="form-control" placeholder="예: win_2019_std"
-                                    required>
+                                <input type="text" id="s-id" class="form-control" placeholder="ID 입력" required>
+                                <small>예: win_2019_std</small>
                             </div>
                         </div>
 
                         <div class="grid-2" style="margin-top:15px;">
                             <div class="form-group">
                                 <label class="form-label">가격</label>
-                                <input type="text" id="s-price" class="form-control" placeholder="예: 41,000" required>
+                                <input type="text" id="s-price" class="form-control" placeholder="가격 입력" required>
+                                <small>예: 41,000</small>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">기간/단위</label>
@@ -942,8 +593,8 @@
 
                         <div class="form-group" style="margin-top:15px;">
                             <label class="form-label">상세 설명 (또는 스펙)</label>
-                            <input type="text" id="s-summary" class="form-control"
-                                placeholder="예: 기본 8Core 제공, 정품 라이선스">
+                            <input type="text" id="s-summary" class="form-control" placeholder="상세 설명 입력">
+                            <small>예: 기본 8Core 제공, 정품 라이선스</small>
                         </div>
 
                         <div class="form-group" style="margin-top:15px;">
@@ -976,6 +627,39 @@
 
         </div>
 
+        <!-- ======================= 신청 관리 탭 (NEW) ======================= -->
+        <div id="tab-application" class="tab-content">
+            <h2 class="page-title">신청 관리</h2>
+            <p class="page-subtitle">홈페이지를 통해 접수된 견적/상담 신청 내역입니다.</p>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">신청 내역 목록</h3>
+                    <button class="btn btn-secondary" onclick="loadApplications()">
+                        <i class="fas fa-sync-alt"></i> 새로고침
+                    </button>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th width="140">신청일시</th>
+                                <th>상태</th>
+                                <th>상품 정보</th>
+                                <th>고객사 / 담당자</th>
+                                <th>연락처</th>
+                                <th>문의 내용</th>
+                                <th width="100">관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="app-list-body">
+                            <!-- JS load -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <!-- ======================= 다른 탭들 (기존 유지) ======================= -->
         <!-- 고객사 로고 탭 -->
         <div id="tab-customer" class="tab-content">
@@ -985,26 +669,34 @@
             <!-- 고객사 추가 폼 -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title" id="form-title">고객사 추가</h3>
+                    <h3 class="card-title" id="cust-form-title">고객사 추가</h3>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="resetCustomerForm()"
+                        style="margin-left: auto;">
+                        <i class="fas fa-undo"></i> 초기화
+                    </button>
                 </div>
                 <form id="customer-form">
-                    <input type="hidden" id="edit-index" value="">
+                    <input type="hidden" id="cust-id-hidden"> <!-- DB ID -->
+
                     <div style="display: grid; grid-template-columns: 1fr 2fr auto auto; gap: 16px; align-items: end;">
                         <div class="form-group" style="margin-bottom: 0;">
                             <label class="form-label">고객사명 *</label>
-                            <input type="text" id="customer-name" class="form-input" placeholder="예: 삼성전자" required>
+                            <div class="input-wrapper">
+                                <input type="text" id="customer-name" class="form-input" placeholder="고객사명 입력" required>
+                                <small style="display:block; margin-top:4px; color:#64748b; font-size:13px;">예:
+                                    삼성전자</small>
+                            </div>
                         </div>
                         <div class="form-group" style="margin-bottom: 0;">
                             <label class="form-label">로고 URL (선택)</label>
-                            <input type="url" id="customer-logo" class="form-input"
-                                placeholder="https://example.com/logo.png">
+                            <div class="input-wrapper">
+                                <input type="text" id="customer-logo" class="form-input" placeholder="로고 URL 입력">
+                                <small style="display:block; margin-top:4px; color:#64748b; font-size:13px;">* http://
+                                    생략 가능 (예: google.com/logo.png)</small>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary" id="submit-btn">
-                            <i class="fas fa-plus"></i> 추가
-                        </button>
-                        <button type="button" class="btn btn-secondary" id="cancel-btn" style="display: none;"
-                            onclick="cancelEdit()">
-                            <i class="fas fa-times"></i> 취소
+                        <button type="submit" class="btn btn-primary" id="cust-submit-btn">
+                            <i class="fas fa-plus"></i> 저장
                         </button>
                     </div>
                 </form>

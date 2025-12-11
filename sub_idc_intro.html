@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 
 <head>
@@ -55,7 +55,7 @@
         /* --- Hero --- */
         .idc-hero {
             background-color: var(--footer-bg);
-            padding: 100px 0 100px;
+            padding: 80px 0;
             text-align: center;
             position: relative;
         }
@@ -70,7 +70,7 @@
         }
 
         .idc-hero h1 {
-            font-size: 4rem;
+            font-size: 42px;
             font-weight: 900;
             color: white;
             line-height: 1.1;
@@ -79,7 +79,7 @@
         }
 
         .idc-hero p {
-            font-size: 1.35rem;
+            font-size: 18px;
             color: #94a3b8;
             max-width: 800px;
             margin: 0 auto;
@@ -89,7 +89,7 @@
 
         /* --- Section Common --- */
         .idc-section {
-            padding: 100px 0;
+            padding: 80px 0;
             border-top: 1px solid var(--border-light);
         }
 
@@ -507,7 +507,14 @@
         <!-- 1. Hero -->
         <section class="idc-hero">
             <div class="idc-container">
-                <h2>HUMECCA IDC</h2>
+
+                <div style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 20px;">
+                    IDC 서비스 <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 8px;"></i> IDC 소개
+                </div>
+                <div
+                    style="width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fas fa-server" style="font-size: 30px; color: white;"></i>
+                </div>
                 <h1>국내 최고 수준의<br>데이터센터</h1>
                 <p>Tier 3+ 등급의 인프라와 24시간 전문 인력 상주로<br>귀사의 데이터를 365일 안전하게 보호합니다.</p>
             </div>
@@ -731,7 +738,11 @@
                         투어를 신청하세요</h2>
                     <p style="color: var(--text-sub); margin-bottom: 2rem;">직접 시설을 확인하고, 전문가와 상담하세요</p>
                     <div class="cta-btn-wrap">
-                        <a href="sub_support.html" class="cta-btn-main">투어 신청하기 <i class="fas fa-chevron-right"></i></a>
+                        <div class="cta-btn-wrap">
+                            <button onclick="openAppModal('IDC 투어 신청', 'intro-tour')" class="cta-btn-main"
+                                style="border:none; cursor:pointer; font-family:inherit;">투어 신청하기 <i
+                                    class="fas fa-chevron-right"></i></button>
+                        </div>
                         <a href="tel:02-418-7766" class="cta-btn-sub"><i class="fas fa-phone"></i> 02-418-7766</a>
                     </div>
                 </div>
