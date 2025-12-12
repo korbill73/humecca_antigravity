@@ -7,11 +7,23 @@ Write-Host "Reading component files..."
 $headerContent = [System.IO.File]::ReadAllText($headerPath, [System.Text.Encoding]::UTF8)
 $footerContent = [System.IO.File]::ReadAllText($footerPath, [System.Text.Encoding]::UTF8)
 
+# Remove BOM (Byte Order Mark) if present - Critical for inline JS strings
+$headerContent = $headerContent.TrimStart([char]0xFEFF)
+$footerContent = $footerContent.TrimStart([char]0xFEFF)
+
+# Escape backticks to prevent breaking template literals
+$headerContent = $headerContent.Replace('`', '\`')
+$footerContent = $footerContent.Replace('`', '\`')
+
+# Escape ${ to prevent JS interpolation attempts
+$headerContent = $headerContent.Replace('${', '\${')
+$footerContent = $footerContent.Replace('${', '\${')
+
 # Validating content
 if (-not $headerContent) { Write-Error "Header content is empty!"; exit 1 }
 if (-not $footerContent) { Write-Error "Footer content is empty!"; exit 1 }
 
-# Template for loader.js (Using single-quote here-string to avoid variable expansion)
+# Template for loader.js
 $loaderTemplate = @'
 /**
  * Component Loader (components/loader.js)
@@ -21,6 +33,8 @@ $loaderTemplate = @'
  * - Supports versioning for cache busting (?v=...)
  * - Fallback for local file:// protocol
  */
+
+console.log('Loader.js v3.4 initialized');
 
 const componentCache = {};
 

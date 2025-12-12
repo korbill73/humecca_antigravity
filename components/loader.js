@@ -7,6 +7,8 @@
  * - Fallback for local file:// protocol
  */
 
+console.log('Loader.js v3.4 initialized');
+
 const componentCache = {};
 
 function loadComponent(placeholderId, componentPath, callback) {
@@ -742,10 +744,10 @@ function getInlineFooter() {
         let content = localStorage.getItem('humecca_term_v4_' + type);
 
         // 데이터가 없으면 안내 메시지 표시
-        if (!content) content = `<div style="text-align:center; padding: 40px;">
+        if (!content) content = \`<div style="text-align:center; padding: 40px;">
             <p>등록된 약관 내용이 없습니다.</p>
             <p style="color:#666; margin-top:10px;">관리자 페이지에서 내용을 등록해주세요.</p>
-        </div>`;
+        </div>\`;
 
         let title = '약관';
         if (type === 'privacy') title = '개인정보처리방침';
