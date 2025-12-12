@@ -3114,3 +3114,45 @@ main.sub-content {
         transform: translateY(-50%);
     }
 }
+
+/* Mega Menu Grid Styles */
+.mega-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 8px 0;
+}
+
+.mega-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-sub);
+    margin: 16px 0 8px;
+    padding-left: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.mega-cta {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-light);
+    text-align: center;
+}
+
+.mega-cta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-red);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.mega-cta a:hover {
+    background: #FEF2F2;
+}
