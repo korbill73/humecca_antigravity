@@ -64,7 +64,10 @@ function initSubpageEffect() {
     });
 
     // Effect Router
-    if (path.includes('db') || path.includes('database')) {
+    if (path.includes('addon')) {
+        // NEW: Purple Light Ray for Addon Services
+        runPurpleLightRayEffect(ctx, () => ({ w: width, h: height }), mouse);
+    } else if (path.includes('db') || path.includes('database')) {
         runDataRingsEffect(ctx, () => ({ w: width, h: height }), mouse);
     } else if (path.includes('security') || path.includes('vpn') || path.includes('sec_') || path.includes('ssl') || path.includes('firewall')) {
         runCyberShieldEffect(ctx, () => ({ w: width, h: height }), mouse);
