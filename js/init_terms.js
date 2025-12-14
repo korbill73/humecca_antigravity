@@ -2,10 +2,10 @@
 // 브라우저 콘솔에서 실행하거나 HTML에 추가
 
 (function () {
-    console.log('📝 약관 데이터 초기화 중...');
+   console.log('📝 약관 데이터 초기화 중...');
 
-    // 1. 이용약관
-    const termsContent = `휴메카 서비스 이용약관
+   // 1. 이용약관
+   const termsContent = `휴메카 서비스 이용약관
 
 제1조 (목적)
 본 약관은 (주)휴메카(이하 "회사"라 합니다)가 제공하는 서버 호스팅, 클라우드, IDC 등의 서비스(이하 "서비스"라 합니다)의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
@@ -64,8 +64,8 @@
 문의: 02-418-7766
 (주)휴메카 | 서울특별시 강남구 언주로 517길 KT 강남IDC B2`;
 
-    // 2. 개인정보처리방침
-    const privacyContent = `개인정보처리방침
+   // 2. 개인정보처리방침
+   const privacyContent = `개인정보처리방침
 
 (주)휴메카(이하 "회사"라 합니다)는 개인정보 보호법 제30조에 따라 정보주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리방침을 수립·공개합니다.
 
@@ -144,8 +144,8 @@
 문의: 02-418-7766
 개인정보보호책임자: 박제군 (admin@humecca.co.kr)`;
 
-    // 3. 회원약관
-    const memberContent = `회원 서비스 약관
+   // 3. 회원약관
+   const memberContent = `회원 서비스 약관
 
 제1조 (목적)
 본 약관은 (주)휴메카(이하 "회사"라 합니다)가 운영하는 온라인 회원 서비스의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
@@ -218,15 +218,14 @@
 문의: 02-418-7766
 (주)휴메카 | 서울특별시 강남구 언주로 517길 KT 강남IDC B2`;
 
-    // LocalStorage에 저장
-    localStorage.setItem('humecca_term_v4_terms', termsContent);
-    localStorage.setItem('humecca_term_v4_privacy', privacyContent);
-    localStorage.setItem('humecca_term_v4_member', memberContent);
+   // LocalStorage에 저장
+   localStorage.setItem('humecca_term_v4_terms', termsContent);
+   localStorage.setItem('humecca_term_v4_privacy', privacyContent);
+   localStorage.setItem('humecca_term_v4_member', memberContent);
 
-    console.log('✅ 약관 데이터 초기화 완료!');
-    console.log('- 이용약관 저장 완료');
-    console.log('- 개인정보처리방침 저장 완료');
-    console.log('- 회원약관 저장 완료');
-
-    alert('약관 데이터가 성공적으로 저장되었습니다!\n이제 푸터의 약관 링크를 클릭해보세요.');
+   console.log('✅ 약관 데이터 초기화 완료!');
+   console.log('- 이용약관 저장 완료');
+   console.log('- 개인정보처리방침 저장 완료');
+   console.log('- 회원약관 저장 완료');
 })();
+```
