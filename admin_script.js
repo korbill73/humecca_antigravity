@@ -824,42 +824,22 @@ window.loadTermEditor = async (type) => {
 
     const textarea = document.getElementById('term-content');
     if (!textarea) return;
-    textarea.value = '로딩중...';
 
-    // Try LocalStorage first (for footer compatibility)
-    let content = localStorage.getItem(`humecca_term_v4_${type}`);
-
-    if (content) {
-        // Found in LocalStorage
-        textarea.value = content;
-    } else {
-        // Fallback to Supabase DB
-        const { data, error } = await supabase.from('terms').select('content').eq('type', type).single();
-        if (data) {
-            textarea.value = data.content;
-            // Sync to LocalStorage
-            localStorage.setItem(`humecca_term_v4_${type}`, data.content);
-        } else {
-            textarea.value = '';
-        }
-    }
+    // Load from LocalStorage ONLY
+    const content = localStorage.getItem(`humecca_term_v4_${type}`) || '';
+    textarea.value = content;
 };
 
 window.saveCurrentTerm = async () => {
     const content = document.getElementById('term-content').value;
-    if (!content) return;
-
-    // Save to Supabase DB
-    const { error } = await supabase.from('terms').upsert({ type: currentTermType, content: content }, { onConflict: 'type' });
-
-    // ALSO save to LocalStorage for footer compatibility
-    localStorage.setItem(`humecca_term_v4_${currentTermType}`, content);
-
-    if (error) {
-        alert('저장 실패: ' + error.message);
-    } else {
-        alert('저장되었습니다. (DB + LocalStorage)');
+    if (!content) {
+        alert('내용을 입력해주세요.');
+        return;
     }
+
+    // Save to LocalStorage ONLY
+    localStorage.setItem(`humecca_term_v4_${currentTermType}`, content);
+    alert('저장되었습니다! (LocalStorage)');
 };
 
 window.resetTermToDefault = () => {
