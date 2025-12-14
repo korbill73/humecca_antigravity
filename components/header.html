@@ -14,8 +14,8 @@
                     <a href="sub_cloud_intro.html" class="nav-link">
                         클라우드 <i class="fas fa-chevron-down"></i>
                     </a>
-                    <div class="dropdown-menu mega-menu" style="min-width: 720px;">
-                        <a href="sub_cloud_intro.html" class="dropdown-item">
+                    <div class="dropdown-menu mega-menu" style="min-width: 360px;">
+                        <a href="sub_cloud.html#intro" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fas fa-cloud"></i></div>
                             <div class="dropdown-text">
                                 <span class="dropdown-title">클라우드 소개</span>
@@ -24,48 +24,77 @@
                         </a>
                         <p class="mega-section-title">KT Cloud 서비스</p>
                         <div class="mega-grid">
-                            <a href="sub_cloud_server.html" class="dropdown-item">
+                            <a href="sub_cloud.html#server" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fas fa-server"></i></div>
                                 <div class="dropdown-text"><span class="dropdown-title">Server</span></div>
                             </a>
-                            <a href="sub_cloud_db.html" class="dropdown-item">
+                            <a href="sub_cloud.html#db" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fas fa-database"></i></div>
                                 <div class="dropdown-text"><span class="dropdown-title">데이터베이스</span></div>
                             </a>
-                            <a href="sub_cloud_storage.html" class="dropdown-item">
+                            <a href="sub_cloud.html#storage" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fas fa-hdd"></i></div>
                                 <div class="dropdown-text"><span class="dropdown-title">스토리지/CDN</span></div>
                             </a>
-                            <a href="sub_cloud_network.html" class="dropdown-item">
+                            <a href="sub_cloud.html#network" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fas fa-network-wired"></i></div>
                                 <div class="dropdown-text"><span class="dropdown-title">네트워크</span></div>
                             </a>
-                            <a href="sub_cloud_management.html" class="dropdown-item">
+                            <a href="sub_cloud.html#management" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fas fa-tasks"></i></div>
                                 <div class="dropdown-text"><span class="dropdown-title">매니지먼트</span></div>
                             </a>
-                            <a href="sub_cloud_vdi.html" class="dropdown-item">
+                            <a href="sub_cloud.html#vdi" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fas fa-desktop"></i></div>
                                 <div class="dropdown-text"><span class="dropdown-title">VDI</span></div>
                             </a>
-                            <a href="sub_cloud_private.html" class="dropdown-item">
+                            <a href="sub_cloud.html#private" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fas fa-lock"></i></div>
                                 <div class="dropdown-text"><span class="dropdown-title">Private Cloud</span></div>
                             </a>
                         </div>
 
                         <div style="margin-top: 12px; border-top: 1px solid #eee; padding-top: 12px;">
-                            <a href="sub_cloud_limits.html" class="dropdown-item">
+                            <a href="sub_cloud.html#limits" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fas fa-info-circle"></i></div>
                                 <div class="dropdown-text"><span class="dropdown-title">서비스별 제한사항</span></div>
                             </a>
                         </div>
 
-                        <div class="mega-cta"
-                            style="position: relative; width: 100%; text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; clear: both;">
-                            <a href="https://login.humecca.co.kr" target="_blank"
-                                style="display: inline-block; padding: 10px 20px; background: #fff; border: 1px solid #e94d36; color: #e94d36; border-radius: 6px; text-decoration: none; font-weight: bold;">
-                                <i class="fas fa-cloud"></i> 서비스 콘솔 바로가기 <i class="fas fa-external-link-alt"></i>
+                        <div class="mega-cta" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+                            <style>
+                                .btn-service-shortcut {
+                                    display: flex !important;
+                                    align-items: center !important;
+                                    justify-content: center !important;
+                                    gap: 8px !important;
+                                    width: 100% !important;
+                                    padding: 14px 20px !important;
+                                    background-color: #EF4444 !important;
+                                    color: #FFFFFF !important;
+                                    border-radius: 8px !important;
+                                    font-weight: 700 !important;
+                                    font-size: 15px !important;
+                                    text-decoration: none !important;
+                                    transition: all 0.2s ease !important;
+                                    border: 2px solid #EF4444 !important;
+                                }
+
+                                .btn-service-shortcut:hover {
+                                    background-color: #DC2626 !important;
+                                    color: #FFFFFF !important;
+                                    transform: translateY(-2px);
+                                    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+                                }
+
+                                .btn-service-shortcut i {
+                                    color: #FFFFFF !important;
+                                }
+                            </style>
+                            <a href="https://login.humecca.co.kr" target="_blank" class="btn-service-shortcut"
+                                style="color: #FFFFFF !important;">
+                                <i class="fas fa-cloud" style="color: #FFFFFF !important;"></i> 서비스 콘솔 바로가기 <i
+                                    class="fas fa-external-link-alt" style="color: #FFFFFF !important;"></i>
                             </a>
                         </div>
                     </div>
@@ -196,18 +225,27 @@
                 <!-- 6. Enterprise Solutions -->
                 <li class="nav-item">
                     <a href="sub_sol_ms365.html" class="nav-link">기업솔루션 <i class="fas fa-chevron-down"></i></a>
-                    <div class="dropdown-menu">
+                    <div class="dropdown-menu" style="min-width: 320px;">
                         <a href="sub_sol_ms365.html" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fab fa-microsoft"></i></div>
-                            <div class="dropdown-text"><span class="dropdown-title">MS 365</span></div>
+                            <div class="dropdown-text">
+                                <span class="dropdown-title">MS 365</span>
+                                <span class="dropdown-desc">스마트한 업무 환경</span>
+                            </div>
                         </a>
                         <a href="sub_sol_groupware.html" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fas fa-envelope-open-text"></i></div>
-                            <div class="dropdown-text"><span class="dropdown-title">네이버웍스</span></div>
+                            <div class="dropdown-text">
+                                <span class="dropdown-title">네이버웍스</span>
+                                <span class="dropdown-desc">올인원 협업 툴</span>
+                            </div>
                         </a>
                         <a href="sub_web_custom.html" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fas fa-laptop-code"></i></div>
-                            <div class="dropdown-text"><span class="dropdown-title">홈페이지 제작</span></div>
+                            <div class="dropdown-text">
+                                <span class="dropdown-title">홈페이지 제작</span>
+                                <span class="dropdown-desc">비즈니스 맞춤형 제작</span>
+                            </div>
                         </a>
                     </div>
                 </li>
@@ -215,18 +253,27 @@
                 <!-- 7. Company -->
                 <li class="nav-item">
                     <a href="sub_company_intro.html" class="nav-link">회사소개 <i class="fas fa-chevron-down"></i></a>
-                    <div class="dropdown-menu">
+                    <div class="dropdown-menu" style="min-width: 320px; left: 0; right: auto; transform: none;">
                         <a href="sub_company_intro.html#intro" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fas fa-info-circle"></i></div>
-                            <div class="dropdown-text"><span class="dropdown-title">회사소개</span></div>
+                            <div class="dropdown-text">
+                                <span class="dropdown-title">회사소개</span>
+                                <span class="dropdown-desc">IT 인프라 파트너</span>
+                            </div>
                         </a>
                         <a href="sub_company_intro.html#history" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fas fa-history"></i></div>
-                            <div class="dropdown-text"><span class="dropdown-title">연혁</span></div>
+                            <div class="dropdown-text">
+                                <span class="dropdown-title">연혁</span>
+                                <span class="dropdown-desc">31년의 성장 스토리</span>
+                            </div>
                         </a>
                         <a href="sub_company_intro.html#location" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fas fa-map-marker-alt"></i></div>
-                            <div class="dropdown-text"><span class="dropdown-title">오시는 길</span></div>
+                            <div class="dropdown-text">
+                                <span class="dropdown-title">오시는 길</span>
+                                <span class="dropdown-desc">본사 및 IDC 위치</span>
+                            </div>
                         </a>
                     </div>
                 </li>
@@ -239,10 +286,13 @@
         </nav>
 
         <!-- Header Buttons -->
-        <div class="header-buttons">
+        <!-- Header Buttons -->
+        <div class="header-buttons" style="display:flex; align-items:center;">
             <a href="https://login.humecca.co.kr/" class="btn" style="color: #64748b; font-weight: 600;">
                 <i class="fas fa-power-off" style="margin-right:6px; color:#EF4444;"></i> 로그인
             </a>
+            <span
+                style="font-size:10px; color: #ff0000; margin-left:24px; font-weight:bold; position:relative; top:1px;">v.20251214.1735</span>
         </div>
         <!-- Mobile Menu Button -->
         <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>

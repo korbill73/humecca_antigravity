@@ -63,24 +63,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
 
-            // 2. Update Dots (Style-based transition)
+            // 2. Update Dots
             if (dots.length > 0) {
                 dots.forEach((dot, i) => {
                     if (i === currentSlide) {
                         dot.classList.add('active');
-                        // Force styles for visibility
                         dot.style.width = '40px';
                         dot.style.background = '#EF4444';
                         dot.style.opacity = '1';
                     } else {
                         dot.classList.remove('active');
-                        // Reset styles
                         dot.style.width = '20px';
                         dot.style.background = 'rgba(255,255,255,0.2)';
                         dot.style.opacity = '1';
-                        // Ensure background is reset specifically
                     }
                 });
+            }
+
+            // 3. Update Counter
+            const slideNumber = document.querySelector('.slide-number');
+            if (slideNumber) {
+                slideNumber.textContent = currentSlide + 1;
             }
         }
 
@@ -118,6 +121,27 @@ document.addEventListener('DOMContentLoaded', function () {
             heroContent.addEventListener('mouseleave', startSlideTimer);
         }
 
+        // Event Listeners: Arrows
+        const prevBtn = document.querySelector('.hero-arrow.prev');
+        const nextBtn = document.querySelector('.hero-arrow.next');
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                stopSlideTimer();
+                showSlide(currentSlide - 1);
+                startSlideTimer();
+            });
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                stopSlideTimer();
+                nextSlide();
+                startSlideTimer();
+            });
+        }
+
         // Initialize (Show first slide explicitly to set dots)
         // Note: HTML usually has first slide active, but JS needs to sync dots.
         // We'll trust HTML 'active' state for LCP, but run showSlide(0) to ensure dots sync IF not set.
@@ -127,6 +151,94 @@ document.addEventListener('DOMContentLoaded', function () {
         showSlide(0);
         startSlideTimer();
     }
+    // ===================================
+    // Customer Logos Grid (Supabase Integration)
+    // ===================================
+    const logoGrid = document.getElementById('customer-logos-grid');
+
+    async function loadCustomerLogos() {
+        if (!logoGrid) return;
+
+        // Wait for Supabase to be available
+        if (typeof supabase === 'undefined' && window.sb) {
+            window.supabase = window.sb; // Fallback
+        }
+
+        if (typeof supabase === 'undefined') {
+            console.warn('⚠️ Supabase client not found. Skipping customer logo fetch.');
+            return;
+        }
+
+        try {
+            console.log('🔄 Fetching customer logos from DB...');
+            const { data, error } = await supabase
+                .from('customers')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(15);
+
+            if (error) throw error;
+
+            if (data && data.length > 0) {
+                logoGrid.innerHTML = ''; // Clear existing content
+
+                data.forEach(customer => {
+                    const logoCard = document.createElement('div');
+                    logoCard.className = 'logo-card';
+                    // Inline styles removed to rely on styles.css for premium hover effects
+
+
+                    // Check for logo_url or logo_path
+                    const logoUrl = customer.logo_url || customer.logo_path || customer.logo;
+
+                    if (logoUrl) {
+                        const img = document.createElement('img');
+                        img.src = logoUrl;
+                        img.alt = customer.name;
+                        img.style.maxHeight = '40px';
+                        img.style.maxWidth = '80%';
+                        img.style.objectFit = 'contain';
+
+                        // Error fallback to text
+                        img.onerror = function () {
+                            this.style.display = 'none';
+                            const text = document.createElement('span');
+                            text.textContent = customer.name;
+                            text.style.cssText = 'color: #64748b; font-weight: 600; font-size: 14px; text-align: center; padding: 0 10px; word-break: keep-all;';
+                            logoCard.appendChild(text);
+                        };
+
+                        logoCard.appendChild(img);
+                    } else {
+                        const text = document.createElement('span');
+                        text.textContent = customer.name;
+                        text.style.cssText = `
+                            color: #64748b;
+                            font-weight: 600;
+                            font-size: 14px;
+                            text-align: center;
+                            padding: 0 10px;
+                            word-break: keep-all;
+                        `;
+                        logoCard.appendChild(text);
+                    }
+                    logoGrid.appendChild(logoCard);
+                });
+                console.log(`✅ Loaded ${data.length} customers from DB.`);
+            } else {
+                console.log('ℹ️ No customers found in DB.');
+                logoGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #94a3b8;">등록된 고객사가 없습니다.</p>';
+            }
+
+        } catch (err) {
+            console.error('❌ Failed to fetch customers:', err);
+            // Optional: fallback to hardcoded list if DB fails? 
+            // For now, just log error as requested.
+        }
+    }
+
+    // specific call
+    loadCustomerLogos();
 });
 
 // ===================================

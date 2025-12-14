@@ -3,6 +3,12 @@
  * 헤더, 푸터 등 공통 컴포넌트를 동적으로 로드합니다.
  */
 
+// [Configuration] Current Application Version
+// Update this value manually whenever a deployment/update occurs
+const APP_VERSION = 'v.20251214.1735';
+
+
+
 // 페이지 로드 시 공통 컴포넌트 로드
 // [Fallback] openAppModal 정의 (스크립트 로드 지연 방지)
 if (typeof window.openAppModal === 'undefined') {
@@ -59,8 +65,8 @@ function loadComponent(placeholderId, componentPath, callback) {
     if (!placeholder) return;
 
     // Cache Busting: Add timestamp to force reload of components
-    // This solves issues where updated header.html is not reflected on live site
     const version = new Date().getTime();
+    console.log(`[Loader] Loading component: ${componentPath} (v=${version})`);
     const separator = componentPath.includes('?') ? '&' : '?';
     const pathWithVersion = `${componentPath}${separator}v=${version}`;
 
@@ -85,6 +91,11 @@ function loadComponent(placeholderId, componentPath, callback) {
                 }
                 document.body.appendChild(newScript);
             });
+
+            // [Dynamic Version Injection]
+            // 헤더에 있는 버전 표시를 현재 APP_VERSION으로 강제 업데이트
+            updateHeaderVersion(placeholder);
+
 
             // 콜백 실행
             if (callback) callback();
@@ -125,6 +136,10 @@ function loadComponentViaFallback(placeholderId, componentPath, callback) {
             }
             document.body.appendChild(newScript);
         });
+
+        // [Dynamic Version Injection]
+        updateHeaderVersion(placeholder);
+
 
         if (callback) callback();
     }
@@ -213,10 +228,28 @@ function initHeaderScripts() {
 }
 
 
+
+
 /**
- * 인라인 헤더 HTML 반환 (로컬 개발 환경용)
- * components/header.html 내용과 동일하게 유지
+ * [Helper] Update Version String in Header
  */
+function updateHeaderVersion(container) {
+    // 1. 헤더 우측 상단 버전 (빨간색 텍스트) 찾기
+    // 보통 "v.202xxxx..."형태의 텍스트를 가진 span을 찾거나, 특정 스타일로 찾음
+    // 여기서는 가장 확실하게 텍스트 내용을 포함하거나, 구조적으로 접근.
+    // 기존 코드: <span style="... color: #ff0000 ...">v.2025...</span>
+
+    // 더 확실한 방법: data-version-tag 속성을 헤더 HTML에 추가하는 것이 좋으나,
+    // 현재는 기존 구조 유지하며 텍스트 노드나 스타일로 식별.
+    const spans = container.querySelectorAll('span');
+    spans.forEach(span => {
+        if (span.textContent.includes('v.202') || span.style.color === 'rgb(255, 0, 0)' || span.style.color === '#ff0000') {
+            span.textContent = APP_VERSION;
+            console.log(`[Loader] Updated header version to ${APP_VERSION}`);
+        }
+    });
+}
+
 function getInlineHeader() {
     return `<!-- ========== HEADER (Centralized) ========== -->
 <header class="header">
@@ -234,8 +267,8 @@ function getInlineHeader() {
                     <a href="sub_cloud_intro.html" class="nav-link">
                         클라우드 <i class="fas fa-chevron-down"></i>
                     </a>
-                    <div class="dropdown-menu mega-menu">
-                        <a href="sub_cloud_intro.html" class="dropdown-item">
+                    <div class="dropdown-menu mega-menu" style="min-width: 360px;">
+                        <a href="sub_cloud.html#intro" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fas fa-cloud"></i></div>
                             <div class="dropdown-text">
                                 <span class="dropdown-title">클라우드 소개</span>
@@ -280,10 +313,41 @@ function getInlineHeader() {
                                 <div class="dropdown-text"><span class="dropdown-title">서비스별 제한사항</span></div>
                             </a>
                         </div>
-                        
-                        <div class="mega-cta">
-                            <a href="https://login.humecca.co.kr" target="_blank">
-                                <i class="fas fa-cloud"></i> 서비스 바로 가기 <i class="fas fa-external-link-alt"></i>
+
+                        <div class="mega-cta" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+                            <style>
+                                .btn-service-shortcut {
+                                    display: flex !important;
+                                    align-items: center !important;
+                                    justify-content: center !important;
+                                    gap: 8px !important;
+                                    width: 100% !important;
+                                    padding: 14px 20px !important;
+                                    background-color: #EF4444 !important;
+                                    color: #FFFFFF !important;
+                                    border-radius: 8px !important;
+                                    font-weight: 700 !important;
+                                    font-size: 15px !important;
+                                    text-decoration: none !important;
+                                    transition: all 0.2s ease !important;
+                                    border: 2px solid #EF4444 !important;
+                                }
+
+                                .btn-service-shortcut:hover {
+                                    background-color: #DC2626 !important;
+                                    color: #FFFFFF !important;
+                                    transform: translateY(-2px);
+                                    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+                                }
+
+                                .btn-service-shortcut i {
+                                    color: #FFFFFF !important;
+                                }
+                            </style>
+                            <a href="https://login.humecca.co.kr" target="_blank" class="btn-service-shortcut"
+                                style="color: #FFFFFF !important;">
+                                <i class="fas fa-cloud" style="color: #FFFFFF !important;"></i> 서비스 콘솔 바로가기 <i
+                                    class="fas fa-external-link-alt" style="color: #FFFFFF !important;"></i>
                             </a>
                         </div>
                     </div>
@@ -339,7 +403,9 @@ function getInlineHeader() {
                                 <div class="dropdown-text"><span class="dropdown-title">클린존</span></div>
                             </a>
                         </div>
-                        <p class="mega-section-title" style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">System & Data Security</p>
+                        <p class="mega-section-title"
+                            style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">System & Data
+                            Security</p>
                         <div class="mega-grid">
                             <a href="sub_security.html" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fas fa-certificate"></i></div>
@@ -363,80 +429,109 @@ function getInlineHeader() {
 
                 <!-- 5. Addon -->
                 <li class="nav-item">
-                    <a href="#" class="nav-link">부가서비스 <i class="fas fa-chevron-down"></i></a>
+                    <a href="sub_addon_software.html" class="nav-link">부가서비스 <i class="fas fa-chevron-down"></i></a>
                     <div class="dropdown-menu mega-menu" style="min-width: 400px;">
-                         <div class="menu-list" style="padding: 10px 0;">
+                        <div class="menu-list" style="padding: 10px 0;">
                             <a href="sub_addon_software.html" class="dropdown-item icon-left">
                                 <div class="icon-box"><i class="fas fa-window-maximize"></i></div>
-                                <div class="text-box"><span class="title">소프트웨어</span><span class="desc">라이선스 임대</span></div>
+                                <div class="text-box"><span class="title">소프트웨어</span><span class="desc">라이선스 임대</span>
+                                </div>
                             </a>
                             <a href="sub_addon_backup.html" class="dropdown-item icon-left">
                                 <div class="icon-box"><i class="fas fa-database"></i></div>
-                                <div class="text-box"><span class="title">백업</span><span class="desc">데이터 보호</span></div>
+                                <div class="text-box"><span class="title">백업</span><span class="desc">데이터 보호</span>
+                                </div>
                             </a>
                             <a href="sub_addon_ha.html" class="dropdown-item icon-left">
                                 <div class="icon-box"><i class="fas fa-layer-group"></i></div>
-                                <div class="text-box"><span class="title">HA(고가용성)</span><span class="desc">무중단 서비스</span></div>
+                                <div class="text-box"><span class="title">HA(고가용성)</span><span class="desc">무중단
+                                        서비스</span></div>
                             </a>
                             <a href="sub_addon_loadbalancing.html" class="dropdown-item icon-left">
                                 <div class="icon-box"><i class="fas fa-wave-square"></i></div>
-                                <div class="text-box"><span class="title">로드밸런싱</span><span class="desc">트래픽 분산</span></div>
+                                <div class="text-box"><span class="title">로드밸런싱</span><span class="desc">트래픽 분산</span>
+                                </div>
                             </a>
                             <a href="sub_addon_cdn.html" class="dropdown-item icon-left">
                                 <div class="icon-box"><i class="fas fa-bolt"></i></div>
-                                <div class="text-box"><span class="title">CDN</span><span class="desc">속도 가속</span></div>
+                                <div class="text-box"><span class="title">CDN</span><span class="desc">속도 가속</span>
+                                </div>
                             </a>
-                             <a href="sub_addon_recovery.html" class="dropdown-item icon-left">
+                            <a href="sub_addon_recovery.html" class="dropdown-item icon-left">
                                 <div class="icon-box"><i class="fas fa-undo"></i></div>
-                                <div class="text-box"><span class="title">데이터 복구</span><span class="desc">데이터 손상 복원</span></div>
+                                <div class="text-box"><span class="title">데이터 복구</span><span class="desc">데이터 손상
+                                        복원</span></div>
                             </a>
                             <a href="sub_addon_monitoring.html" class="dropdown-item icon-left">
                                 <div class="icon-box"><i class="fas fa-desktop"></i></div>
-                                <div class="text-box"><span class="title">모니터링</span><span class="desc">실시간 감시</span></div>
+                                <div class="text-box"><span class="title">모니터링</span><span class="desc">실시간 감시</span>
+                                </div>
                             </a>
+                        </div>
+                        <div class="menu-footer"
+                            style="border-top: 1px solid #f3f4f6; padding: 12px; text-align: center; background: #f9fafb;">
+                            <a href="sub_addon_software.html" style="color: #dc2626; font-size: 14px; font-weight: 500;">전체 부가서비스 보기</a>
                         </div>
                     </div>
                 </li>
 
                 <!-- 6. Enterprise Solutions -->
                 <li class="nav-item">
-                    <a href="#" class="nav-link">기업솔루션 <i class="fas fa-chevron-down"></i></a>
-                    <div class="dropdown-menu">
-                         <a href="sub_sol_ms365.html" class="dropdown-item">
+                    <a href="sub_sol_ms365.html" class="nav-link">기업솔루션 <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-menu" style="min-width: 320px;">
+                        <a href="sub_sol_ms365.html" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fab fa-microsoft"></i></div>
-                            <div class="dropdown-text"><span class="dropdown-title">MS 365</span></div>
+                            <div class="dropdown-text">
+                                <span class="dropdown-title">MS 365</span>
+                                <span class="dropdown-desc">스마트한 업무 환경</span>
+                            </div>
                         </a>
                         <a href="sub_sol_groupware.html" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fas fa-envelope-open-text"></i></div>
-                            <div class="dropdown-text"><span class="dropdown-title">네이버웍스</span></div>
+                            <div class="dropdown-text">
+                                <span class="dropdown-title">네이버웍스</span>
+                                <span class="dropdown-desc">올인원 협업 툴</span>
+                            </div>
                         </a>
                         <a href="sub_web_custom.html" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fas fa-laptop-code"></i></div>
-                            <div class="dropdown-text"><span class="dropdown-title">홈페이지 제작</span></div>
+                            <div class="dropdown-text">
+                                <span class="dropdown-title">홈페이지 제작</span>
+                                <span class="dropdown-desc">비즈니스 맞춤형 제작</span>
+                            </div>
                         </a>
                     </div>
                 </li>
 
-                <!-- 7. Company (Added Icons, Adjusted Position) -->
+                <!-- 7. Company -->
                 <li class="nav-item">
                     <a href="sub_company_intro.html" class="nav-link">회사소개 <i class="fas fa-chevron-down"></i></a>
-                    <div class="dropdown-menu">
+                    <div class="dropdown-menu" style="min-width: 320px; left: 0; right: auto; transform: none;">
                         <a href="sub_company_intro.html#intro" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fas fa-info-circle"></i></div>
-                            <div class="dropdown-text"><span class="dropdown-title">회사소개</span></div>
+                            <div class="dropdown-text">
+                                <span class="dropdown-title">회사소개</span>
+                                <span class="dropdown-desc">IT 인프라 파트너</span>
+                            </div>
                         </a>
                         <a href="sub_company_intro.html#history" class="dropdown-item">
-                             <div class="dropdown-icon"><i class="fas fa-history"></i></div>
-                            <div class="dropdown-text"><span class="dropdown-title">연혁</span></div>
+                            <div class="dropdown-icon"><i class="fas fa-history"></i></div>
+                            <div class="dropdown-text">
+                                <span class="dropdown-title">연혁</span>
+                                <span class="dropdown-desc">31년의 성장 스토리</span>
+                            </div>
                         </a>
                         <a href="sub_company_intro.html#location" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fas fa-map-marker-alt"></i></div>
-                            <div class="dropdown-text"><span class="dropdown-title">오시는 길</span></div>
+                            <div class="dropdown-text">
+                                <span class="dropdown-title">오시는 길</span>
+                                <span class="dropdown-desc">본사 및 IDC 위치</span>
+                            </div>
                         </a>
                     </div>
                 </li>
 
-                <!-- 8. Customer Center (Added Icons) -->
+                <!-- 8. Customer Center -->
                 <li class="nav-item">
                     <a href="sub_support.html" class="nav-link">고객센터</a>
                 </li>
@@ -444,10 +539,12 @@ function getInlineHeader() {
         </nav>
 
         <!-- Header Buttons -->
-        <div class="header-buttons">
+        <!-- Header Buttons -->
+        <div class="header-buttons" style="display:flex; align-items:center;">
             <a href="https://login.humecca.co.kr/" class="btn" style="color: #64748b; font-weight: 600;">
                 <i class="fas fa-power-off" style="margin-right:6px; color:#EF4444;"></i> 로그인
             </a>
+            <span style="font-size:10px; color: #ff0000; margin-left:24px; font-weight:bold; position:relative; top:1px;">v.20251214.1735</span>
         </div>
         <!-- Mobile Menu Button -->
         <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>

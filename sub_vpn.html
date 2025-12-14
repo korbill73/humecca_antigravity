@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VPN 전용선 - HUMECCA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css?v=3.5">
+    <link rel="stylesheet" href="styles.css?v=3.18">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
         rel="stylesheet">
     <script src="js/vpn_data.js"></script>
@@ -53,20 +53,317 @@
 
 
     <!-- Hero Section -->
-    <section class="sw-hero" style="background-color: #0f172a;">
-        <div class="container">
+    <section class="sw-hero" style="background-color: #0f172a; position: relative; overflow: hidden;">
+        <!-- Last Updated: 2025-12-14 14:15:00 (KST) - Sparking Head & Dynamic Path -->
+
+        <!-- Full Width Canvas Background -->
+        <canvas id="space-canvas"
+            style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
+
+        <div class="container" style="position: relative; z-index: 10;">
             <div style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 20px;">
                 네트워크 <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 8px;"></i> VPN 전용선
             </div>
-            <div
-                style="width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; border: 1px solid rgba(255,255,255,0.2);">
-                <i class="fas fa-network-wired" style="font-size: 30px; color: white;"></i>
-            </div>
-            <h1>VPN 전용선 서비스</h1>
+
+            <h1
+                style="font-size: 48px; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px; color: white; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+                VPN 전용선 서비스</h1>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const version = '251214.1430';
+                    console.log(`%cVPN Effect Loaded: ${version}`, 'background: #222; color: #bada55; font-size: 12px; padding: 4px;');
+
+                    const canvas = document.getElementById('space-canvas');
+                    const hero = document.querySelector('.sw-hero');
+
+                    if (!canvas || !hero) return;
+
+                    const ctx = canvas.getContext('2d');
+                    let width, height;
+
+                    // --- Config ---
+                    const STAR_COUNT = 150;
+                    const COMET_SPEED = 0.3; // Even Faster
+                    const TRAIL_RATE = 12; // Denser trail
+                    const SPARK_RATE = 6;  // More sparks
+
+                    // --- State ---
+                    const stars = [];
+                    const particles = []; // Trail
+                    const sparks = [];    // Explosive Sparks
+                    const comet = {
+                        x: 0,
+                        y: 0,
+                        targetX: 0,
+                        targetY: 0,
+                        angle: 0,
+                        autoMode: true
+                    };
+
+                    // --- Classes ---
+                    class Star {
+                        constructor() {
+                            this.reset();
+                            this.y = Math.random() * height;
+                        }
+                        reset() {
+                            this.x = Math.random() * width;
+                            this.y = -10;
+                            this.size = Math.random() * 2 + 0.5;
+                            this.speed = Math.random() * 0.5 + 0.1;
+                            this.alpha = Math.random();
+                            this.twinkleDir = Math.random() > 0.5 ? 0.02 : -0.02;
+                        }
+                        update() {
+                            this.y += this.speed;
+                            this.alpha += this.twinkleDir;
+                            if (this.alpha > 1 || this.alpha < 0.2) this.twinkleDir *= -1;
+                            if (this.y > height) {
+                                this.y = -10;
+                                this.x = Math.random() * width;
+                            }
+                        }
+                        draw() {
+                            ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                            ctx.beginPath();
+                            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+
+                    class TrailParticle {
+                        constructor(x, y, angle) {
+                            this.x = x;
+                            this.y = y;
+                            this.life = 1.0;
+                            this.decay = Math.random() * 0.005 + 0.005; // Medium-Long Life
+
+                            // Spread for beam tail
+                            const spread = (Math.random() - 0.5) * 0.3;
+                            const speed = Math.random() * 0.2;
+
+                            this.vx = Math.cos(angle + Math.PI + spread) * speed;
+                            this.vy = Math.sin(angle + Math.PI + spread) * speed;
+
+                            this.size = Math.random() * 4 + 1;
+                            // Cool colors
+                            const r = Math.random();
+                            this.color = r > 0.6 ? '#60A5FA' : (r > 0.3 ? '#00ffff' : '#ffffff');
+                        }
+                        update() {
+                            this.x += this.vx;
+                            this.y += this.vy;
+                            this.life -= this.decay;
+                            if (this.size > 0.5) this.size *= 0.98;
+                        }
+                        draw() {
+                            ctx.fillStyle = this.color;
+                            ctx.globalAlpha = this.life * 0.8;
+                            ctx.beginPath();
+                            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.globalAlpha = 1.0;
+                        }
+                    }
+
+                    class Spark {
+                        constructor(x, y, angle) {
+                            this.x = x;
+                            this.y = y;
+                            this.life = 1.0;
+                            this.decay = Math.random() * 0.04 + 0.02; // Short & Violent
+
+                            // Eject sparks mostly backwards but with wide angle (splashing)
+                            // Angle is the comet's forward angle.
+                            // Sparks fly in range: angle + PI +/- 1.5 rad (mostly back)
+                            const ejectAngle = angle + Math.PI + (Math.random() - 0.5) * 2.5;
+                            const speed = Math.random() * 4 + 2; // Fast ejection
+
+                            this.vx = Math.cos(ejectAngle) * speed;
+                            this.vy = Math.sin(ejectAngle) * speed;
+
+                            this.size = Math.random() * 3 + 1;
+                            this.color = Math.random() > 0.5 ? '#ffffff' : '#A5F3FC';
+                        }
+                        update() {
+                            this.x += this.vx;
+                            this.y += this.vy;
+                            this.life -= this.decay;
+                            this.size *= 0.95;
+                        }
+                        draw() {
+                            ctx.fillStyle = this.color;
+                            ctx.globalAlpha = this.life;
+                            ctx.beginPath();
+                            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.globalAlpha = 1.0;
+                        }
+                    }
+
+                    // --- Init ---
+                    function resize() {
+                        const rect = hero.getBoundingClientRect();
+                        width = canvas.width = rect.width;
+                        height = canvas.height = rect.height;
+
+                        stars.length = 0;
+                        for (let i = 0; i < STAR_COUNT; i++) stars.push(new Star());
+
+                        // Start pos if clean
+                        if (comet.x === 0) {
+                            comet.x = -50;
+                            comet.y = height * 0.5;
+                        }
+                    }
+                    window.addEventListener('resize', resize);
+                    resize();
+
+                    // --- Interaction ---
+                    hero.addEventListener('mousemove', (e) => {
+                        const rect = hero.getBoundingClientRect();
+                        comet.targetX = e.clientX - rect.left;
+                        comet.targetY = e.clientY - rect.top;
+                        comet.autoMode = false;
+                    });
+
+                    hero.addEventListener('mouseleave', () => {
+                        comet.autoMode = true;
+                    });
+
+                    // --- Loop ---
+                    function animate() {
+                        ctx.clearRect(0, 0, width, height);
+
+                        stars.forEach(star => {
+                            star.update();
+                            star.draw();
+                        });
+
+                        if (comet.autoMode) {
+                            const t = Date.now() / 1000;
+                            // X: Move constantly right
+                            const speedPixelPerSec = width * 0.3;
+                            comet.targetX = (t * speedPixelPerSec) % (width + 300) - 150;
+
+                            // Y: Organic Path
+                            comet.targetY = (height * 0.5)
+                                + Math.sin(t * 1.2) * (height * 0.15)
+                                + Math.cos(t * 2.5) * (height * 0.08);
+
+                            // Snap if wrapping
+                            if (comet.targetX < -140 && comet.x > width) {
+                                comet.x = comet.targetX;
+                                comet.y = comet.targetY;
+                            }
+                        }
+
+                        // Movement Physics
+                        const dx = comet.targetX - comet.x;
+                        const dy = comet.targetY - comet.y;
+
+                        if (Math.abs(dx) > width * 0.9) {
+                            comet.x = comet.targetX;
+                            comet.y = comet.targetY;
+                        } else {
+                            // High inertia follow
+                            comet.x += dx * (comet.autoMode ? 0.2 : COMET_SPEED);
+                            comet.y += dy * (comet.autoMode ? 0.2 : COMET_SPEED);
+                        }
+
+                        comet.angle = Math.atan2(dy, dx);
+                        const vTotal = Math.sqrt(dx * dx + dy * dy); // Speed magnitude
+
+                        // 1. Emit Trail (Beam Body)
+                        // Fill gaps
+                        const steps = Math.min(20, Math.floor(vTotal * 0.5) + 1);
+                        for (let s = 0; s < steps; s++) {
+                            const ratio = s / steps;
+                            // Interpolated position
+                            const ix = comet.x - (comet.x - (comet.x - dx * 0.2)) * ratio; // Approximation
+                            // Simply emit at comet.x is fine if rate is high,
+                            // but for smoothness, we scatter slightly along the velocity vector?
+                            // No, just jitter emit.
+                        }
+
+                        for (let i = 0; i < TRAIL_RATE; i++) {
+                            const p = Math.random();
+                            // Back-propagate emission
+                            const jx = comet.x - (Math.cos(comet.angle) * vTotal * p * 0.5);
+                            const jy = comet.y - (Math.sin(comet.angle) * vTotal * p * 0.5);
+                            particles.push(new TrailParticle(jx, jy, comet.angle));
+                        }
+
+                        // 2. Emit Sparks (Splashing Head)
+                        // More sparks if moving fast
+                        const sparkCount = SPARK_RATE + Math.floor(vTotal * 0.2);
+                        for (let i = 0; i < sparkCount; i++) {
+                            sparks.push(new Spark(comet.x, comet.y, comet.angle));
+                        }
+
+                        // Update particles
+                        ctx.globalCompositeOperation = 'screen';
+
+                        for (let i = particles.length - 1; i >= 0; i--) {
+                            particles[i].update();
+                            particles[i].draw();
+                            if (particles[i].life <= 0) particles.splice(i, 1);
+                        }
+
+                        for (let i = sparks.length - 1; i >= 0; i--) {
+                            sparks[i].update();
+                            sparks[i].draw();
+                            if (sparks[i].life <= 0) sparks.splice(i, 1);
+                        }
+
+                        ctx.globalCompositeOperation = 'source-over';
+
+                        // 3. Draw Dynamic Head
+                        ctx.save();
+                        ctx.translate(comet.x, comet.y);
+                        ctx.rotate(comet.angle);
+
+                        // Core Glow
+                        const grad = ctx.createRadialGradient(0, 0, 2, 0, 0, 35);
+                        grad.addColorStop(0, 'rgba(255,255,255,1)');
+                        grad.addColorStop(0.2, 'rgba(165, 243, 252, 0.8)'); // Cyan
+                        grad.addColorStop(0.5, 'rgba(56, 189, 248, 0.4)'); // Blue
+                        grad.addColorStop(1, 'rgba(0,0,0,0)');
+                        ctx.fillStyle = grad;
+                        ctx.beginPath();
+                        ctx.arc(0, 0, 35, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        // "Shockwave" Arc (Front)
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.arc(0, 0, 18, -Math.PI / 3, Math.PI / 3); // 120 deg arc facing right (0)
+                        ctx.stroke();
+
+                        // Solid Core
+                        ctx.fillStyle = '#ffffff';
+                        ctx.beginPath();
+                        ctx.ellipse(5, 0, 8, 5, 0, 0, Math.PI * 2); // Elongated slightly forward
+                        ctx.fill();
+
+                        ctx.restore();
+
+                        requestAnimationFrame(animate);
+                    }
+                    animate();
+                });
+            </script>
+
             <p style="max-width: 800px; color: rgba(255,255,255,0.8); line-height: 1.6;">
                 본사-지사 간 안전하고 빠른 네트워크 연결을 위한 최고의 선택.<br>
                 HUMECCA가 제공하는 차세대 기업 통신망을 경험하세요.
             </p>
+            <!-- Visible Version Indicator -->
+            <div
+                style="position: absolute; bottom: 0; left: 0; padding: 20px; font-size: 11px; color: rgba(255,255,255,0.8); font-family: monospace;">
+                Ver. 251214.1440</div>
         </div>
     </section>
 
@@ -159,7 +456,7 @@
     <!-- Supabase Integration -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase_config.js"></script>
-    <script src="components/loader.js?v=3.5"></script>
+    <script src="components/loader.js?v=3.18"></script>
     <script src="js/data_loader.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -177,11 +474,8 @@
     </script>
 
     <!-- Load Header and Footer -->
-    <script src="components/loader.js?v=3.5"></script>
+    <script src="components/loader.js?v=3.18"></script>
+
 </body>
 
 </html>
-
-
-
-

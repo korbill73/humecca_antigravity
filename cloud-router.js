@@ -48,8 +48,8 @@
         if (!link) return;
 
         const href = link.getAttribute('href');
-        // Filter for cloud sub-pages only
-        if (!href || !href.includes('sub_cloud_') || href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto')) return;
+        // Filter for cloud sub-pages only (exclude security - not in data file)
+        if (!href || !href.includes('sub_cloud_') || href.includes('security') || href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto')) return;
 
         const fileName = href.split('/').pop().split('?')[0];
 

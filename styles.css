@@ -141,6 +141,12 @@ body {
     height: 100%;
 }
 
+/* Fix for Loader Layout Shift */
+#header-placeholder {
+    min-height: 80px;
+    display: block;
+}
+
 .nav-list {
     display: flex;
     /* Removed gap: 36px to prevent hover dead zones */
@@ -592,15 +598,61 @@ body {
     flex-direction: column;
     align-items: stretch;
     overflow: hidden;
-    background: linear-gradient(135deg, #1e2a4a 0%, #2d3e5f 50%, #1e2a4a 100%);
-    padding: 80px 0 20px 0;
+    /* Cybernetic Space Background */
+    background: url('images/hero_bg_cyber.png') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    /* Parallax feel */
+    padding: 40px 0 20px 0;
 }
 
 .hero-bg-overlay {
     position: absolute;
     inset: 0;
-    opacity: 0.1;
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+');
+    /* Dark gradient for text readability against 3D bg */
+    background: linear-gradient(to right, rgba(10, 15, 30, 0.9) 0%, rgba(10, 15, 30, 0.7) 50%, rgba(10, 15, 30, 0.3) 100%);
+    opacity: 1;
+}
+
+#hero-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    /* Above bg (0), below content (10) */
+    pointer-events: none;
+}
+
+.subpage-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Ensure hero contents are above canvas */
+.idc-hero,
+.sw-hero,
+.cloud-hero,
+.sub-visual {
+    position: relative;
+    /* Anchor for absolute canvas */
+    background-color: transparent;
+    /* Allow canvas if bg is on wrapper? No, canvas is on TOP of bg color usually. */
+}
+
+.idc-hero>.idc-container,
+.sw-hero>.container,
+.cloud-hero>.container,
+.sub-visual>.container {
+    position: relative;
+    z-index: 10;
+    /* Above canvas */
 }
 
 /* Container alignment handled by base .container class */
@@ -670,94 +722,147 @@ body {
     margin-top: 32px;
 }
 
+/* Cutting-Edge Glass Card Design */
 .glass-card {
-    background: linear-gradient(135deg, rgba(80, 60, 65, 0.85), rgba(65, 50, 55, 0.9));
+    background: rgba(15, 23, 42, 0.65);
+    /* Deep dark blue-gray */
     backdrop-filter: blur(24px);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 60px rgba(239, 68, 68, 0.35), inset 0 0 80px rgba(239, 68, 68, 0.12);
-    border-radius: 20px;
-    padding: 28px;
-    width: 100%;
-    height: auto;
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 2px solid rgba(239, 68, 68, 0.6);
+    /* Red Neon Top */
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        /* Deep Shadow */
+        0 0 40px rgba(239, 68, 68, 0.15),
+        /* Subtle Red Glow */
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    /* Inner Highlight */
+    border-radius: 24px;
+    padding: 24px 32px;
+    /* Reduced vertical padding from 32px */
+    width: 320px;
+    /* Fixed width for sleek profile */
     display: flex;
     flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    height: fit-content;
+    /* Ensure it wraps content tightly */
+}
+
+/* Shine effect overlay */
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    transform: skewX(-15deg);
+    transition: 0.5s;
+    pointer-events: none;
+}
+
+.glass-card:hover::before {
+    left: 100%;
+    transition: 0.7s;
 }
 
 .glass-card h3 {
-    color: white;
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 5px;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .glass-card>p {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 12px;
-    margin-bottom: 21px;
+    color: #94a3b8;
+    font-size: 14px;
+    margin-bottom: 24px;
+    font-weight: 500;
+}
+
+/* List container */
+#quick-links-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .quick-link-item {
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(239, 68, 68, 0.15);
-    border-radius: 9px;
-    margin-bottom: 7px;
-    padding: 11px 13px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 12px 16px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 16px;
     text-decoration: none;
-    transition: all 0.2s ease;
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.1), inset 0 0 20px rgba(239, 68, 68, 0.03);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
 }
 
 .quick-link-item:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(239, 68, 68, 0.1);
     border-color: rgba(239, 68, 68, 0.4);
-    transform: translateY(-1px);
-    box-shadow: 0 0 30px rgba(239, 68, 68, 0.25), inset 0 0 30px rgba(239, 68, 68, 0.05);
-}
-
-.quick-link-left {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+    transform: translateX(6px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
 }
 
 .quick-link-icon-box {
-    width: 36px;
-    height: 36px;
-    background: rgba(239, 68, 68, 0.15);
-    border-radius: 9px;
+    width: 42px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #EF4444;
-    font-size: 16px;
+    color: #cbd5e1;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
     flex-shrink: 0;
 }
 
+.quick-link-item:hover .quick-link-icon-box {
+    background: #EF4444;
+    color: white;
+    border-color: #EF4444;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
 .quick-link-text {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 2px;
 }
 
 .quick-link-title {
-    display: block;
     color: white;
-    font-weight: 600;
-    font-size: 14px;
+    font-weight: 700;
+    font-size: 15px;
 }
 
 .quick-link-desc {
-    display: block;
-    color: rgba(255, 255, 255, 0.45);
+    color: #94a3b8;
     font-size: 12px;
+    font-weight: 400;
 }
 
 .quick-link-item i.fa-chevron-right {
-    color: rgba(255, 255, 255, 0.25);
-    font-size: 13px;
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 12px;
+    transition: all 0.3s;
+}
+
+.quick-link-item:hover i.fa-chevron-right {
+    color: #EF4444;
+    transform: translateX(3px);
 }
 
 .btn-white-full {
@@ -3155,4 +3260,66 @@ main.sub-content {
 
 .mega-cta a:hover {
     background: #FEF2F2;
+}
+
+/* Customer Logo Grid Premium Effects */
+.logo-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.logo-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.25), 0 10px 10px -5px rgba(239, 68, 68, 0.1) !important;
+    border-color: #EF4444 !important;
+    /* Stronger Red */
+}
+
+.logo-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(255, 255, 255, 0) 100%);
+    /* 3x Opacity */
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.logo-card:hover::before {
+    opacity: 1;
+}
+
+.logo-card img {
+    filter: grayscale(100%) opacity(0.7);
+    transition: all 0.4s ease;
+    transform: scale(1);
+    max-width: 80%;
+    max-height: 50px;
+    object-fit: contain;
+}
+
+.logo-card:hover img {
+    filter: grayscale(0%) opacity(1);
+    transform: scale(1.1);
+}
+
+.logo-card span {
+    transition: color 0.3s ease;
+}
+
+.logo-card:hover span {
+    color: #EF4444 !important;
 }
