@@ -824,10 +824,32 @@ window.loadTermEditor = async (type) => {
 
     const textarea = document.getElementById('term-content');
     if (!textarea) return;
+    textarea.value = '로딩 중...';
 
-    // Load from LocalStorage ONLY
-    const content = localStorage.getItem(`humecca_term_v4_${type}`) || '';
-    textarea.value = content;
+    // Try LocalStorage first
+    let content = localStorage.getItem(`humecca_term_v4_${type}`);
+
+    if (content) {
+        textarea.value = content;
+    } else {
+        // Fallback to Supabase
+        try {
+            const { data, error } = await supabase
+                .from('terms')
+                .select('content')
+                .eq('type', type)
+                .single();
+
+            if (data && data.content) {
+                content = data.content;
+                // Sync to LocalStorage
+                localStorage.setItem(`humecca_term_v4_${type}`, content);
+            }
+        } catch (err) {
+            console.log('Supabase load failed, using LocalStorage only:', err);
+        }
+        textarea.value = content || '';
+    }
 };
 
 window.saveCurrentTerm = async () => {
@@ -837,9 +859,32 @@ window.saveCurrentTerm = async () => {
         return;
     }
 
-    // Save to LocalStorage ONLY
+    // 1. Save to LocalStorage (always works)
     localStorage.setItem(`humecca_term_v4_${currentTermType}`, content);
-    alert('저장되었습니다! (LocalStorage)');
+
+    // 2. Try to save to Supabase
+    try {
+        const { error } = await supabase
+            .from('terms')
+            .upsert({
+                type: currentTermType,
+                content: content,
+                title: currentTermType === 'privacy' ? '개인정보처리방침' :
+                    currentTermType === 'terms' ? '이용약관' : '회원약관'
+            }, {
+                onConflict: 'type'
+            });
+
+        if (error) {
+            console.error('Supabase save error:', error);
+            alert('저장되었습니다! (LocalStorage만)\n\nSupabase 저장 실패: ' + error.message);
+        } else {
+            alert('저장되었습니다! (Supabase + LocalStorage)');
+        }
+    } catch (err) {
+        console.error('Supabase error:', err);
+        alert('저장되었습니다! (LocalStorage만)\n\nSupabase 테이블 설정이 필요합니다.');
+    }
 };
 
 window.resetTermToDefault = () => {
