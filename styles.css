@@ -3458,8 +3458,13 @@ main.sub-content {
     }
 
     /* Keep the V.version text but maybe smaller */
+    /* Keep the V.version text visible as requested */
     .header-buttons span {
-        display: none;
-        /* Hide version on mobile to save space */
+        display: inline-block !important;
+        /* Force show */
+        font-size: 10px;
+        /* Make it small enough to fit */
+        color: #64748b;
+        margin-right: 10px;
     }
 }
