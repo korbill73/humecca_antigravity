@@ -75,6 +75,8 @@ body {
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
     color: #0f172a;
     line-height: 1.6;
+    overflow-x: hidden;
+    /* 모바일에서 좌우 스크롤 방지 */
 }
 
 .container {
@@ -3512,6 +3514,24 @@ main.sub-content {
         /* 모바일에서 fixed는 퍼포먼스 이슈 */
     }
 
+    /* Hero 섹션 오버플로우 수정 - 음수 마진 제거 */
+    .hero-content {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* 글래스 카드 모바일 최적화 */
+    .glass-card {
+        margin: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 20px 24px;
+    }
+
     .hero-title {
         font-size: 32px;
         line-height: 1.3;
@@ -3522,12 +3542,6 @@ main.sub-content {
         gap: 2rem;
     }
 
-    .glass-card {
-        width: 100%;
-        max-width: 100%;
-        padding: 20px 24px;
-    }
-
     .glass-card h3 {
         font-size: 20px;
     }
@@ -3535,6 +3549,13 @@ main.sub-content {
     /* Hero Buttons */
     .hero-buttons {
         flex-wrap: wrap;
+    }
+
+    /* 통계 섹션 gap 조정 - 오버플로우 방지 */
+    .hero-section .header-container>div[style*="gap"] {
+        gap: 20px !important;
+        flex-wrap: wrap;
+        justify-content: center !important;
     }
 
     /* 기타 섹션 */
