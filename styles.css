@@ -3390,9 +3390,14 @@ main.sub-content {
 /* Mobile Only (768px 이하) */
 @media (max-width: 768px) {
 
-    /* Container */
-    .container {
-        padding: 0 20px;
+    /* Container - 강력한 오버라이드 */
+    body .container,
+    body div.container,
+    html body .container {
+        padding: 0 20px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        max-width: 100% !important;
     }
 
     /* Header */
@@ -3525,65 +3530,72 @@ main.sub-content {
         font-size: 10px;
     }
 
-    /* Hero Section */
-    .hero-section {
-        min-height: 500px;
-        padding: 30px 0 20px 0;
-        background-attachment: scroll;
-        /* 모바일에서 fixed는 퍼포먼스 이슈 */
+    /* Hero Section - 강력한 오버라이드 */
+    body .hero-section,
+    html body section.hero-section {
+        min-height: 500px !important;
+        padding: 30px 0 20px 0 !important;
+        background-attachment: scroll !important;
     }
 
     /* Hero 섹션 오버플로우 수정 - 음수 마진 제거 */
-    .hero-content {
+    body .hero-content,
+    body div.hero-content,
+    html body .hero-content[style] {
         margin-left: 0 !important;
         margin-right: 0 !important;
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
 
-    /* 글래스 카드 모바일 최적화 */
-    .glass-card {
+    /* 글래스 카드 모바일 최적화 - 강력한 오버라이드 */
+    body .glass-card,
+    body div.glass-card,
+    html body .glass-card[style] {
         margin: 0 !important;
         margin-left: 0 !important;
         margin-right: 0 !important;
         width: 100% !important;
         max-width: 100% !important;
-        padding: 20px 24px;
+        padding: 20px 24px !important;
     }
 
-    .hero-title {
-        font-size: 32px;
-        line-height: 1.3;
+    body .hero-title,
+    html body h1.hero-title {
+        font-size: 32px !important;
+        line-height: 1.3 !important;
     }
 
-    .hero-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
+    body .hero-grid,
+    html body .hero-grid {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
     }
 
     .glass-card h3 {
-        font-size: 20px;
+        font-size: 20px !important;
     }
 
     /* Hero Buttons */
     .hero-buttons {
-        flex-wrap: wrap;
+        flex-wrap: wrap !important;
     }
 
     /* 통계 섹션 gap 조정 - 오버플로우 방지 */
-    .hero-section .header-container>div[style*="gap"] {
+    body .hero-section .header-container>div[style*="gap"],
+    html body section.hero-section div[style*="gap"] {
         gap: 20px !important;
-        flex-wrap: wrap;
+        flex-wrap: wrap !important;
         justify-content: center !important;
     }
 
     /* 기타 섹션 */
     .section {
-        padding: 60px 0;
+        padding: 60px 0 !important;
     }
 
     .section-title {
-        font-size: 32px;
+        font-size: 32px !important;
     }
 
     /* 모든 그리드 레이아웃 모바일 최적화 */
