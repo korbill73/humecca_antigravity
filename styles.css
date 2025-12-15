@@ -3468,14 +3468,15 @@ main.sub-content {
         box-shadow: none;
         border: none;
         border-left: 3px solid var(--primary-red);
-        margin: 8px 0 8px 0;
-        padding: 8px 0 8px 16px;
+        margin: 0 0 0 16px !important;
+        padding: 12px 0 12px 16px !important;
         background: #f8fafc;
         border-radius: 0;
         opacity: 1 !important;
         visibility: visible !important;
         transform: none !important;
         min-width: auto;
+        width: auto !important;
     }
 
     /* 모바일에서 드롭다운 활성화 */
@@ -3485,7 +3486,13 @@ main.sub-content {
 
     /* 드롭다운 아이템 모바일 스타일 */
     .dropdown-item {
-        padding: 10px 8px;
+        padding: 12px 10px;
+        margin-bottom: 4px;
+        border-radius: 6px;
+    }
+
+    .dropdown-item:last-child {
+        margin-bottom: 0;
     }
 
     .dropdown-icon {
