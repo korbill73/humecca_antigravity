@@ -5,7 +5,7 @@
 
 // [Configuration] Current Application Version
 // Update this value manually whenever a deployment/update occurs
-const APP_VERSION = 'v.20251215.1324';
+const APP_VERSION = 'v.20251215.1509';
 
 
 
