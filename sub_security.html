@@ -331,7 +331,7 @@
                     <main class="cloud-content">
 
                         <!-- 1. WAF -->
-                        <div id="waf" class="security-content active">
+                        <div id="tab-waf" class="security-content active">
                             <div class="content-header">
                                 <h3>WAF (웹방화벽)</h3>
                                 <p>Web Service에 대한 HTTP/HTTPS 공격을 탐지 및 차단하는 지능형 방화벽 서비스</p>
@@ -383,7 +383,7 @@
                         </div>
 
                         <!-- 2. WAF Pro -->
-                        <div id="waf-pro" class="security-content">
+                        <div id="tab-waf-pro" class="security-content">
                             <div class="content-header">
                                 <h3>WAF Pro (Managed Security)</h3>
                                 <p>전문 보안 관제 인력이 24/365 운영 및 관리를 대행해주는 프리미엄 WAF 서비스</p>
@@ -422,7 +422,7 @@
                         </div>
 
                         <!-- 3. Clean Zone -->
-                        <div id="clean-zone" class="security-content">
+                        <div id="tab-clean-zone" class="security-content">
                             <div class="content-header">
                                 <h3>클린존 (Anti-DDoS)</h3>
                                 <p>대규모 DDoS 공격으로부터 고객의 서비스를 보호하는 대용량 트래픽 정화 서비스</p>
@@ -461,7 +461,7 @@
                         </div>
 
                         <!-- 4. Private CA -->
-                        <div id="private-ca" class="security-content">
+                        <div id="tab-private-ca" class="security-content">
                             <div class="content-header">
                                 <h3>Private CA</h3>
                                 <p>사설 인증서(Private Certificate)를 쉽고 안전하게 발급 및 관리하는 서비스</p>
@@ -489,7 +489,7 @@
                         </div>
 
                         <!-- 5. Certificate Manager -->
-                        <div id="cert-manager" class="security-content">
+                        <div id="tab-cert-manager" class="security-content">
                             <div class="content-header">
                                 <h3>SSL 인증서 (Certificate Manager)</h3>
                                 <p>공인 SSL 보안 인증서를 간편하게 구매하고 수명 주기를 관리하는 서비스</p>
@@ -517,7 +517,7 @@
                         </div>
 
                         <!-- 6. V3 Net Server -->
-                        <div id="v3-server" class="security-content">
+                        <div id="tab-v3-server" class="security-content">
                             <div class="content-header">
                                 <h3>V3 Net Server</h3>
                                 <p>국내 No.1 안티바이러스 솔루션으로 서버 내 악성코드를 실시간 탐지 및 치료</p>
@@ -544,7 +544,7 @@
                         </div>
 
                         <!-- 7. DBSAFER -->
-                        <div id="dbsafer" class="security-content">
+                        <div id="tab-dbsafer" class="security-content">
                             <div class="content-header">
                                 <h3>DBSAFER (접근제어)</h3>
                                 <p>데이터베이스 및 시스템에 대한 접근 권한을 통제하고 로그를 기록하는 통합 보안 솔루션</p>
@@ -816,28 +816,15 @@
             }
         });
 
-        // Dropdown Handling Fix
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => {
-            const menu = item.querySelector('.dropdown-menu');
-            if (!menu) return;
 
-            item.addEventListener('mouseenter', () => {
-                menu.style.display = 'block';
-                setTimeout(() => menu.style.opacity = '1', 10);
-            });
-            item.addEventListener('mouseleave', () => {
-                menu.style.opacity = '0';
-                setTimeout(() => menu.style.display = 'none', 300);
-            });
-        });
     </script>
     </div>
     </main>
 
     <!-- Footer -->
     <div id="footer-placeholder"></div>
-    <script src="components/loader.js?v=3.18"></script>
+    <script src="js/security_tabs.js"></script>
+    <script src="components/loader.js"></script>
 
     <!-- Supabase & Price Loader Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

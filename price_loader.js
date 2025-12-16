@@ -13,12 +13,26 @@ async function loadProductPrices(containerId, productCode) {
     // 로딩 표시
     container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;"><i class="fas fa-spinner fa-spin"></i> 요금 정보를 불러오는 중입니다...</div>';
 
-    // Supabase 체크
-    if (typeof supabase === 'undefined') {
-        container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: red;">시스템 오류: 데이터베이스 연결에 실패했습니다.</div>';
-        console.error('Supabase client is not defined. Make sure supabase.js and supabase_config.js are loaded.');
+    // Supabase 체크 (Polling 방식)
+    let maxRetries = 20; // 2초 대기 (100ms * 20)
+    while (typeof window.sb === 'undefined' && maxRetries > 0) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        maxRetries--;
+    }
+
+    if (typeof window.sb === 'undefined') {
+        // Fallback: Check global supabase variable from CDN
+        if (typeof supabase !== 'undefined') window.sb = supabase;
+    }
+
+    if (typeof window.sb === 'undefined') {
+        container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: red;">시스템 오류: 데이터베이스 연결에 실패했습니다. (Timeout)</div>';
+        console.error('[PriceLoader] Supabase client (window.sb) not found after waiting.');
         return;
     }
+
+    // Alias for code clarity
+    const supabase = window.sb;
 
     try {
         // 1. 상품 정보 조회 (Product ID 찾기)
@@ -111,7 +125,7 @@ async function loadProductPrices(containerId, productCode) {
 
             // 카드 HTML 생성
             html += `
-            <div class="plan-card ${isRec ? 'popular' : ''}">
+            <div class="plan-card popular">
                 ${badgeHtml ? `<div class="plan-badge">${plan.badge}</div>` : ''}
                 <div class="plan-title">${plan.plan_name}</div>
                 <div class="plan-price" style="font-size: 1.8rem; font-weight: 800; color: var(--accent); margin-bottom: 20px;">

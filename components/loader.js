@@ -22,7 +22,16 @@ document.addEventListener('DOMContentLoaded', function () {
     // 헤더 로드
     loadComponent('header-placeholder', 'components/header.html', initHeaderScripts);
     // 푸터 로드
-    loadComponent('footer-placeholder', 'components/footer.html', initTermsModal);
+    loadComponent('footer-placeholder', 'components/footer.html', () => {
+        // [EmailJS] Load SDK dynamically
+
+        const script = document.createElement('script');
+        script.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js";
+        script.onload = () => {
+            console.log("EmailJS SDK Loaded");
+        };
+        document.head.appendChild(script);
+    });
 
     // [New] Web Analytics Logging
     // Supabase가 로드되었는지 확인 후 없으면 CDN 로드 후 실행 (admin.html 등에서 중복 로드 방지)
@@ -502,7 +511,7 @@ function getInlineHeader() {
                         </div>
                     </div>
                 </li>
-
+ 
                 <!-- 6. Enterprise Solutions -->
                 <li class="nav-item">
                     <a href="sub_sol_ms365.html" class="nav-link">기업솔루션 <i class="fas fa-chevron-down"></i></a>
@@ -548,7 +557,7 @@ function getInlineHeader() {
                                 <span class="dropdown-title">연혁</span>
                                 <span class="dropdown-desc">31년의 성장 스토리</span>
                             </div>
-                        </a>
+        
                         <a href="sub_company_intro.html#location" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fas fa-map-marker-alt"></i></div>
                             <div class="dropdown-text">
@@ -844,80 +853,83 @@ function getInlineFooter() {
  * 약관 레이어 팝업 표시
  * @param {string} type - 'privacy' | 'terms' | 'member'
  */
-function showLayerTerm(type) {
-    let modal = document.getElementById('term-modal-wrapper');
+// [Fixed] showLayerTerm with window.sb support
+async function showLayerTerm(type) {
+    console.log('[Loader] showLayerTerm called:', type);
+
+    // 1. Get Elements
+    // Use 'term-modal' to match footer.html structure instead of creating 'term-modal-wrapper'
+    const modal = document.getElementById('term-modal');
     if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'term-modal-wrapper';
-        modal.className = 'term-modal-overlay';
-        modal.innerHTML = `
-            <div class="term-modal">
-                <div class="term-header">
-                    <h3 id="term-modal-title">약관</h3>
-                    <button class="term-close-btn" onclick="hideLayerTerm()"><i class="fas fa-times"></i></button>
-                </div>
-                 <div class="term-body" id="term-modal-content">
-                    <div style="display:flex; justify-content:center; align-items:center; height:200px;">
-                        <i class="fas fa-spinner fa-spin fa-2x" style="color:#d1d5db;"></i>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-
-        // Close on overlay click
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) hideLayerTerm();
-        });
+        console.error('Debug: Modal element #term-modal not found!');
+        return;
     }
-
-    // Scroll Lock with padding adjustment to prevent shift
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    document.body.style.paddingRight = `${scrollbarWidth}px`;
-    document.body.style.overflow = 'hidden';
-
-    // Show
-    setTimeout(() => {
-        modal.classList.add('active');
-    }, 10);
 
     const titleEl = document.getElementById('term-modal-title');
     const contentEl = document.getElementById('term-modal-content');
 
+    // 2. Set Title
     let title = '약관';
     if (type === 'privacy') title = '개인정보처리방침';
     else if (type === 'terms') title = '이용약관';
     else if (type === 'member') title = '회원약관';
-    titleEl.textContent = title;
 
-    // Load content
-    if (typeof supabase !== 'undefined') {
-        contentEl.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:200px;"><i class="fas fa-spinner fa-spin fa-2x" style="color:#d1d5db;"></i></div>';
-        supabase
+    if (titleEl) titleEl.textContent = title;
+
+    // 3. Show Loading State
+    if (contentEl) {
+        contentEl.innerHTML = '<div style="text-align:center; padding: 40px;"><i class="fas fa-spinner fa-spin" style="font-size:24px; color:#dc2626;"></i><br><br>약관 데이터를 불러오는 중...</div>';
+    }
+
+    // 4. Show Modal
+    modal.style.display = 'flex';
+    modal.style.opacity = '0';
+    setTimeout(() => {
+        modal.style.opacity = '1';
+        modal.style.transition = 'opacity 0.2s';
+    }, 10);
+    document.body.style.overflow = 'hidden';
+
+    // 5. DB Client Selection (Key Fix)
+    const db = window.sb || (typeof supabase !== 'undefined' ? supabase : null);
+
+    if (!db || !db.from) {
+        console.error('[Loader] Supabase Client missing. window.sb:', window.sb);
+        if (contentEl) {
+            contentEl.innerHTML = `<div style="text-align:center; padding: 40px;">
+                <p style="color:#dc2626;">시스템 오류</p>
+                <p style="color:#666;">데이터베이스 연결 클라이언트를 찾을 수 없습니다.</p>
+            </div>`;
+        }
+        return;
+    }
+
+    // 6. Fetch Data
+    try {
+        console.log('[Loader] Fetching terms for:', type);
+        const { data, error } = await db
             .from('terms')
             .select('content')
             .eq('type', type)
-            .single()
-            .then(({ data, error }) => {
-                if (data && data.content) {
-                    contentEl.innerHTML = data.content.replace(/\n/g, '<br>');
-                } else {
-                    // Fallback to local storage (existing logic)
-                    let localContent = localStorage.getItem('humecca_term_v4_' + type);
-                    if (localContent) {
-                        contentEl.innerHTML = localContent;
-                    } else {
-                        contentEl.innerHTML = '<div style="text-align:center; padding:40px; color:#64748b;">등록된 약관 내용이 없습니다.</div>';
-                    }
-                }
-            });
-    } else {
-        // Fallback if supabase not loaded
-        let localContent = localStorage.getItem('humecca_term_v4_' + type);
-        if (localContent) {
-            contentEl.innerHTML = localContent;
-        } else {
-            contentEl.innerHTML = '<div style="text-align:center; padding:40px; color:#64748b;">약관 내용을 불러올 수 없습니다.</div>';
+            .single();
+
+        if (error) {
+            console.error('[Loader] Supabase Error:', error);
+            if (error.code === 'PGRST116') {
+                if (contentEl) contentEl.innerHTML = `<div style="text-align:center; padding: 40px;"><p>등록된 약관 내용이 없습니다.</p></div>`;
+            } else {
+                throw error;
+            }
+        } else if (data && data.content) {
+            if (contentEl) contentEl.innerHTML = '<div style="white-space: pre-wrap;">' + data.content + '</div>';
+        }
+    } catch (error) {
+        console.error('[Loader] Fetch Failure:', error);
+        if (contentEl) {
+            contentEl.innerHTML = `<div style="text-align:center; padding: 40px;">
+                <p style="color:#dc2626; font-weight:bold;">약관을 불러올 수 없습니다.</p>
+                <p style="color:#666; font-size:13px; margin-top:10px;">Error: ${error.message || error.code}</p>
+            </div>`;
         }
     }
 }
@@ -925,17 +937,50 @@ function showLayerTerm(type) {
 /**
  * 약관 레이어 숨김
  */
+/**
+ * 약관 레이어 숨김 (Fixed ID)
+ */
 function hideLayerTerm() {
-    const modal = document.getElementById('term-modal-wrapper');
+    // Correct ID is 'term-modal' as defined in footer.html and used in showLayerTerm
+    const modal = document.getElementById('term-modal');
+
     if (modal) {
-        modal.classList.remove('active');
+        modal.style.opacity = '0';
         setTimeout(() => {
+            modal.style.display = 'none';
             document.body.style.overflow = '';
             document.body.style.paddingRight = '';
-        }, 300); // Wait for transition
+        }, 200);
+    } else {
+        console.warn('[Loader] Close failed: Modal #term-modal not found');
     }
 }
 
 // Global exposure
 window.closeTermModal = hideLayerTerm;
 window.initTermsModal = () => { };
+
+// ===========================
+// Fix: Force Close Menu on Click (for SPA navigation)
+// ===========================
+document.addEventListener('click', (e) => {
+    // If clicking a dropdown item inside a mega menu
+    const link = e.target.closest('.mega-menu .dropdown-item');
+    if (link) {
+        const menu = link.closest('.mega-menu');
+        const navItem = link.closest('.nav-item');
+
+        if (menu) {
+            // 1. Temporarily hide the menu to break the hover state visual
+            menu.style.display = 'none';
+            // 2. Also force the parent nav-item to lose 'hover' effects if possible (via class)
+            if (navItem) navItem.style.pointerEvents = 'none';
+
+            setTimeout(() => {
+                // Restore after a short delay (enough for visual feedback)
+                menu.style.display = '';
+                if (navItem) navItem.style.pointerEvents = '';
+            }, 300);
+        }
+    }
+});

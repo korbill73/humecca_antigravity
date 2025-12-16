@@ -270,125 +270,414 @@ window.migrateToSupabase = async () => {
     location.reload();
 };
 
+// Admin Logic V7 - Premium UI
+// Force Alert to confirm load
+// alert('업데이트 확인: 시스템이 최신 버전(V7)으로 로드되었습니다.');
+
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('Admin Script V7 Loaded');
+
     if (!window.supabase) {
         console.error('Supabase client missing.');
     } else {
         console.log('✅ Admin Page connected to Supabase');
     }
 
-    // Check for hash
+    // [Fix] Resolve Tab State IMMEDIATELY before data load to prevent flicker
     const hash = window.location.hash.replace('#', '');
-    if (hash) showTab(hash);
-    else showTab('product'); // Default
+    if (hash) {
+        showTab(hash);
+    } else {
+        showTab('product'); // Default
+    }
 
+    // Initial Load
+    await loadApplications();
+
+    // Refresh Counts
     await refreshDashboard();
 });
 
 // ===========================
 // 5. Application Management (NEW)
 // ===========================
+// ===========================
+// Application Management (Premium Refactor)
+// ===========================
+
+let currentAppStatus = 'all';
+
+// Filter by Status Tab
+window.filterAppStatus = (status, btn) => {
+    currentAppStatus = status;
+
+    // Update UI
+    document.querySelectorAll('.status-tab-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    else {
+        // Find button if not passed (e.g. init)
+        // ... simplified for now
+    }
+
+    loadApplications();
+};
+
+window.closeAdminModal = () => {
+    document.getElementById('admin-common-modal').style.display = 'none';
+};
+
+window.onclick = (event) => {
+    const modal = document.getElementById('admin-common-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+}
+
 async function loadApplications() {
     const listEl = document.getElementById('app-list-body');
     if (!listEl) return;
 
-    listEl.innerHTML = '<tr><td colspan="7" align="center"><i class="fas fa-spinner fa-spin"></i> 로딩중...</td></tr>';
+    const productFilter = document.getElementById('app-filter-product')?.value || 'all';
 
-    // Fetch data joined with nothing (Applications has all info self-contained)
-    const { data, error } = await supabase.from('applications')
-        .select('*')
-        .order('created_at', { ascending: false });
+    // Show Loading
+    listEl.innerHTML = '<tr><td colspan="7" align="center" style="padding:40px;"><i class="fas fa-spinner fa-spin fa-2x" style="color:#4f46e5;"></i></td></tr>';
+
+    // Fetch Data
+    let query = supabase.from('applications').select('*').order('created_at', { ascending: false });
+
+    if (productFilter !== 'all') {
+        if (productFilter === 'security') query = query.like('product_type', 'security%');
+        else query = query.eq('product_type', productFilter);
+    }
+
+    const { data: allData, error } = await query;
 
     if (error) {
-        console.error(error);
-        listEl.innerHTML = '<tr><td colspan="7" align="center" style="color:red;">데이터 로딩 실패</td></tr>';
+        listEl.innerHTML = `<tr><td colspan="7" align="center" style="color:#ef4444; padding:20px;">Error: ${error.message}</td></tr>`;
         return;
     }
 
-    if (!data || data.length === 0) {
-        listEl.innerHTML = '<tr><td colspan="7" align="center" style="padding:20px;">접수된 신청 내역이 없습니다.</td></tr>';
+    if (!allData || allData.length === 0) {
+        listEl.innerHTML = '<tr><td colspan="7" align="center" style="padding:60px; color:#94a3b8;">신청 내역이 없습니다.</td></tr>';
+        ['all', 'pending', 'contacting', 'completed', 'cancelled'].forEach(s => {
+            const el = document.getElementById(`count-${s}`);
+            if (el) el.innerText = 0;
+        });
         return;
     }
+
+    // Counts
+    const counts = {
+        all: allData.length,
+        pending: allData.filter(d => d.status === 'pending').length,
+        contacting: allData.filter(d => d.status === 'contacting').length,
+        completed: allData.filter(d => d.status === 'completed').length,
+        cancelled: allData.filter(d => d.status === 'cancelled').length
+    };
+    Object.keys(counts).forEach(key => {
+        const el = document.getElementById(`count-${key}`);
+        if (el) el.innerText = counts[key];
+    });
+
+    // Filter
+    const filteredData = currentAppStatus === 'all' ? allData : allData.filter(d => d.status === currentAppStatus);
 
     listEl.innerHTML = '';
 
-    data.forEach(item => {
-        // Status Badge Style
-        let statusBadge = '';
+    if (filteredData.length === 0) {
+        listEl.innerHTML = '<tr><td colspan="7" align="center" style="padding:40px; color:#94a3b8;">해당 상태의 내역이 없습니다.</td></tr>';
+        return;
+    }
+
+    filteredData.forEach(item => {
+        // Status Badge Logic (Icon Only as requested)
+        let badgeHtml = '';
+        let rowStyle = '';
+        let statusTitle = '';
+
+        // Tooltip text mapping
+        const statusMap = { pending: '접수대기', contacting: '상담중', completed: '처리완료', cancelled: '취소됨' };
+        statusTitle = statusMap[item.status] || item.status;
+
         switch (item.status) {
-            case 'pending': statusBadge = '<span class="badge badge-red">접수대기</span>'; break;
-            case 'contacting': statusBadge = '<span class="badge badge-yellow">상담중</span>'; break;
-            case 'completed': statusBadge = '<span class="badge badge-green">처리완료</span>'; break;
-            case 'cancelled': statusBadge = '<span class="badge badge-gray">취소됨</span>'; break;
-            default: statusBadge = `<span class="badge">${item.status}</span>`;
+            case 'pending':
+                badgeHtml = `<span class="badge-pill badge-red" title="${statusTitle}" style="width:32px; height:32px; justify-content:center; padding:0; border-radius:50%;"><i class="fas fa-clock"></i></span>`;
+                break;
+            case 'contacting':
+                badgeHtml = `<span class="badge-pill badge-yellow" title="${statusTitle}" style="width:32px; height:32px; justify-content:center; padding:0; border-radius:50%;"><i class="fas fa-phone-alt"></i></span>`;
+                break;
+            case 'completed':
+                badgeHtml = `<span class="badge-pill badge-green" title="${statusTitle}" style="width:32px; height:32px; justify-content:center; padding:0; border-radius:50%;"><i class="fas fa-check"></i></span>`;
+                rowStyle = 'background-color:#f8fafc; opacity:0.8;';
+                break;
+            case 'cancelled':
+                badgeHtml = `<span class="badge-pill badge-gray" title="${statusTitle}" style="width:32px; height:32px; justify-content:center; padding:0; border-radius:50%;"><i class="fas fa-ban"></i></span>`;
+                rowStyle = 'color:#94a3b8; background-color:#f9fafb;';
+                break;
+            default:
+                badgeHtml = `<span class="badge-pill badge-gray" title="${statusTitle}">${item.status}</span>`;
         }
 
-        // Product Badge (Type)
-        let typeLabel = item.product_type;
-        if (typeLabel === 'hosting') typeLabel = '호스팅';
-        else if (typeLabel === 'vpn') typeLabel = 'VPN';
+        const d = new Date(item.created_at);
+        const dateMain = `${d.getFullYear().toString().slice(2)}. ${d.getMonth() + 1}. ${d.getDate()}.`;
+        const dateSub = d.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-        const dateStr = new Date(item.created_at).toLocaleString('ko-KR', {
-            year: '2-digit', month: '2-digit', day: '2-digit',
-            hour: '2-digit', minute: '2-digit'
-        });
+        // Parsing for List Display (Show simpler name)
+        let rawName = item.product_name || '-';
+        let priceMatch = rawName.match(/\((₩[\d,]+)\)/);
+        let priceText = priceMatch ? priceMatch[1] : '';
+        let fullCleanName = rawName.replace(/\((₩[\d,]+)\)/, '').trim();
+        // In list, if name is super long with `/`, show first part + "..."
+        let displayName = fullCleanName.split('/')[0].trim();
+        if (fullCleanName.includes('/')) displayName += '...';
 
         listEl.innerHTML += `
-            <tr>
-                <td style="font-size:0.9em; color:#666;">${dateStr}</td>
-                <td>${statusBadge}</td>
-                <td>
-                    <span style="font-weight:bold; color:#1e293b;">${item.product_name || '-'}</span><br>
-                    <small style="color:#64748b;">${typeLabel}</small>
+            <tr style="${rowStyle}" onclick="openApplicationDetail('${item.id}')">
+                <td class="date-cell">
+                    <div class="date-main">${dateMain}</div>
+                    <div class="date-sub">${dateSub}</div>
                 </td>
+                <td style="text-align:center;">${badgeHtml}</td>
                 <td>
-                    <strong>${item.company_name || '-'}</strong><br>
-                    ${item.contact_person}
-                </td>
-                <td>
-                    ${item.phone}<br>
-                    <span style="font-size:0.85em; color:#888;">${item.email || ''}</span>
-                </td>
-                <td>
-                    <div style="max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${item.memo || ''}">
-                        ${item.memo || '-'}
+                    <div class="prod-name">${displayName}</div>
+                    <div class="prod-sub">
+                        ${priceText ? `<span class="prod-price">${priceText}</span>` : ''}
+                        <span>${item.product_type}</span>
                     </div>
                 </td>
                 <td>
-                    <select onchange="updateApplicationStatus(${item.id}, this.value)" style="padding:4px; border:1px solid #ddd; border-radius:4px; font-size:12px; margin-bottom:4px; width:100%;">
-                        <option value="pending" ${item.status === 'pending' ? 'selected' : ''}>접수대기</option>
-                        <option value="contacting" ${item.status === 'contacting' ? 'selected' : ''}>상담중</option>
-                        <option value="completed" ${item.status === 'completed' ? 'selected' : ''}>완료</option>
-                        <option value="cancelled" ${item.status === 'cancelled' ? 'selected' : ''}>취소</option>
-                    </select>
-                    <button class="delete-btn" onclick="deleteApplication(${item.id})" style="width:100%;">삭제</button>
+                    <div style="font-weight:600; color:#1e293b;">${item.company_name || '-'}</div>
+                    <div style="font-size:0.9em; color:#64748b;">${item.contact_person}</div>
+                </td>
+                <td>
+                    <div style="font-weight:500;">${item.phone}</div>
+                </td>
+                <td>
+                    <div style="max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#64748b; font-size:0.9em;" title="${item.memo || ''}">
+                        ${item.memo || '-'}
+                    </div>
+                </td>
+                <td onclick="event.stopPropagation()">
+                     <div style="display:flex; gap:5px; justify-content:center;">
+                        <button class="delete-btn" onclick="deleteApplication('${item.id}')" style="padding:6px; width:32px; height:32px; border-radius:6px; display:flex; align-items:center; justify-content:center; background:#fff; border:1px solid #fee2e2; color:#ef4444;"><i class="fas fa-trash"></i></button>
+                     </div>
                 </td>
             </tr>
         `;
     });
 }
 
+// Toast Helper (Global)
+window.showToast = function (message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.innerText = message;
+
+    let bg = '#10b981'; // green
+    if (type === 'error') bg = '#ef4444'; // red
+    if (type === 'info') bg = '#3b82f6'; // blue
+
+    toast.style.cssText = `position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:${bg}; color:white; padding:12px 28px; border-radius:30px; z-index:9999999; box-shadow:0 10px 30px rgba(0,0,0,0.3); font-weight:600; font-size:16px; opacity:0; transition:all 0.3s ease; white-space:nowrap;`;
+
+    document.body.appendChild(toast);
+
+    // Animate
+    requestAnimationFrame(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+    });
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+};
+
+// Update Status Function
 window.updateApplicationStatus = async (id, newStatus) => {
-    if (!confirm('상태를 변경하시겠습니까?')) {
-        loadApplications(); // Revert UI
+    console.log(`[Status Change Triggered] ID: ${id} -> ${newStatus}`);
+    window.showToast('상태 변경 중...', 'info');
+
+    // DB Update
+    const { data, error } = await supabase.from('applications').update({ status: newStatus }).eq('id', id).select();
+
+    if (error) {
+        console.error('Update Error:', error);
+        window.showToast('변경 실패: ' + error.message, 'error');
+        alert('DB 오류: ' + error.message);
+    } else {
+        if (!data || data.length === 0) {
+            console.warn('Silent Failure: No rows updated');
+            window.showToast('변경 실패 (권한 없음)', 'error');
+            alert('변경되지 않았습니다. (RLS 권한 확인 필요)');
+        } else {
+            const labels = { pending: '접수대기', contacting: '상담중', completed: '처리완료', cancelled: '취소됨' };
+            window.showToast(`[${labels[newStatus]}] 상태로 변경되었습니다.`, 'success');
+            loadApplications(); // Refresh list
+        }
+    }
+};
+
+// Global Event Delegate for Status Radio Buttons (Robust Fix for Inline Handler Issues)
+document.addEventListener('change', (e) => {
+    if (e.target && e.target.classList.contains('status-radio-input')) {
+        const id = e.target.dataset.id;
+        const val = e.target.value;
+        if (id && val) {
+            updateApplicationStatus(id, val);
+        }
+    }
+});
+
+// Open Detail Modal (Premium Design Final V3)
+window.openApplicationDetail = async (id) => {
+    const modal = document.getElementById('admin-common-modal');
+    const modalBody = document.getElementById('admin-modal-body');
+    const modalTitle = document.getElementById('admin-modal-title');
+
+    modalTitle.innerText = '신청 상세 정보';
+    modalBody.innerHTML = '<div style="display:flex; justify-content:center; padding:50px;"><i class="fas fa-spinner fa-spin fa-3x" style="color:#e2e8f0;"></i></div>';
+    modal.style.display = 'block';
+
+    const { data: item, error } = await supabase.from('applications').select('*').eq('id', id).single();
+
+    if (error || !item) {
+        modalBody.innerHTML = '<div style="text-align:center; padding:30px; color:#ef4444;">데이터를 불러올 수 없습니다.</div>';
         return;
     }
 
-    const { error } = await supabase.from('applications').update({ status: newStatus }).eq('id', id);
-    if (error) {
-        alert('변경 실패: ' + error.message);
+    // Parsing Logic
+    let rawName = item.product_name || '';
+    let priceMatch = rawName.match(/\((₩[\d,]+)\)/);
+    let priceText = priceMatch ? priceMatch[1] : '';
+    let cleanName = rawName.replace(/\((₩[\d,]+)\)/, '').trim();
+
+    if (cleanName.includes('(CPU:')) cleanName = cleanName.replace('(CPU:', '/ CPU:');
+
+    let specParts = cleanName.split('/').map(s => s.trim()).filter(s => s);
+    let productNameDisplay = specParts.length > 0 ? specParts[0] : cleanName;
+    let specsList = specParts.slice(1);
+
+    let specsHtml = '';
+    if (specsList.length > 0) {
+        specsHtml = `<ul style="margin:12px 0 0 0; padding-left:20px; color:#475569; line-height:1.6; list-style-type:disc;">` +
+            specsList.map(s => `<li>${s.replace(/\)$/, '')}</li>`).join('') +
+            `</ul>`;
     } else {
-        // alert('변경되었습니다.'); // Too noisy
-        // Just reload
+        specsHtml = '<div style="color:#94a3b8; font-size:0.9rem; margin-top:8px;">추가 사양 정보 없음</div>';
     }
-    loadApplications();
+
+    // Status Options
+    const statusOptions = [
+        { val: 'pending', label: '접수대기' },
+        { val: 'contacting', label: '상담중' },
+        { val: 'completed', label: '처리완료' },
+        { val: 'cancelled', label: '취소됨' }
+    ];
+
+    // Status Radio HTML (Using class 'status-radio-input' for delegation)
+    const statusSelectHtml = statusOptions.map(opt =>
+        `<label style="cursor:pointer; display:flex; align-items:center; gap:12px; margin-bottom: 12px; font-size:1rem; color:${item.status === opt.val ? '#4338ca' : '#4b5563'}; font-weight:${item.status === opt.val ? '700' : '500'}; transition:all 0.2s; padding:6px; border-radius:6px; background:${item.status === opt.val ? '#e0e7ff' : 'transparent'};">
+            <input type="radio" class="status-radio-input" name="modal_status_${item.id}" data-id="${item.id}" value="${opt.val}" ${item.status === opt.val ? 'checked' : ''} style="width:20px; height:20px; accent-color:#4338ca;">
+            ${opt.label}
+         </label>`
+    ).join('');
+
+    const headerStyle = "color: #4338ca; font-size: 1.15rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: block;";
+
+    modalBody.innerHTML = `
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+            <!-- Left Column: Product Info -->
+            <div>
+                <div class="info-group">
+                    <span style="${headerStyle}">상품 정보 (Product Info)</span>
+                    <div class="info-value highlight" style="position:relative; background:#f8fafc; border:1px solid #e2e8f0; padding:24px; border-radius:12px;">
+                        
+                        <!-- Top Row: Badge + Price -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">
+                            <span class="badge badge-blue" style="font-size:1rem; padding:6px 12px; text-transform:uppercase; letter-spacing:1px; background:#eff6ff; color:#1d4ed8; border:1px solid #dbeafe;">${item.product_type || 'Product'}</span>
+                            ${priceText ? `<span style="font-size:1.3rem; font-weight:700; color:#dc2626; background:#fff1f2; padding:4px 12px; border-radius:6px;">${priceText}</span>` : ''}
+                        </div>
+
+                        <!-- Product Name -->
+                        <div style="font-size:1.5rem; font-weight:800; color:#0f172a; margin-bottom:20px; line-height:1.4;">
+                            ${productNameDisplay}
+                        </div>
+                        
+                        <!-- Specs List -->
+                        <div style="background:#fff; padding:16px; border-radius:8px; border:1px solid #f1f5f9; box-shadow:sm;">
+                            <span style="font-size:0.9rem; color:#64748b; font-weight:700; display:block; margin-bottom:8px;">상세 사양:</span>
+                            ${specsHtml}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-group" style="margin-top:25px;">
+                    <span style="${headerStyle}">문의 / 요청사항 (Inquiry)</span>
+                    <div class="info-value" style="min-height:120px; white-space:pre-wrap; background:#fff; border:1px solid #e2e8f0; padding:20px; border-radius:12px; font-size:1rem; line-height:1.6; color:#334155;">${item.memo || '<span style="color:#cbd5e1">내용 없음</span>'}</div>
+                </div>
+            </div>
+
+            <!-- Right Column: Status & Customer -->
+            <div style="background:#fff; padding:24px; border-radius:16px; border:1px solid #e2e8f0; box-shadow:0 10px 15px -3px rgba(0,0,0,0.05);">
+                <div class="info-group">
+                    <span style="${headerStyle} color:#4f46e5;">신청 상태 변경</span>
+                    <div style="background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;">
+                        ${statusSelectHtml}
+                    </div>
+                </div>
+                
+                <hr style="border:0; border-top:1px solid #e2e8f0; margin: 24px 0;">
+
+                <div class="info-group">
+                    <span style="${headerStyle} color:#0f172a;">고객 정보</span>
+                    <div style="margin-bottom:8px; font-weight:700; color:#334155; font-size:1.1rem;">${item.company_name || '(회사명 미입력)'}</div>
+                    <div style="margin-bottom:4px; font-weight:600; font-size:1.05rem;">${item.contact_person}</div>
+                    <div style="color:#64748b; font-size:1rem; margin-bottom:2px;">${item.phone}</div>
+                    <div style="color:#64748b; font-size:0.95rem;"><a href="mailto:${item.email}" style="color:#3b82f6; text-decoration:none;">${item.email || '-'}</a></div>
+                </div>
+                
+                <div style="margin-top:40px;">
+                     <button onclick="closeAdminModal()" style="width:100%; padding:14px; border-radius:10px; background:#475569; color:white; font-size:1rem; font-weight:600; cursor:pointer; border:none; transition:all 0.2s; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+                        <i class="fas fa-times"></i> 닫기
+                     </button>
+                </div>
+            </div>
+        </div>
+    `;
 };
+
+// (Removed Legacy Duplicate updateApplicationStatus)
 
 window.deleteApplication = async (id) => {
     if (confirm('정말 이 신청 내역을 삭제하시겠습니까? (복구 불가)')) {
-        const { error } = await supabase.from('applications').delete().eq('id', id);
-        if (error) alert('삭제 실패: ' + error.message);
-        else loadApplications();
+        console.log('Deleting entry:', id, typeof id);
+
+        // .select()를 추가하여 실제 삭제된 데이터를 반환받습니다.
+        const { data, error } = await supabase
+            .from('applications')
+            .delete()
+            .eq('id', id)
+            .select();
+
+        if (error) {
+            console.error('Delete failed (Error):', error);
+            if (error.code === '42501' || error.message.includes('policy')) {
+                alert('권한 오류: Supabase RLS 정책에 의해 삭제가 차단되었습니다.\n(Project Settings > Table Editor > applications > Enable Delete for public/anon)');
+            } else {
+                alert('삭제 중 오류 발생: ' + error.message);
+            }
+        } else {
+            // 에러는 없지만 삭제된 데이터도 없는 경우 (RLS Silent Failure)
+            if (!data || data.length === 0) {
+                console.warn('Delete failed (Silent): No rows affected.');
+                alert('삭제된 데이터가 없습니다.\n원인: 이미 삭제되었거나, Supabase RLS 정책이 삭제를 조용히 차단하고 있습니다.\n\n해결책: Supabase 대시보드에서 "applications" 테이블의 Delete 권한을 허용해주세요.');
+            } else {
+                console.log('Delete successful:', data);
+                alert('삭제되었습니다.');
+                loadApplications();
+            }
+        }
     }
 };
 
@@ -425,6 +714,7 @@ window.showTab = async (tabId) => {
         if (tabId === 'inquiry') await renderInquiries();
         if (tabId === 'faq') await renderFaqs();
         if (tabId === 'application') await loadApplications();
+        if (tabId === 'backup' && window.loadBackups) await window.loadBackups();
     } catch (err) { console.error(err); }
 }
 
@@ -644,6 +934,7 @@ async function renderProducts() {
                 <td style="font-size: 0.9em; white-space: pre-wrap;">${specs}</td>
                 <td>${p.active ? '<span class="badge badge-green">On</span>' : '<span class="badge badge-gray">Off</span>'}</td>
                 <td>
+                    <button class="btn btn-secondary" style="padding:4px 8px; margin-right:4px;" onclick="openProductDetail(${p.id})"><i class="fas fa-search"></i></button>
                     <button class="btn btn-secondary" style="padding:4px 8px;" onclick="editProduct(${p.id}, '${typePrefix}')">수정</button>
                     <button class="delete-btn" onclick="deletePlan(${p.id})"><i class="fas fa-trash"></i></button>
                 </td>
@@ -651,6 +942,81 @@ async function renderProducts() {
         `;
     });
 }
+
+// Open Product Detail Modal
+window.openProductDetail = async (id) => {
+    // Show Loading
+    const modal = document.getElementById('admin-common-modal');
+    const modalBody = document.getElementById('admin-modal-body');
+    const modalTitle = document.getElementById('admin-modal-title');
+
+    modalTitle.innerText = '상품 상세 정보';
+    modalBody.innerHTML = '<div style="text-align:center; padding:30px;"><i class="fas fa-spinner fa-spin fa-2x"></i></div>';
+    modal.style.display = 'block';
+
+    // Fetch single plan
+    const { data: p, error } = await supabase.from('product_plans').select('*, products(name, category)').eq('id', id).single();
+
+    if (error || !p) {
+        modalBody.innerHTML = '<p style="color:red; text-align:center;">데이터를 불러올 수 없습니다.</p>';
+        return;
+    }
+
+    // Format Data
+    const categoryName = p.products?.name || '-';
+    let featuresHtml = '';
+    if (p.features) {
+        const feats = Array.isArray(p.features) ? p.features : (p.features.split ? p.features.split('\n') : [p.features]);
+        featuresHtml = '<ul style="padding-left:20px; margin:0;">' + feats.map(f => `<li>${f}</li>`).join('') + '</ul>';
+    } else {
+        featuresHtml = '-';
+    }
+
+    // Spec Helper
+    const makeSpecRow = (label, val) => val ? `<div class="detail-grid"><div class="detail-label">${label}</div><div class="detail-value">${val}</div></div>` : '';
+
+    let specRows = '';
+    // Hosting
+    specRows += makeSpecRow('CPU', p.cpu);
+    specRows += makeSpecRow('RAM', p.ram);
+    specRows += makeSpecRow('Storage', p.storage);
+    specRows += makeSpecRow('Traffic', p.traffic);
+    // VPN
+    specRows += makeSpecRow('속도', p.speed);
+    specRows += makeSpecRow('거점', p.sites);
+    specRows += makeSpecRow('사용자', p.users);
+
+    modalBody.innerHTML = `
+        <div class="detail-grid">
+            <div class="detail-label">상품명</div>
+            <div class="detail-value"><strong>${p.plan_name}</strong></div>
+        </div>
+        <div class="detail-grid">
+            <div class="detail-label">카테고리</div>
+            <div class="detail-value">${categoryName}</div>
+        </div>
+        <div class="detail-grid">
+            <div class="detail-label">가격</div>
+            <div class="detail-value">${p.price} / ${p.period}</div>
+        </div>
+        <div class="detail-grid">
+            <div class="detail-label">요약 설명</div>
+            <div class="detail-value">${p.summary || '-'}</div>
+        </div>
+        ${specRows}
+        <div class="detail-grid">
+            <div class="detail-label">주요 기능</div>
+            <div class="detail-value">${featuresHtml}</div>
+        </div>
+        <div class="detail-grid" style="border-bottom:none;">
+            <div class="detail-label">상태</div>
+            <div class="detail-value">
+                ${p.active ? '<span class="badge badge-green">판매중</span>' : '<span class="badge badge-gray">판매중지</span>'}
+                ${p.popular ? '<span class="badge badge-yellow">인기상품</span>' : ''}
+            </div>
+        </div>
+    `;
+};
 
 window.deletePlan = async (id) => {
     if (confirm('정말 이 플랜을 삭제하시겠습니까?')) {
@@ -817,8 +1183,15 @@ window.loadTermEditor = async (type) => {
     ['privacy', 'terms', 'member'].forEach(t => {
         const btn = document.getElementById(`btn-${t}`);
         if (btn) {
+            // Remove legacy classes just in case
             btn.classList.remove('btn-primary', 'btn-secondary');
-            btn.classList.add(t === type ? 'btn-primary' : 'btn-secondary');
+
+            // Toggle Active State
+            if (t === type) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
         }
     });
 

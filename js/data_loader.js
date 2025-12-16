@@ -36,19 +36,63 @@ const PRODUCT_CATEGORIES = {
 };
 
 async function loadProductData(pageKey) {
-    if (!window.sb) {
-        console.error('Supabase client not initialized. Make sure supabase_config.js is loaded.');
-        return;
-    }
-
     const config = PRODUCT_CATEGORIES[pageKey];
     if (!config) {
         console.warn(`No configuration found for page key: ${pageKey}`);
         return;
     }
 
-    // 1. Get Product ID
-    const { data: product, error: prodError } = await window.sb.from('products')
+    const container = document.getElementById(config.containerId);
+
+    // 1. DB Client Resolution (Self-Healing & Polling)
+    let maxRetries = 20;
+    while (typeof window.sb === 'undefined' && maxRetries > 0) {
+        await new Promise(r => setTimeout(r, 100));
+        maxRetries--;
+    }
+
+    let db = window.sb;
+
+    // Fallback: Check standard supabase variable
+    if ((!db || !db.from) && typeof supabase !== 'undefined') {
+        db = supabase;
+        window.sb = supabase;
+    }
+
+    // Emergency Fallback if still missing (Direct Init)
+    if (!db || !db.from) {
+        console.warn('[Data Loader] window.sb missing after wait. Attempting fallback init...');
+        const lib = window.supabase || (typeof supabase !== 'undefined' ? supabase : null);
+
+        if (lib && lib.createClient) {
+            try {
+                const _url = 'https://pfowkwodqsirbaqkpfmb.supabase.co';
+                const _key = 'sb_publishable_i8wY_NmKlt9qUZJPKH1f2A_yOwp3qlA';
+                db = lib.createClient(_url, _key);
+                window.sb = db;
+                console.log('[Data Loader] Fallback Init Success');
+            } catch (e) {
+                console.error('[Data Loader] Fallback Init Error', e);
+            }
+        }
+    }
+
+    // 2. Final Error Check (Show UI Message)
+    if (!db || !db.from) {
+        console.error('Supabase client fully unavailable.');
+        if (container) {
+            container.innerHTML = `
+                <div style="text-align:center; padding: 60px 20px;">
+                    <i class="fas fa-exclamation-triangle" style="font-size:30px; color:#f59e0b; margin-bottom:15px;"></i>
+                    <h3 style="color:#333; margin-bottom:10px;">데이터를 불러올 수 없습니다</h3>
+                    <p style="color:#666; font-size:14px;">서버 연결(CDN)에 실패했습니다. 새로고침 해주세요.</p>
+                </div>`;
+        }
+        return;
+    }
+
+    // 3. Get Product ID
+    const { data: product, error: prodError } = await db.from('products')
         .select('id')
         .eq('category', config.category)
         .eq('subcategory', config.subcategory)
@@ -56,11 +100,12 @@ async function loadProductData(pageKey) {
 
     if (prodError || !product) {
         console.warn('Product group not found in DB.', prodError);
+        if (container) container.innerHTML = '<div style="text-align:center; padding:40px; color:#999;">상품 정보가 없습니다.</div>';
         return;
     }
 
-    // 2. Get Plans
-    const { data: plans, error: planError } = await window.sb.from('product_plans')
+    // 4. Get Plans
+    const { data: plans, error: planError } = await db.from('product_plans')
         .select('*')
         .eq('product_id', product.id)
         .eq('active', true) // Only active plans
@@ -68,11 +113,13 @@ async function loadProductData(pageKey) {
 
     if (planError) {
         console.error('Error fetching plans:', planError);
+        if (container) container.innerHTML = '<div style="text-align:center; padding:40px; color:#dc2626;">데이터 로드 오류</div>';
         return;
     }
 
     if (!plans || plans.length === 0) {
         console.log('No active plans found.');
+        if (container) container.innerHTML = '<div style="text-align:center; padding:40px; color:#999;">등록된 요금제가 없습니다.</div>';
         return;
     }
 
@@ -126,7 +173,7 @@ function renderAddon(container, plans) {
         const escDetails = escapeHtml(addonDetails);
 
         const cardHtml = `
-            <div class="plan-card ${plan.popular ? 'popular' : ''}">
+            <div class="plan-card popular">
                 ${badgeHtml}
                 <div class="plan-title">${plan.plan_name}</div>
                 <div class="plan-price">${priceDisplay}</div>
@@ -134,7 +181,7 @@ function renderAddon(container, plans) {
                 <ul class="plan-features">
                     ${featureListHtml}
                 </ul>
-                <button class="plan-btn ${plan.popular ? 'solid' : 'outline'} js-open-modal" 
+                <button class="plan-btn solid js-open-modal" 
                     data-name="${escName}" data-type="addon" data-details="${escDetails}"
                     style="width:100%; border:none; cursor:pointer;">신청하기</button>
             </div>
@@ -176,7 +223,7 @@ function renderHosting(container, plans) {
         const escSpec = escapeHtml(specStr);
 
         const html = `
-            <div class="plan-card ${p.popular ? 'popular' : ''}">
+            <div class="plan-card popular">
                 ${p.badge ? `<span class="plan-badge">${p.badge}</span>` : ''}
                 <h3 class="plan-title">${p.plan_name}</h3>
                 <div class="plan-summary">${p.summary || ''}</div>
@@ -186,8 +233,8 @@ function renderHosting(container, plans) {
 
                 <ul class="plan-features">${featureHtml}</ul>
 
-                <button class="plan-btn ${p.popular ? 'solid' : 'outline'} js-open-modal" 
-                    data-name="${escName}" data-type="hosting" data-details="${escSpec}"
+                <button class="plan-btn solid js-open-modal" 
+                    data-name="${escName}" data-type="hosting" data-details="${escSpec}" data-price="${p.price}"
                     style="width:100%; border:none; cursor:pointer;">신청하기</button>
             </div>
         `;
@@ -206,13 +253,13 @@ function renderVpn(container, plans) {
         const escSummary = escapeHtml(p.summary || p.speed || 'VPN Service');
 
         const html = `
-            <div class="plan-card ${p.popular ? 'popular' : ''}">
+            <div class="plan-card popular">
                 ${p.badge ? `<span class="plan-badge">${p.badge}</span>` : ''}
                 <h3 class="plan-title">${p.plan_name}</h3>
                 <div class="plan-summary" style="font-size:0.9em; color:#666; margin-bottom:15px; min-height:24px;">${p.summary || ''}</div>
                 <div class="plan-price">${displayPrice}</div>
                 <ul class="plan-features">${featureHtml}</ul>
-                <button class="plan-btn ${p.popular ? 'solid' : 'outline'} js-open-modal"
+                <button class="plan-btn solid js-open-modal"
                     data-name="${escName}" data-type="vpn" data-details="${escSummary}"
                     style="width:100%; border:none; cursor:pointer;">신청하기</button>
             </div>
@@ -232,12 +279,12 @@ function renderColocation(container, plans) {
         const escSummary = escapeHtml(p.summary || '상면 임대 서비스');
 
         const html = `
-            <div class="plan-card ${p.popular ? 'popular' : ''}">
+            <div class="plan-card popular">
                 ${p.badge ? `<span class="plan-badge">${p.badge}</span>` : ''}
                 <h3 class="plan-title">${p.plan_name}</h3>
                 <div class="plan-price">${displayPrice}</div>
                 <ul class="plan-features">${featureHtml}</ul>
-                <button class="plan-btn ${p.popular ? 'solid' : 'outline'} js-open-modal"
+                <button class="plan-btn solid js-open-modal"
                     data-name="${escName}" data-type="colocation" data-details="${escSummary}"
                     style="width:100%; border:none; cursor:pointer;">신청하기</button>
             </div>
