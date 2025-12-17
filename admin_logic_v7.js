@@ -55,7 +55,6 @@ window.showTab = (tabId) => {
     document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'));
 
     // Show target tab
-    // Show target tab
     const target = document.getElementById('tab-' + tabId);
 
     // Find button (Robust Search)
@@ -1427,8 +1426,7 @@ window.loadTermEditor = async (type) => {
     const types = ['privacy', 'terms', 'member'];
     console.log(`Switching Term Tab to: ${type}`);
 
-    const types = ['privacy', 'terms', 'member'];
-    console.log(`Switching Term Tab to: ${type}`);
+
 
     types.forEach(t => {
         const btn = document.getElementById(`btn-${t}`);
