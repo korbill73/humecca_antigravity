@@ -1498,30 +1498,40 @@ window.saveCurrentTerm = async () => {
         let error;
         if (existing) {
             // Update
-            const { error: updateError } = await supabase
+            const { data: updated, error: updateError } = await supabase
                 .from('terms')
                 .update({
                     content: content,
                     updated_at: new Date()
                 })
-                .eq('type', currentTermType);
-            error = updateError;
+                .eq('type', currentTermType)
+                .select(); // Return modified rows
+
+            if (updateError) throw updateError;
+            if (!updated || updated.length === 0) {
+                throw new Error('업데이트된 데이터가 없습니다. (권한 부족 또는 데이터 불일치)');
+            }
+            error = null;
         } else {
             // Insert
-            const { error: insertError } = await supabase
+            const { data: inserted, error: insertError } = await supabase
                 .from('terms')
                 .insert([{
                     type: currentTermType,
                     content: content,
                     title: currentTermType === 'privacy' ? '개인정보처리방침' :
                         currentTermType === 'terms' ? '이용약관' : '회원약관'
-                }]);
-            error = insertError;
+                }])
+                .select();
+
+            if (insertError) throw insertError;
+            if (!inserted || inserted.length === 0) {
+                throw new Error('데이터 추가 실패 (권한 부족)');
+            }
+            error = null;
         }
 
-        if (error) {
-            console.error('[Debug] DB Error:', error);
-            alert('DB 저장 오류 발생:\n' + error.message);
+        if (error) { // Should be handled above, but keeping for safety
             throw error;
         }
 
