@@ -1413,15 +1413,22 @@ window.loadTermEditor = async (type) => {
     const types = ['privacy', 'terms', 'member'];
     console.log(`Switching Term Tab to: ${type}`);
 
+    const types = ['privacy', 'terms', 'member'];
+    console.log(`Switching Term Tab to: ${type}`);
+
     types.forEach(t => {
         const btn = document.getElementById(`btn-${t}`);
         if (btn) {
-            // Force remove first
-            btn.classList.remove('active');
-
-            // Add if match
             if (t === type) {
                 btn.classList.add('active');
+                btn.style.backgroundColor = '#dc2626'; // Force Apply Red
+                btn.style.color = '#ffffff';
+                btn.style.fontWeight = 'bold';
+            } else {
+                btn.classList.remove('active');
+                btn.style.backgroundColor = ''; // Reset
+                btn.style.color = '';
+                btn.style.fontWeight = '';
             }
         }
     });
@@ -1461,9 +1468,9 @@ window.saveCurrentTerm = async () => {
 
     // Save to Supabase DB
     // Save to Supabase DB
+    // Save to Supabase DB
     try {
         console.log('[Debug] Saving term:', currentTermType);
-        // alert('[디버그] 저장 시작: ' + currentTermType); // Commented out to reduce noise, enable if needed
 
         // 1. Check if exists
         const { data: existing, error: fetchError } = await supabase
@@ -1473,13 +1480,11 @@ window.saveCurrentTerm = async () => {
             .single();
 
         if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is 'Row not found'
-            // alert('[디버그] 조회 오류: ' + fetchError.message + ' (' + fetchError.code + ')');
             throw fetchError;
         }
 
         let error;
         if (existing) {
-            console.log('[Debug] Updating existing term:', existing.id);
             // Update
             const { error: updateError } = await supabase
                 .from('terms')
@@ -1490,7 +1495,6 @@ window.saveCurrentTerm = async () => {
                 .eq('type', currentTermType);
             error = updateError;
         } else {
-            console.log('[Debug] Inserting new term');
             // Insert
             const { error: insertError } = await supabase
                 .from('terms')
@@ -1505,14 +1509,13 @@ window.saveCurrentTerm = async () => {
 
         if (error) {
             console.error('[Debug] DB Error:', error);
-            alert('DB 저장 오류 발생:\n' + error.message + '\n(Code: ' + error.code + ')');
+            alert('DB 저장 오류 발생:\n' + error.message);
             throw error;
         }
 
-        alert('저장되었습니다! (Type: ' + currentTermType + ')');
+        alert('저장되었습니다.');
     } catch (err) {
         console.error('저장 실패:', err);
-        // Alert is already shown above for specific DB errors, but generic catch:
         if (!err.code) alert('저장 실패(시스템): ' + err.message);
     } finally {
         if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> 저장하기'; }
