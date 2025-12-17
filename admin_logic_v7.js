@@ -1685,16 +1685,7 @@ async function renderInquiries() {
     });
 }
 
-// Terms
-window.loadTermEditor = async (type) => {
-    currentTermType = type;
-    const { data } = await supabase.from('terms').select('content').eq('type', type).single();
-    document.getElementById('term-content').value = data ? data.content : '';
-}
-window.saveCurrentTerm = async () => {
-    await supabase.from('terms').upsert({ type: currentTermType, content: document.getElementById('term-content').value }, { onConflict: 'type' });
-    alert('Saved');
-}
+
 
 // History
 // History
