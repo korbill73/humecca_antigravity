@@ -55,9 +55,23 @@ window.showTab = (tabId) => {
     document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'));
 
     // Show target tab
+    // Show target tab
     const target = document.getElementById('tab-' + tabId);
-    // Find button by onclick attribute since data-tab is missing in some versions
-    const btn = document.querySelector(`.admin-tab[onclick="showTab('${tabId}')"]`);
+
+    // Find button (Robust Search)
+    let btn = document.querySelector(`.admin-tab[onclick="showTab('${tabId}')"]`);
+
+    // Fallback: search by checking attribute content loosely if exact match failed
+    if (!btn) {
+        const tabs = document.querySelectorAll('.admin-tab');
+        for (let i = 0; i < tabs.length; i++) {
+            const onClick = tabs[i].getAttribute('onclick');
+            if (onClick && onClick.includes(`showTab('${tabId}')`)) {
+                btn = tabs[i];
+                break;
+            }
+        }
+    }
 
     if (target) target.classList.add('active');
     if (btn) btn.classList.add('active');
