@@ -1682,26 +1682,29 @@
     </div> <!-- End Main Container -->
 
     <!-- ======================= 백업/복구 탭 ======================= -->
-    <div id="tab-backup" class="tab-content" style="max-width: 1000px; margin: 0 auto;">
+    <div id="tab-backup" class="tab-content" style="max-width: 1000px; margin: 0 auto; color: #f8fafc;">
         <div style="margin-bottom: 30px;">
-            <h2 class="page-title" style="font-size: 1.8rem; color: #1e293b; margin-bottom: 10px;">로컬 파일 백업/복구 (Time
-                Machine)</h2>
-            <p class="page-subtitle" style="color: #64748b;">현재 작업 중인 로컬 파일들을 스냅샷으로 저장하거나, 이전 시점으로 즉시 되돌립니다.</p>
+            <h2 class="page-title"
+                style="font-size: 1.8rem; color: #f8fafc; margin-bottom: 10px; display:flex; align-items:center; gap:10px;">
+                <i class="fas fa-history" style="color:#60a5fa;"></i> 로컬 파일 백업/복구 (Time Machine)
+            </h2>
+            <p class="page-subtitle" style="color: #94a3b8;">현재 작업 중인 로컬 파일들을 스냅샷으로 저장하거나, 이전 시점으로 즉시 되돌립니다.</p>
         </div>
 
-        <div class="card">
+        <div class="card"
+            style="background: #1e293b; border: 1px solid #334155; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);">
             <div class="card-header"
-                style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(15, 23, 42, 0.5); border-bottom: 1px solid #334155;">
                 <div>
-                    <h3 class="card-title" style="font-size: 1.25rem; font-weight: 700; color: #334155;">백업 타임라인</h3>
+                    <h3 class="card-title" style="font-size: 1.25rem; font-weight: 700; color: #f8fafc;">백업 타임라인</h3>
                     <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 5px;">* 복구 시 현재 파일은 덮어씌워집니다.</p>
                 </div>
                 <button class="btn btn-primary" onclick="createBackup()" id="btn-create-backup"
-                    style="padding: 10px 24px; font-size: 1rem; box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);">
+                    style="padding: 10px 24px; font-size: 1rem; background: #3b82f6; border: none; color: white;">
                     <i class="fas fa-save"></i> 현재 상태 백업하기
                 </button>
             </div>
-            <div id="backup-list" style="max-height: 600px; overflow-y: auto; min-height: 200px;">
+            <div id="backup-list" style="max-height: 600px; overflow-y: auto; min-height: 200px; background: #1e293b;">
                 <!-- Backups loaded here via JS -->
             </div>
         </div>
@@ -1720,8 +1723,38 @@
         </div>
     </div>
 
-    <script src="js/admin_backup.js"></script>
-    <script src="admin_logic_v7.js?v=7.8"></script>
+    <script src="admin_logic_v7.js?v=3.21"></script>
+    <script src="js/admin_backup.js?v=1.0"></script>
+    <script src="js/admin_analytics.js?v=1.0"></script> <!-- Analytics Script Added -->
+    <script>
+        // Tab switching logic override to trigger analytics refresh
+        const originalShowTab = window.showTab;
+        window.showTab = function (tabName) {
+            // Call original
+            if (typeof originalShowTab === 'function') originalShowTab(tabName);
+
+            // Handle custom logic
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById('tab-' + tabName);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'));
+            // Find button that calls this tab
+            const buttons = document.querySelectorAll('.admin-tab');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('onclick').includes(`'${tabName}'`)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // If Analytics tab, refresh data
+            if (tabName === 'analytics') {
+                if (typeof refreshAnalytics === 'function') {
+                    refreshAnalytics();
+                }
+            }
+        }
+    </script>
 </body>
 
 </html>
