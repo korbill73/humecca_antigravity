@@ -1,11 +1,11 @@
-/**
+﻿/**
  * HUMECCA 공통 컴포넌트 로더
  * 헤더, 푸터 등 공통 컴포넌트를 동적으로 로드합니다.
  */
 
 // [Configuration] Current Application Version
 // Update this value manually whenever a deployment/update occurs
-const APP_VERSION = 'v.20251226.0116';
+const APP_VERSION = 'v.20251226.0123';
 
 
 
@@ -611,7 +611,7 @@ function getInlineHeader() {
             <a href="https://login.humecca.co.kr/" class="btn" style="color: #64748b; font-weight: 600;">
                 <i class="fas fa-power-off" style="margin-right:6px; color:#EF4444;"></i> 로그인
             </a>
-            <span style="font-size:10px; color: #ff0000; margin-left:24px; font-weight:bold; position:relative; top:1px;">v.20251216.1909</span>
+            <span style="font-size:10px; color: #ff0000; margin-left:24px; font-weight:bold; position:relative; top:1px;">v.20251226.0123</span>
         </div>
         <!-- Mobile Menu Button -->
         <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
@@ -1014,3 +1014,4 @@ document.addEventListener('click', (e) => {
         }
     }
 });
+
