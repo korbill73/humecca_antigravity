@@ -229,6 +229,23 @@ const s_products_dbsafer = [
     { "id": "dbsafer-am", "name": "DBSAFER AM", "price": "문의", "period": "OS", "badge": "", "summary": "시스템 접근 제어", "isActive": true, "popular": false, "sortOrder": 2, "features": ["OS 계정 관리", "명령어 통제", "Telnet/SSH 제어"] }
 ];
 
+const solution_products_ms365 = [
+    { "id": "ms365-basic", "name": "Microsoft 365 Business Basic", "price": "7,500", "period": "월", "badge": "", "summary": "사용자/월 (연간 약정시)", "features": ["웹 및 모바일용 Office 앱", "1TB OneDrive 스토리지", "비즈니스용 이메일", "Teams 채팅 및 화상회의"], "sortOrder": 1, "isActive": true, "popular": false },
+    { "id": "ms365-standard", "name": "Microsoft 365 Business Standard", "price": "15,600", "period": "월", "badge": "인기 상품", "summary": "사용자/월 (연간 약정시)", "features": ["데스크톱용 Office 앱 포함", "Word, Excel, PPT, Outlook", "1TB OneDrive 스토리지", "웨비나 개최 기능"], "sortOrder": 2, "isActive": true, "popular": true },
+    { "id": "ms365-premium", "name": "Microsoft 365 Business Premium", "price": "27,500", "period": "월", "badge": "", "summary": "사용자/월 (연간 약정시)", "features": ["모든 Standard 기능 포함", "고급 보안 및 사이버 위협 보호", "PC 및 모바일 장치 관리", "데이터 손실 방지 (DLP)"], "sortOrder": 3, "isActive": true, "popular": false }
+];
+
+const solution_products_naver = [
+    { "id": "naver-lite", "name": "Lite", "price": "3,000", "period": "월", "badge": "", "summary": "사용자/월 (연간 약정시)", "features": ["메시지 (채팅/음성/영상 통화)", "게시판, 캘린더, 주소록", "설문, 할 일", "공용 용량 10GB/1인"], "sortOrder": 1, "isActive": true, "popular": false },
+    { "id": "naver-basic", "name": "Basic", "price": "6,000", "period": "월", "badge": "추천", "summary": "사용자/월 (연간 약정시)", "features": ["Lite 기능 전체 포함", "메일 (30GB/1인)", "드라이브 (35GB/1인)", "화상회의 (최대 200명)"], "sortOrder": 2, "isActive": true, "popular": true },
+    { "id": "naver-premium", "name": "Premium", "price": "10,000", "period": "월", "badge": "", "summary": "사용자/월 (연간 약정시)", "features": ["Basic 기능 전체 포함", "드라이브 용량 무제한", "아카이빙(보존)", "고급 보안 설정", "감사 로그"], "sortOrder": 3, "isActive": true, "popular": false }
+];
+
+const solution_products_web = [
+    { "id": "web-basic", "name": "일반형 (반응형)", "price": "1,000,000", "period": "건", "badge": "", "summary": "기본 5페이지 내외", "features": ["반응형 웹 디자인 적용", "게시판/문의폼 기능", "기본 관리자 모드", "유지보수 1개월 무료"], "sortOrder": 1, "isActive": true, "popular": false },
+    { "id": "web-business", "name": "비즈니스형", "price": "2,000,000", "period": "건", "badge": "추천", "summary": "페이지 수 제한 없음 (협의)", "features": ["고급 디자인 및 퍼블리싱", "회원관리 / SMS 연동", "접속 통계 프로그램", "유지보수 3개월 무료"], "sortOrder": 2, "isActive": true, "popular": true },
+    { "id": "web-premium", "name": "프리미엄 쇼핑몰", "price": "문의", "period": "건", "badge": "", "summary": "독립형 쇼핑몰 구축", "features": ["전자결제(PG) 연동", "상품/주문/배송 관리 시스템", "마케팅 툴 연동", "맞춤 기능 개발 가능"], "sortOrder": 3, "isActive": true, "popular": false }
+];
 
 // ===========================
 // Migration Logic (File -> DB)
@@ -247,7 +264,12 @@ const CATEGORIES = {
     'security-v3': { category: 'security', subcategory: 'sec-v3', name: 'V3 Net Server' },
     'security-dbsafer': { category: 'security', subcategory: 'sec-dbsafer', name: 'DBSAFER' },
 
-    // Add-on Services (Changed category from 'security' to 'addon')
+    // Solution Products
+    'solution': { category: 'solution', subcategory: 'solution', name: '기업 솔루션 (MS365)' },
+    'solution-naver': { category: 'solution', subcategory: 'naverworks', name: '네이버웍스' },
+    'solution-website': { category: 'solution', subcategory: 'website', name: '홈페이지 제작' },
+
+    // Add-on Services
     'addon-license': { category: 'addon', subcategory: 'addon-license', name: '소프트웨어 라이선스' },
     'addon-backup': { category: 'addon', subcategory: 'addon-backup', name: '백업 서비스' },
     'addon-ha': { category: 'addon', subcategory: 'addon-ha', name: 'HA (고가용성)' },
@@ -336,6 +358,11 @@ window.migrateToSupabase = async () => {
     for (const p of s_products_ssl) { await addPlanToSupabase('security-ssl', p); count++; }
     for (const p of s_products_v3) { await addPlanToSupabase('security-v3', p); count++; }
     for (const p of s_products_dbsafer) { await addPlanToSupabase('security-dbsafer', p); count++; }
+
+    // Migrate Solutions
+    for (const p of solution_products_ms365) { await addPlanToSupabase('solution', p); count++; }
+    for (const p of solution_products_naver) { await addPlanToSupabase('solution-naver', p); count++; }
+    for (const p of solution_products_web) { await addPlanToSupabase('solution-website', p); count++; }
 
     // Migrate Add-ons
     for (const p of s_products_license) { await addPlanToSupabase('addon-license', p); count++; }
@@ -553,7 +580,7 @@ async function loadApplications() {
         if (fullCleanName.includes('/')) displayName += '...';
 
         listEl.innerHTML += `
-            <tr style="${rowStyle}" onclick="openApplicationDetail('${item.id}')">
+            <tr style="${rowStyle}" onclick="openApplicationDetailNew('${item.id}')">
                 <td class="date-cell">
                     <div class="date-main">${dateMain}</div>
                     <div class="date-sub">${dateSub}</div>
@@ -943,6 +970,7 @@ async function renderAnnouncements() {
 }
 
 // Global View Function
+// Global View Function
 window.viewNoticeDetail = (id) => {
     const notice = window.currentNoticeList?.find(n => n.id == id);
     if (!notice) return;
@@ -958,18 +986,18 @@ window.viewNoticeDetail = (id) => {
     const pinBadge = notice.is_pinned ? '<span class="badge badge-red">중요 공지</span>' : '';
 
     modalBody.innerHTML = `
-        <div style="border-bottom:1px solid #e2e8f0; padding-bottom:15px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px; margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
             <div>
                 ${pinBadge}
-                <span style="color:#64748b; font-size:0.9rem; margin-left:10px;"><i class="far fa-calendar-alt"></i> ${date}</span>
-                <span style="color:#64748b; font-size:0.9rem; margin-left:15px;"><i class="fas fa-user-circle"></i> ${notice.author || '관리자'}</span>
+                <span style="color:#94a3b8; font-size:0.9rem; margin-left:10px;"><i class="far fa-calendar-alt"></i> ${date}</span>
+                <span style="color:#94a3b8; font-size:0.9rem; margin-left:15px;"><i class="fas fa-user-circle"></i> ${notice.author || '관리자'}</span>
             </div>
-            <span style="color:#94a3b8; font-size:0.85rem;">ID: ${notice.id}</span>
+            <span style="color:#64748b; font-size:0.85rem;">ID: ${notice.id}</span>
         </div>
-        <div style="min-height:200px; color:#334155; line-height:1.6;">
+        <div style="min-height:200px; color:#f1f5f9; line-height:1.7; font-size:1.05rem; white-space:pre-wrap;">
             ${notice.content}
         </div>
-        <div style="text-align:right; margin-top:30px; border-top:1px solid #e2e8f0; padding-top:20px;">
+        <div style="text-align:right; margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
             <button class="btn btn-primary" onclick="editNotice(${notice.id}); closeAdminModal();">수정하기</button>
             <button class="btn btn-secondary" onclick="closeAdminModal()">닫기</button>
         </div>
@@ -1057,7 +1085,7 @@ window.switchProductTab = (sub) => {
     if (activeTab) activeTab.classList.add('active');
 
     // 2. Show Content Area
-    ['hosting', 'vpn', 'colocation', 'service', 'security'].forEach(id => {
+    ['hosting', 'vpn', 'colocation', 'service', 'security', 'solution'].forEach(id => {
         const content = document.getElementById(`sub-${id}`);
         if (content) content.style.display = (id === sub) ? 'block' : 'none';
     });
@@ -1081,6 +1109,8 @@ async function renderProducts() {
     } else if (sub === 'security') {
         listEl = document.getElementById('security-list-body');
         subtitleEl = document.getElementById('sec-list-subtitle');
+    } else if (sub === 'solution') {
+        listEl = document.getElementById('product-list-solution');
     } else if (sub === 'service') {
         listEl = document.getElementById('service-list-body');
         subtitleEl = document.getElementById('s-list-subtitle');
@@ -1110,6 +1140,19 @@ async function renderProducts() {
             subcategory = config.subcategory;
             if (subtitleEl) subtitleEl.textContent = `선택된 카테고리: ${config.name}`;
         }
+    } else if (sub === 'solution') {
+        // Solution subcategory depends on the dropdown in the solution form container (if we move it out or check value)
+        // Wait, the screenshot showed no dropdown for solution LIST, but there IS a dropdown in the FORM.
+        // However, for listing, we need to know WHICH solution to list.
+        // The user complained "Enterprise Solution" tab is empty.
+        // I need to add a "Solution Category Select" dropdown above the list (like Service/Security tabs have).
+        // For now, I'll default to 'solution' (MS365) but if I add the dropdown, I should use it.
+
+        category = 'solution';
+        const solSelect = document.getElementById('solution-type-select');
+        subcategory = solSelect ? solSelect.value : 'solution';
+
+        if (subtitleEl) subtitleEl.textContent = subcategory === 'solution' ? 'MS365' : (subcategory === 'naverworks' ? '네이버웍스' : '홈페이지 제작');
     } else if (sub === 'service') {
         currentServiceType = document.getElementById('service-type-select')?.value || 'addon-license';
         const config = CATEGORIES[currentServiceType];
@@ -1152,6 +1195,9 @@ async function renderProducts() {
         } else if (sub === 'colocation') {
             const specText = [p.cpu, p.ram].filter(x => x).join(' / ');
             specs = specText || '-';
+        } else if (sub === 'solution') {
+            // Solution specs from category(summary) + detail(features[0])
+            specs = `<span class="badge badge-gray">${p.summary || '기타'}</span> ${p.features ? (Array.isArray(p.features) ? p.features[0] : p.features) : '-'}`;
         } else {
             // Service / Security generic
             specs = p.summary || (p.features ? (Array.isArray(p.features) ? p.features[0] : p.features.split('\n')[0]) : '-');
@@ -1164,6 +1210,7 @@ async function renderProducts() {
         else if (sub === 'colocation') typePrefix = 'c';
         else if (sub === 'security') typePrefix = 'sec';
         else if (sub === 'service') typePrefix = 's';
+        else if (sub === 'solution') typePrefix = 'solution';
 
         listEl.innerHTML += `
             <tr>
@@ -1265,8 +1312,16 @@ window.deletePlan = async (id) => {
 };
 
 window.editProduct = async (id, prefix) => {
-    const { data: p } = await supabase.from('product_plans').select('*').eq('id', id).single();
-    if (!p) return;
+    // Join with products to get subcategory
+    const { data: p, error } = await supabase.from('product_plans')
+        .select('*, products(subcategory)')
+        .eq('id', id)
+        .single();
+
+    if (error || !p) {
+        console.error('Error fetching plan:', error);
+        return;
+    }
 
     // Populate common fields
     const setVal = (pid, val) => { const el = document.getElementById(pid); if (el) el.value = val || ''; };
@@ -1296,6 +1351,17 @@ window.editProduct = async (id, prefix) => {
         setVal('v-speed', p.speed);
         setVal('v-sites', p.sites);
         setVal('v-users', p.users);
+    } else if (prefix === 'solution') {
+        // Solution Specific
+        // Solution Specific
+        // (Category dropdown removed as per request)
+        setVal('solution-summary', p.summary);
+        // And I have solution-category dropdown.
+        // Where is category stored? I passed it as commonData.category in SAVE.
+        // But getOrCreateProduct uses it to find PARENT product.
+        // It does NOT store it on CHILD plan usually. 
+        // BUT, if I want to edit, I need to know which one selected.
+        // I will rely on standard 'groupware' default for now or try to infer.
     }
 
     // Set Hidden ID to trigger Update mode
@@ -1308,9 +1374,11 @@ window.editProduct = async (id, prefix) => {
     else if (prefix === 'c') formId = 'colocation-form';
     else if (prefix === 'sec') formId = 'security-form';
     else if (prefix === 's') formId = 'service-form';
+    else if (prefix === 'solution') formId = 'solution-form-container';
 
     const formEl = document.getElementById(formId);
     if (formEl) {
+        formEl.style.display = 'block'; // Ensure form is visible
         formEl.scrollIntoView({ behavior: 'smooth' });
         // Highlight submit button text
         const btn = formEl.querySelector('button[type="submit"]');
@@ -1331,6 +1399,14 @@ window.resetForm = (type) => {
         else if (type === 'colocation') prefix = 'c';
         else if (type === 'security') prefix = 'sec';
         else if (type === 'service') prefix = 's';
+        else if (type === 'solution') {
+            prefix = 'solution';
+            document.getElementById('solution-category').value = 'groupware';
+            document.getElementById('solution-summary').value = '';
+            document.getElementById('solution-badge').value = '';
+            document.getElementById('solution-features').value = '';
+        }
+
         const hiddenInfo = document.getElementById(`${prefix}-id-hidden`);
         if (hiddenInfo) hiddenInfo.value = '';
     }
@@ -1338,83 +1414,117 @@ window.resetForm = (type) => {
 
 
 // Generic Product Form Handler (Upsert)
-['hosting', 'vpn', 'colocation', 'security', 'service'].forEach(type => {
+window.saveProduct = async (e, type) => {
+    if (e) e.preventDefault();
+    console.log(`Saving Product: ${type}`);
+
+    let p = 'h';
+    if (type === 'vpn') p = 'v';
+    if (type === 'colocation') p = 'c';
+    if (type === 'security') p = 'sec';
+    if (type === 'security') p = 'sec';
+    if (type === 'service') p = 's';
+    if (type === 'solution') p = 'solution';
+
+    const getVal = (id) => document.getElementById(id)?.value || '';
+    const getCheck = (id) => document.getElementById(id)?.checked || false;
+
+    // Determine Target Category/Subcategory
+    let targetType = type;
+    if (type === 'solution') {
+        const solSelect = document.getElementById('solution-type-select');
+        const solVal = solSelect ? solSelect.value : 'solution';
+        if (solVal === 'solution') targetType = 'solution';
+        else if (solVal === 'naverworks') targetType = 'solution-naver';
+        else if (solVal === 'website') targetType = 'solution-website';
+    } else if (type === 'service') {
+        targetType = document.getElementById('service-type-select').value;
+    } else if (type === 'security') {
+        targetType = document.getElementById('security-type-select').value;
+    }
+
+    // Get Parent Product ID
+    const prod = await getOrCreateProduct(targetType);
+    if (!prod) return;
+
+    // Prepare Payload
+    const featuresInput = getVal(`${p}-features`); // For non-solution types strictly, or overridden below
+
+    const commonData = {
+        product_id: prod.id,
+        plan_name: getVal(`${p}-name`),
+        plan_id: getVal(`${p}-id`), // This is the Slug/User-facing ID
+        price: getVal(`${p}-price`),
+        period: getVal(`${p}-period`),
+        summary: getVal(`${p}-summary`),
+        badge: getVal(`${p}-badge`),
+        active: getCheck(`${p}-active`),
+        sort_order: parseInt(getVal(`${p}-order`)) || 1,
+        features: featuresInput
+    };
+
+    // Custom Mapping for Solution
+    if (type === 'solution') {
+        commonData.plan_name = getVal('solution-name');
+        commonData.price = getVal('solution-price').replace(/,/g, ''); // Clean price
+        commonData.period = '월';
+        if (targetType === 'solution-website') commonData.period = '건'; // Special case for website
+
+        commonData.summary = getVal('solution-summary');
+        commonData.badge = getVal('solution-badge');
+
+        // Features: split by new line
+        const feetRaw = getVal('solution-features');
+        commonData.features = feetRaw ? feetRaw.split('\n').filter(x => x.trim()).join('\n') : '';
+
+        commonData.sort_order = parseInt(getVal('solution-sort')) || 1;
+        commonData.active = getCheck('solution-active');
+    }
+
+    // Specific Specs
+    if (type === 'hosting') {
+        commonData.cpu = getVal('h-cpu');
+        commonData.ram = getVal('h-ram');
+        commonData.storage = getVal('h-storage');
+        commonData.traffic = getVal('h-traffic');
+    } else if (type === 'colocation') {
+        // Map Colocation Space/Power to CPU/RAM columns
+        commonData.cpu = getVal('c-cpu'); // Space
+        commonData.ram = getVal('c-ram'); // Power
+    } else if (type === 'vpn') {
+        commonData.speed = getVal('v-speed');
+        commonData.sites = getVal('v-sites');
+        commonData.users = getVal('v-users');
+    }
+
+    // Check for Update vs Insert
+    const hiddenId = getVal(`${p}-id-hidden`);
+
+    if (hiddenId) {
+        // Update
+        const { error } = await supabase.from('product_plans').update(commonData).eq('id', hiddenId);
+        if (error) { alert('수정 실패: ' + error.message); return; }
+        alert('상품 정보가 수정되었습니다.');
+    } else {
+        // Insert
+        const { error } = await supabase.from('product_plans').insert([commonData]);
+        if (error) { alert('등록 실패: ' + error.message); return; }
+        alert('새로운 상품이 등록되었습니다.');
+    }
+
+    // Reset UI
+    resetForm(type);
+    // Wait slightly for DB propagation if needed, then render
+    setTimeout(() => {
+        renderProducts();
+    }, 300);
+};
+
+// Bind existing forms (legacy support)
+['hosting', 'vpn', 'colocation', 'security', 'service', 'solution'].forEach(type => {
     const form = document.getElementById(`${type}-form`);
     if (form) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            let p = 'h';
-            if (type === 'vpn') p = 'v';
-            if (type === 'colocation') p = 'c';
-            if (type === 'security') p = 'sec';
-            if (type === 'service') p = 's';
-
-            const getVal = (id) => document.getElementById(id)?.value || '';
-            const getCheck = (id) => document.getElementById(id)?.checked || false;
-
-            // Determine Target Category/Subcategory
-            let targetType = type;
-            if (type === 'service') {
-                targetType = document.getElementById('service-type-select').value;
-            } else if (type === 'security') {
-                targetType = document.getElementById('security-type-select').value;
-            }
-
-            // Get Parent Product ID
-            const prod = await getOrCreateProduct(targetType);
-            if (!prod) return;
-
-            // Prepare Payload
-            const featuresInput = getVal(`${p}-features`);
-
-            const commonData = {
-                product_id: prod.id,
-                plan_name: getVal(`${p}-name`),
-                plan_id: getVal(`${p}-id`), // This is the Slug/User-facing ID
-                price: getVal(`${p}-price`),
-                period: getVal(`${p}-period`),
-                summary: getVal(`${p}-summary`),
-                badge: getVal(`${p}-badge`),
-                active: getCheck(`${p}-active`),
-                sort_order: parseInt(getVal(`${p}-order`)) || 1,
-                features: featuresInput
-            };
-
-            // Specific Specs
-            if (type === 'hosting') {
-                commonData.cpu = getVal('h-cpu');
-                commonData.ram = getVal('h-ram');
-                commonData.storage = getVal('h-storage');
-                commonData.traffic = getVal('h-traffic');
-            } else if (type === 'colocation') {
-                // Map Colocation Space/Power to CPU/RAM columns
-                commonData.cpu = getVal('c-cpu'); // Space
-                commonData.ram = getVal('c-ram'); // Power
-            } else if (type === 'vpn') {
-                commonData.speed = getVal('v-speed');
-                commonData.sites = getVal('v-sites');
-                commonData.users = getVal('v-users');
-            }
-
-            // Check for Update vs Insert
-            const hiddenId = getVal(`${p}-id-hidden`);
-
-            if (hiddenId) {
-                // Update
-                const { error } = await supabase.from('product_plans').update(commonData).eq('id', hiddenId);
-                if (error) { alert('수정 실패: ' + error.message); return; }
-                alert('상품 정보가 수정되었습니다.');
-            } else {
-                // Insert
-                const { error } = await supabase.from('product_plans').insert([commonData]);
-                if (error) { alert('등록 실패: ' + error.message); return; }
-                alert('새로운 상품이 등록되었습니다.');
-            }
-
-            // Reset UI
-            resetForm(type);
-            renderProducts();
-        });
+        form.addEventListener('submit', (e) => saveProduct(e, type));
     }
 });
 
@@ -1673,19 +1783,62 @@ document.getElementById('customer-form')?.addEventListener('submit', async (e) =
     renderCustomers();
 });
 
+// FAQ Filter Logic
+let currentFaqFilter = 'all';
+
+window.filterFaq = (filter, btn) => {
+    currentFaqFilter = filter;
+
+    // Update Button UI
+    document.querySelectorAll('.status-tabs .status-tab-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+
+    renderFaqs();
+};
+
 async function renderFaqs() {
     const el = document.getElementById('faq-list');
     if (!el) return;
-    const { data } = await supabase.from('faqs').select('*').order('sort_order');
+
+    // Fetch data
+    let query = supabase.from('faqs').select('*').order('sort_order', { ascending: true });
+    if (currentFaqFilter !== 'all') {
+        query = query.eq('category', currentFaqFilter);
+    }
+
+    const { data } = await query;
+    const countEl = document.getElementById('faq-count');
+    if (countEl) countEl.innerText = data ? data.length : 0;
+
     el.innerHTML = '';
-    data?.forEach(f => {
-        el.innerHTML += `<div class="card" style="padding:15px; margin-bottom:10px;">
-            <b>Q. ${f.question}</b><br><small>A. ${f.answer}</small>
-            <div style="text-align:right;"><button class="delete-btn" onclick="deleteFaq(${f.id})">Del</button></div>
+
+    if (!data || data.length === 0) {
+        el.innerHTML = '<div style="text-align:center; padding:30px; color:#64748b;">등록된 FAQ가 없습니다.</div>';
+        return;
+    }
+
+    data.forEach(f => {
+        let catBadge = '';
+        if (f.category === 'general') catBadge = '<span class="badge badge-gray">일반</span>';
+        else if (f.category === 'technical') catBadge = '<span class="badge badge-blue">기술</span>';
+        else if (f.category === 'billing') catBadge = '<span class="badge badge-yellow">요금</span>';
+        else if (f.category === 'service') catBadge = '<span class="badge badge-green">서비스</span>';
+
+        el.innerHTML += `<div class="card" style="padding:20px; margin-bottom:15px; border-left:4px solid #3b82f6; background:#1e293b; border:1px solid #334155;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    ${catBadge}
+                    <span style="font-size:1.1rem; font-weight:bold; color:#f8fafc;">${f.question}</span>
+                </div>
+                <button class="delete-btn" onclick="deleteFaq(${f.id})" style="padding:4px 8px;"><i class="fas fa-trash"></i></button>
+            </div>
+            <div style="color:#cbd5e1; padding-left:5px; line-height:1.6; font-size:0.95rem;">
+                ${f.answer.replace(/\n/g, '<br>')}
+            </div>
         </div>`;
     });
 }
-window.deleteFaq = async (id) => { if (confirm('Delete?')) { await supabase.from('faqs').delete().eq('id', id); renderFaqs(); } };
+window.deleteFaq = async (id) => { if (confirm('정말 삭제하시겠습니까?')) { await supabase.from('faqs').delete().eq('id', id); renderFaqs(); } };
 document.getElementById('faq-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     await supabase.from('faqs').insert([{
@@ -1886,4 +2039,331 @@ document.getElementById('history-form')?.addEventListener('submit', async (e) =>
     renderTimeline();
     refreshDashboard();
 });
+
+// ==========================================
+// New Application Detail Modal (Premium Design)
+// ==========================================
+window.openApplicationDetailNew = async (id) => {
+    const modal = document.getElementById('admin-common-modal');
+    const modalBody = document.getElementById('admin-modal-body');
+    const modalTitle = document.getElementById('admin-modal-title');
+
+    modalTitle.innerText = '신청 상세 정보';
+    modalBody.innerHTML = '<div style="display:flex; justify-content:center; padding:50px;"><i class="fas fa-spinner fa-spin fa-3x" style="color:#e2e8f0;"></i></div>';
+    modal.style.display = 'block';
+
+    const { data: item, error } = await supabase.from('applications').select('*').eq('id', id).single();
+
+    if (error || !item) {
+        modalBody.innerHTML = '<div style="text-align:center; padding:30px; color:#ef4444;">데이터를 불러올 수 없습니다.</div>';
+        return;
+    }
+
+    // Parsing Logic
+    let rawName = item.product_name || '';
+    let priceMatch = rawName.match(/\((₩[\d,]+)\)/);
+    let priceText = priceMatch ? priceMatch[1] : '';
+    let cleanName = rawName.replace(/\((₩[\d,]+)\)/, '').trim();
+
+    // Dynamic Lookup if Price is Missing
+    if (!priceText && window.adminPriceMap) {
+        let lookupName = cleanName;
+        let foundPrice = window.adminPriceMap[lookupName];
+        if (!foundPrice && lookupName.includes(' (')) {
+            lookupName = lookupName.split(' (')[0].trim();
+            foundPrice = window.adminPriceMap[lookupName];
+        }
+        if (foundPrice) {
+            if (foundPrice === '문의') priceText = '문의';
+            else {
+                const n = Number(String(foundPrice).replace(/,/g, ''));
+                if (!isNaN(n)) priceText = '₩' + n.toLocaleString();
+                else priceText = foundPrice;
+            }
+        }
+    }
+
+    if (cleanName.includes('(CPU:')) cleanName = cleanName.replace('(CPU:', '/ CPU:');
+
+    // Status Options
+    const statusOptions = [
+        { val: 'pending', label: '접수대기' },
+        { val: 'contacting', label: '상담중' },
+        { val: 'completed', label: '처리완료' },
+        { val: 'cancelled', label: '취소됨' }
+    ];
+
+    const statusHtml = statusOptions.map(opt => `
+        <label style="cursor:pointer; display:flex; align-items:center; gap:12px; margin-bottom: 12px; font-size:1rem; color:${item.status === opt.val ? '#ffffff' : '#94a3b8'}; font-weight:${item.status === opt.val ? '700' : '500'}; transition:all 0.2s; padding:10px; border-radius:8px; background:${item.status === opt.val ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255,255,255,0.02)'}; border:1px solid ${item.status === opt.val ? '#3b82f6' : 'transparent'};">
+            <input type="radio" name="modal_status_${item.id}" onchange="updateAppStatus(${item.id}, '${opt.val}')" value="${opt.val}" ${item.status === opt.val ? 'checked' : ''} style="accent-color:#3b82f6; width:18px; height:18px;">
+            ${opt.label}
+        </label>
+    `).join('');
+
+    const headerStyle = "color: #818cf8; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: block;";
+
+    modalBody.innerHTML = `
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+            <!-- Left: Info -->
+            <div>
+                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:24px; margin-bottom:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:15px;">
+                        <span class="badge badge-blue" style="font-size:0.85rem; padding:5px 10px;">${item.product_type}</span>
+                        ${priceText ? `<span style="font-size:1.1rem; font-weight:700; color:#ef4444; background:rgba(239,68,68,0.1); padding:4px 10px; border-radius:6px;">${priceText}</span>` : ''}
+                    </div>
+                    <div style="font-size:1.4rem; font-weight:800; color:#f8fafc; margin-bottom:15px;">${cleanName}</div>
+                    
+                    ${item.product_detail ? `
+                    <div style="background:rgba(15,23,42,0.6); padding:15px; border-radius:8px; color:#cbd5e1; font-size:0.95rem; line-height:1.6; border:1px solid rgba(255,255,255,0.05);">
+                        <strong style="color:#94a3b8; display:block; margin-bottom:6px; font-size:0.85rem;">DETAILS</strong>
+                        ${item.product_detail}
+                    </div>` : ''}
+                </div>
+
+                <div style="margin-bottom:10px;">
+                     <h4 style="color:#94a3b8; font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px; margin-bottom:15px;">문의 내용 (MESSAGE)</h4>
+                     <div style="background:rgba(255,255,255,0.05); color:#e2e8f0; border-radius:12px; padding:24px; min-height:150px; line-height:1.7; white-space:pre-wrap; font-size:1rem; border:1px solid rgba(255,255,255,0.05);">${item.message || '(내용 없음)'}</div>
+                </div>
+            </div>
+
+            <!-- Right: Status & Contact -->
+            <div>
+                <div style="background:rgba(30,41,59,0.5); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:24px; margin-bottom:20px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+                    <h4 style="${headerStyle}">진행 상태</h4>
+                    ${statusHtml}
+                </div>
+
+                <div style="background:rgba(30,41,59,0.5); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:24px;">
+                    <h4 style="${headerStyle}">고객 정보</h4>
+                    <div style="font-size:1.1rem; font-weight:bold; color:#f8fafc; margin-bottom:5px;">${item.company_name || '개인고객'}</div>
+                    <div style="color:#cbd5e1; margin-bottom:20px; font-size:0.95rem;">${item.name}</div>
+                    
+                    <div style="display:flex; align-items:center; gap:12px; color:#cbd5e1; margin-bottom:10px; font-size:0.95rem;">
+                        <span style="background:rgba(255,255,255,0.1); width:28px; height:28px; display:flex; align-items:center; justify-content:center; border-radius:6px;"><i class="fas fa-phone-alt" style="font-size:0.8rem;"></i></span> 
+                        ${item.phone}
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px; color:#cbd5e1; font-size:0.95rem;">
+                        <span style="background:rgba(255,255,255,0.1); width:28px; height:28px; display:flex; align-items:center; justify-content:center; border-radius:6px;"><i class="fas fa-envelope" style="font-size:0.8rem;"></i></span>
+                        <a href="mailto:${item.email}" style="color:#60a5fa; text-decoration:none;">${item.email}</a>
+                    </div>
+                </div>
+
+                <div style="margin-top:30px;">
+                    <button class="btn btn-secondary" onclick="closeAdminModal()" style="width:100%; padding:14px; border-radius:10px; background:#475569; color:white; font-size:1rem; font-weight:600; cursor:pointer; border:none;">닫기</button>
+                    <button class="delete-btn" onclick="deleteApplication(${item.id}); closeAdminModal();" style="width:100%; margin-top:10px; padding:10px; opacity:0.8;">삭제</button>
+                </div>
+            </div>
+        </div>
+    `;
+};
+
+
+// ==========================================
+// Toggle Product Form (Generic)
+// ==========================================
+window.toggleProductForm = (type, isEdit = false) => {
+    const container = document.getElementById(`${type}-form-container`);
+    if (!container) return;
+
+    if (container.style.display === 'none' || isEdit) {
+        container.style.display = 'block';
+    } else {
+        container.style.display = 'none';
+    }
+
+    // Scroll to form if opening
+    if (container.style.display === 'block') {
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+};
+
+// ==========================================
+// FIXED FORM LOGIC (Appended v7.7)
+// ==========================================
+
+// Helper: Reset Form
+window.resetForm = (type) => {
+    console.log('[Fix] Resetting form for:', type);
+    let p = 'h';
+    if (type === 'vpn') p = 'v';
+    if (type === 'colocation') p = 'c';
+    if (type === 'security') p = 'sec';
+    if (type === 'service') p = 's';
+    if (type === 'solution') p = 'solution';
+
+    const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+    };
+    const setCheck = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.checked = val;
+    };
+
+    // Clear Hidden ID (Critical for switching from Edit to Add)
+    setVal(`${p}-id-hidden`, '');
+
+    // Clear Common Fields
+    setVal(`${p}-name`, '');
+    setVal(`${p}-id`, '');
+    setVal(`${p}-price`, '');
+    setVal(`${p}-period`, '');
+    setVal(`${p}-summary`, '');
+    setVal(`${p}-badge`, '');
+    setVal(`${p}-order`, '1');
+    setVal(`${p}-features`, '');
+    setCheck(`${p}-active`, true);
+
+    // Clear Solution Specifics
+    if (type === 'solution') {
+        setVal('solution-name', '');
+        setVal('solution-price', '');
+        setVal('solution-summary', '');
+        setVal('solution-badge', '');
+        setVal('solution-features', '');
+        setVal('solution-sort', '1');
+        setCheck('solution-active', true);
+
+        // Reset Button Text
+        const btn = document.querySelector('#solution-form-container button.btn-primary');
+        if (btn) btn.innerText = "저장완료";
+    }
+
+    // Clear Others (Hosting/VPN/etc)
+    if (type === 'hosting') {
+        setVal('h-cpu', ''); setVal('h-ram', ''); setVal('h-storage', ''); setVal('h-traffic', '');
+    } else if (type === 'vpn') {
+        setVal('v-speed', ''); setVal('v-sites', ''); setVal('v-users', '');
+    } else if (type === 'colocation') {
+        setVal('c-cpu', ''); setVal('c-ram', '');
+    }
+};
+
+// Helper: Toggle Product Form (Add New)
+window.toggleProductForm = (type) => {
+    console.log('[Fix] Toggling form for:', type);
+    let formId = '';
+    if (type === 'solution') formId = 'solution-form-container';
+
+    const formEl = document.getElementById(formId);
+    if (!formEl) {
+        console.error('Form container not found:', formId);
+        return;
+    }
+
+    // Always Open and Reset logic for "Add" button
+    formEl.style.display = 'block';
+    resetForm(type);
+    formEl.scrollIntoView({ behavior: 'smooth' });
+
+    // Ensure button says "Save Complete" (or Save)
+    const btn = formEl.querySelector('button.btn-primary');
+    if (btn) btn.innerText = "저장완료";
+};
+
+// Generic Product Form Handler (Upsert) - Redefined
+window.saveProduct = async (e, type) => {
+    if (e) e.preventDefault();
+    console.log(`[Fix] Saving Product v7.8: ${type}`);
+
+    let p = 'h';
+    if (type === 'vpn') p = 'v';
+    if (type === 'colocation') p = 'c';
+    if (type === 'security') p = 'sec';
+    if (type === 'security') p = 'sec';
+    if (type === 'service') p = 's';
+    if (type === 'solution') p = 'solution';
+
+    const getVal = (id) => document.getElementById(id)?.value || '';
+    const getCheck = (id) => document.getElementById(id)?.checked || false;
+
+    // Determine Target Category/Subcategory
+    let targetType = type;
+    if (type === 'solution') {
+        const solSelect = document.getElementById('solution-type-select');
+        const solVal = solSelect ? solSelect.value : 'solution';
+        if (solVal === 'solution') targetType = 'solution';
+        else if (solVal === 'naverworks') targetType = 'solution-naver';
+        else if (solVal === 'website') targetType = 'solution-website';
+    } else if (type === 'service') {
+        targetType = document.getElementById('service-type-select').value;
+    } else if (type === 'security') {
+        targetType = document.getElementById('security-type-select').value;
+    }
+
+    // Get Parent Product ID
+    const prod = await getOrCreateProduct(targetType);
+    if (!prod) return;
+
+    // Prepare Payload
+    const featuresInput = getVal(`${p}-features`);
+
+    const commonData = {
+        product_id: prod.id,
+        plan_name: getVal(`${p}-name`),
+        plan_id: getVal(`${p}-id`),
+        price: getVal(`${p}-price`),
+        period: getVal(`${p}-period`),
+        summary: getVal(`${p}-summary`),
+        badge: getVal(`${p}-badge`),
+        active: getCheck(`${p}-active`),
+        sort_order: parseInt(getVal(`${p}-order`)) || 1,
+        features: featuresInput
+    };
+
+    // Custom Mapping for Solution
+    if (type === 'solution') {
+        commonData.plan_name = getVal('solution-name');
+        commonData.price = getVal('solution-price').replace(/,/g, '');
+        commonData.period = '월';
+        if (targetType === 'solution-website') commonData.period = '건';
+
+        commonData.summary = getVal('solution-summary');
+        commonData.badge = getVal('solution-badge');
+
+        const feetRaw = getVal('solution-features');
+        commonData.features = feetRaw ? feetRaw.split('\n').filter(x => x.trim()).join('\n') : '';
+
+        commonData.sort_order = parseInt(getVal('solution-sort')) || 1;
+        commonData.active = getCheck('solution-active');
+    }
+
+    // Specific Specs
+    if (type === 'hosting') {
+        commonData.cpu = getVal('h-cpu'); commonData.ram = getVal('h-ram');
+        commonData.storage = getVal('h-storage'); commonData.traffic = getVal('h-traffic');
+    } else if (type === 'colocation') {
+        commonData.cpu = getVal('c-cpu'); commonData.ram = getVal('c-ram');
+    } else if (type === 'vpn') {
+        commonData.speed = getVal('v-speed'); commonData.sites = getVal('v-sites'); commonData.users = getVal('v-users');
+    }
+
+    // Check for Update vs Insert
+    const hiddenId = getVal(`${p}-id-hidden`);
+
+    if (hiddenId) {
+        // Update
+        const { error } = await supabase.from('product_plans').update(commonData).eq('id', hiddenId);
+        if (error) { alert('수정 실패: ' + error.message); return; }
+        alert('상품 정보가 수정되었습니다.');
+    } else {
+        // Insert
+        const { error } = await supabase.from('product_plans').insert([commonData]);
+        if (error) { alert('등록 실패: ' + error.message); return; }
+        alert('새로운 상품이 등록되었습니다.');
+    }
+
+    // Reset UI & Hide Form
+    resetForm(type);
+    if (type === 'solution') {
+        const formEl = document.getElementById('solution-form-container');
+        if (formEl) formEl.style.display = 'none';
+        console.log('[Fix] Form hidden');
+    }
+
+    // Refresh List
+    setTimeout(() => {
+        renderProducts();
+    }, 300);
+};
 

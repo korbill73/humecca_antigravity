@@ -1,150 +1,120 @@
+// Calculator Data - Pricing & Products
+
+// Global lists for calculator steps
+let MAIN_PRODUCTS = [];      // Step 1: Server, Colocation, VPN
+let SECURITY_PRODUCTS = [];  // Step 2: Security (DDoS, Firewall)
+let ADDON_PRODUCTS = [];     // Step 3: Addons (Backup, Monitor, Software)
+let SOLUTION_PRODUCTS = [];  // Step 4: Solutions (Groupware, MS365)
+
+// Hardcoded Discounts (Standard Policy) - Step 5
+const DISCOUNTS = [
+    { id: 'term_1', name: '1년 약정 (-5%)', rate: 0.05, months: 12 },
+    { id: 'term_2', name: '2년 약정 (-10%)', rate: 0.10, months: 24 },
+    { id: 'term_3', name: '3년 약정 (-15%)', rate: 0.15, months: 36 },
+    { id: 'term_0', name: '무약정', rate: 0, months: 1 }
+];
+
 /**
- * HUMECCA Cost Calculator Data
- * Defines categories, products, add-ons, and configuration logic.
+ * Fetch Data from Supabase
+ * Merges 'products' and 'product_plans' tables
+ * populates the global lists above
  */
+async function fetchCalculatorData() {
+    let db = window.supabase || window.sb;
+    if (!db && typeof supabase !== 'undefined') db = supabase;
 
-const CALCULATOR_DATA = {
-    // 1. Categories (Top Level)
-    categories: [
-        { id: 'all', name: '전체 보기', icon: 'fas fa-th-large' },
-        { id: 'server', name: '서버 호스팅', icon: 'fas fa-server' },
-        { id: 'colocation', name: '코로케이션', icon: 'fas fa-building' },
-        { id: 'management', name: '매니지먼트', icon: 'fas fa-tasks' }
-    ],
+    if (!db) {
+        console.error('Supabase SDK not loaded or client not initialized');
+        alert('데이터베이스 연결 실패. 페이지를 새로고침 해주세요.');
+        return;
+    }
 
-    // 2. Products (Base Items)
-    products: [
-        {
-            id: 'server_std',
-            category: 'server',
-            name: 'Standard Server',
-            desc: '스타트업 및 중소규모 웹서비스에 적합',
-            price: 70000,
-            setup_fee: 50000,
-            specs: { cpu: '4 Core', ram: '8GB', storage: 'SSD 250GB' },
-            badge: 'BEST'
-        },
-        {
-            id: 'server_pro',
-            category: 'server',
-            name: 'Pro Server',
-            desc: '고트래픽 웹사이트 및 DB 서버용',
-            price: 150000,
-            setup_fee: 50000,
-            specs: { cpu: '8 Core', ram: '16GB', storage: 'SSD 500GB' },
-            badge: 'POPULAR'
-        },
-        {
-            id: 'server_ent',
-            category: 'server',
-            name: 'Enterprise Server',
-            desc: '대규모 엔터프라이즈 환경을 위한 고성능',
-            price: 350000,
-            setup_fee: 100000,
-            specs: { cpu: '16 Core', ram: '32GB', storage: 'NVMe 1TB' },
-            badge: 'PREMIUM'
-        },
-        {
-            id: 'colo_half',
-            category: 'colocation',
-            name: 'Half Rack (20U)',
-            desc: '합리적인 비용의 상면 임대',
-            price: 450000,
-            setup_fee: 200000,
-            specs: { space: '20U', power: '2.2kW', network: '100Mbps' }
-        },
-        {
-            id: 'colo_full',
-            category: 'colocation',
-            name: 'Full Rack (40U)',
-            desc: '독립적인 전체 랙 사용',
-            price: 850000,
-            setup_fee: 300000,
-            specs: { space: '40U', power: '4.4kW', network: '1Gbps Shared' }
-        },
-        {
-            id: 'manage_basic',
-            category: 'management',
-            name: 'Basic Management',
-            desc: '월 1회 정기점검 및 장애 알림',
-            price: 50000,
-            setup_fee: 0,
-            specs: { support: '9R x 5D', report: 'Monthly' }
+    try {
+        console.log('[Calculator] Fetching all products from DB...');
+
+        // 1. Fetch ALL Active Products
+        // We need 'category' and 'subcategory' to sort them into steps
+        const { data: products, error: pError } = await db
+            .from('products')
+            .select('id, name, category, subcategory')
+            .eq('active', true);
+
+        if (pError) throw pError;
+        if (!products || products.length === 0) {
+            console.warn('[Calculator] No products found in DB.');
+            return;
         }
-    ],
 
-    // 3. Add-ons (Customizable Options)
-    addons: [
-        {
-            id: 'cpu',
-            name: 'CPU 추가',
-            type: 'counter', // +/- button
-            unit: 'Core',
-            price_per_unit: 15000,
-            max: 32
-        },
-        {
-            id: 'ram',
-            name: 'Memory 추가',
-            type: 'counter',
-            unit: 'GB',
-            price_per_unit: 8000, // 8GB = 64000
-            step: 8, // 8GB steps
-            max: 128
-        },
-        {
-            id: 'hdd',
-            name: 'HDD 추가',
-            type: 'counter',
-            unit: 'TB',
-            price_per_unit: 30000,
-            max: 10
-        },
-        {
-            id: 'ssd',
-            name: 'SSD 추가',
-            type: 'counter',
-            unit: 'GB',
-            step: 250,
-            price_per_unit: 40000, // per 250GB logic needs handling
-            max: 2000
-        },
-        {
-            id: 'network',
-            name: '네트워크 대역폭 증설',
-            type: 'select',
-            options: [
-                { value: '100m', label: '100 Mbps (기본)', price: 0 },
-                { value: '1g_shared', label: '1 Gbps Shared', price: 50000 },
-                { value: '1g_dedicated', label: '1 Gbps Dedicated', price: 300000 }
-            ]
-        },
-        {
-            id: 'security',
-            name: '보안 서비스',
-            type: 'checkbox', // Multiple selection
-            items: [
-                { value: 'fw', label: 'H/W 방화벽 임대', price: 50000 },
-                { value: 'ips', label: 'IPS (침입방지시스템)', price: 80000 },
-                { value: 'web_fw', label: 'WAF (웹방화벽)', price: 100000 }
-            ]
-        },
-        {
-            id: 'os',
-            name: 'OS 라이선스',
-            type: 'select',
-            options: [
-                { value: 'linux_free', label: 'Linux (CentOS/Ubuntu) - 무료', price: 0 },
-                { value: 'win_std', label: 'Windows Server Standard', price: 35000 },
-                { value: 'win_dc', label: 'Windows Server Datacenter', price: 250000 }
-            ]
-        }
-    ],
+        const productIds = products.map(p => p.id);
 
-    // 4. Discounts
-    discounts: [
-        { months: 12, rate: 0.05, label: '1년 약정 (5% 할인)' },
-        { months: 24, rate: 0.10, label: '2년 약정 (10% 할인)' },
-        { months: 36, rate: 0.15, label: '3년 약정 (15% 할인)' }
-    ]
-};
+        // 2. Fetch Active Plans for these products
+        const { data: plans, error: plError } = await db
+            .from('product_plans')
+            .select('*')
+            .in('product_id', productIds)
+            .eq('active', true)
+            .order('sort_order', { ascending: true });
+
+        if (plError) throw plError;
+
+        // 3. Clear Lists
+        MAIN_PRODUCTS = [];
+        SECURITY_PRODUCTS = [];
+        ADDON_PRODUCTS = [];
+        SOLUTION_PRODUCTS = [];
+
+        // 4. Categorize Plans
+        plans.forEach(plan => {
+            const product = products.find(p => p.id === plan.product_id);
+            if (!product) return;
+
+            // Normalize Price
+            const priceStr = String(plan.price || '0').replace(/[^0-9]/g, '');
+            const priceVal = parseInt(priceStr, 10) || 0;
+
+            const item = {
+                id: `db_${plan.id}`,
+                name: plan.plan_name,
+                product_name: product.name,
+                price: priceVal,
+                cpu: plan.cpu,
+                ram: plan.ram,
+                storage: plan.storage, // or hdd
+                desc: plan.summary || '',
+                // Keep raw cat/subcat for filtering logic
+                category: product.category,
+                subcategory: product.subcategory
+            };
+
+            // Logic to Sort into Steps
+            const cat = product.category;
+            const sub = product.subcategory;
+
+            // Step 1: Main (IDC: hosting/colocation, VPN: vpn-service)
+            if ((cat === 'idc' && (sub === 'hosting' || sub === 'colocation')) || cat === 'vpn') {
+                MAIN_PRODUCTS.push(item);
+            }
+            // Step 2: Security
+            else if (cat === 'security') {
+                SECURITY_PRODUCTS.push(item);
+            }
+            // Step 4: Solution
+            else if (cat === 'solution') {
+                SOLUTION_PRODUCTS.push(item);
+            }
+            // Step 3: Addons (Catch-all for 'addon' subcategory or Management)
+            else {
+                // e.g. cat='idc', sub='management' -> Addon
+                // e.g. cat='security', sub='addon' -> Security?? explicit check above handles 'security' cat
+                // Let's put everything else in Addons
+                ADDON_PRODUCTS.push(item);
+            }
+        });
+
+        console.log(`[Calculator] Data Loaded: Main(${MAIN_PRODUCTS.length}), Sec(${SECURITY_PRODUCTS.length}), Sol(${SOLUTION_PRODUCTS.length}), Addon(${ADDON_PRODUCTS.length})`);
+
+    } catch (err) {
+        console.error('[Calculator] DB Fetch Error:', err);
+        alert('데이터를 불러오는 중 오류가 발생했습니다.');
+    }
+}

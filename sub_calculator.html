@@ -46,54 +46,65 @@
                     <div class="calc-content-left">
                         <!-- Navigation Steps -->
                         <div class="calc-steps">
-                            <button class="calc-step-btn active" onclick="setStep(1)">1. 서버 선택</button>
-                            <button class="calc-step-btn" onclick="setStep(2)">2. 사양 변경</button>
+                            <button class="calc-step-btn active" onclick="setStep(1)">1. 주상품 선택</button>
+                            <button class="calc-step-btn" onclick="setStep(2)">2. 보안</button>
                             <button class="calc-step-btn" onclick="setStep(3)">3. 부가서비스</button>
-                            <button class="calc-step-btn" onclick="setStep(4)">4. 기간/할인</button>
+                            <button class="calc-step-btn" onclick="setStep(4)">4. 기업솔루션</button>
+                            <button class="calc-step-btn" onclick="setStep(5)">5. 기간/할인</button>
                         </div>
 
-                        <!-- Step 1: Server Select -->
+                        <!-- Step 1: Main Product (Server, Colo, VPN) -->
                         <div id="step-1" class="calc-step-content">
-                            <h2 class="section-title" style="color:white; font-size:1.5rem;">서비스 상품 선택</h2>
+                            <h2 class="section-title" style="color:white; font-size:1.5rem;">주상품 선택</h2>
                             <div class="tabs" style="margin-bottom:20px;">
                                 <div class="tab active" onclick="filterCategory('server')">서버 호스팅</div>
                                 <div class="tab" onclick="filterCategory('colocation')">코로케이션</div>
-                                <div class="tab" onclick="filterCategory('management')">매니지먼트</div>
+                                <div class="tab" onclick="filterCategory('vpn')">VPN 전용선</div>
                             </div>
-                            <div id="product-list" class="calc-grid">
-                                <!-- JS Injected -->
-                            </div>
+                            <div id="product-list-main" class="calc-grid"></div>
+                            <button class="btn btn-primary" onclick="setStep(2)"
+                                style="margin-top:20px; width:100%; padding:15px; font-size:1.1rem;">
+                                다음 단계 (보안 상품 선택) <i class="fas fa-arrow-right"></i>
+                            </button>
                         </div>
 
-                        <!-- Step 2: Specs (Add-ons Part 1) -->
+                        <!-- Step 2: Security -->
                         <div id="step-2" class="calc-step-content" style="display:none;">
-                            <h2 class="section-title" style="color:white; font-size:1.5rem;">사양 업그레이드</h2>
-                            <p style="color:#94a3b8; margin-bottom:20px;">기본 제공 사양 외에 추가로 필요한 자원을 선택하세요.</p>
-                            <div id="addon-list-specs">
-                                <!-- JS Injected (CPU, RAM, HDD) -->
-                            </div>
+                            <h2 class="section-title" style="color:white; font-size:1.5rem;">보안 상품 선택</h2>
+                            <p style="color:#94a3b8; margin-bottom:20px;">디도스 방어, 방화벽 등 보안 서비스를 선택하세요.</p>
+                            <div id="tabs-security" class="tabs" style="margin-bottom:20px; flex-wrap:wrap;"></div>
+                            <div id="product-list-security" class="calc-grid"></div>
                             <button class="btn btn-primary" onclick="setStep(3)" style="margin-top:20px;">다음 단계 <i
                                     class="fas fa-arrow-right"></i></button>
                         </div>
 
-                        <!-- Step 3: Services (Add-ons Part 2) -->
+                        <!-- Step 3: Addons -->
                         <div id="step-3" class="calc-step-content" style="display:none;">
-                            <h2 class="section-title" style="color:white; font-size:1.5rem;">부가서비스 / OS</h2>
-                            <p style="color:#94a3b8; margin-bottom:20px;">보안, 네트워크, 운영체제 라이선스를 선택하세요.</p>
-                            <div id="addon-list-services">
-                                <!-- JS Injected (Network, Security, OS) -->
-                            </div>
+                            <h2 class="section-title" style="color:white; font-size:1.5rem;">부가서비스 선택</h2>
+                            <p style="color:#94a3b8; margin-bottom:20px;">백업, 모니터링, 라이선스 등을 추가하세요.</p>
+
+                            <div id="tabs-addon" class="tabs" style="margin-bottom:20px; flex-wrap:wrap;"></div>
+                            <div id="product-list-addon" class="calc-grid"></div>
                             <button class="btn btn-primary" onclick="setStep(4)" style="margin-top:20px;">다음 단계 <i
                                     class="fas fa-arrow-right"></i></button>
                         </div>
 
-                        <!-- Step 4: Term -->
+                        <!-- Step 4: Solutions -->
                         <div id="step-4" class="calc-step-content" style="display:none;">
-                            <h2 class="section-title" style="color:white; font-size:1.5rem;">약정 기간 선택</h2>
-                            <p style="color:#94a3b8; margin-bottom:20px;">장기 약정 시 할인 혜택이 적용됩니다.</p>
-                            <div class="calc-grid" id="term-list">
-                                <!-- JS Injected -->
-                            </div>
+                            <h2 class="section-title" style="color:white; font-size:1.5rem;">기업 솔루션 선택</h2>
+                            <p style="color:#94a3b8; margin-bottom:20px;">그룹웨어, MS365 등 기업용 솔루션을 선택하세요.</p>
+
+                            <div id="tabs-solution" class="tabs" style="margin-bottom:20px; flex-wrap:wrap;"></div>
+                            <div id="product-list-solution" class="calc-grid"></div>
+                            <button class="btn btn-primary" onclick="setStep(5)" style="margin-top:20px;">다음 단계 <i
+                                    class="fas fa-arrow-right"></i></button>
+                        </div>
+
+                        <!-- Step 5: Term -->
+                        <div id="step-5" class="calc-step-content" style="display:none;">
+                            <h2 class="section-title" style="color:white; font-size:1.5rem;">약정 기간 할인</h2>
+                            <p style="color:#94a3b8; margin-bottom:20px;">장기 계약 시 할인 혜택이 적용됩니다.</p>
+                            <div class="calc-grid" id="term-list"></div>
                         </div>
 
                     </div>
@@ -131,10 +142,14 @@
                                 </div>
                             </div>
 
-                            <button class="btn-print" onclick="window.print()">
-                                <i class="fas fa-file-pdf"></i> 견적서 출력 / 저장
+                            <button class="btn-print" onclick="openQuoteModal('print')">
+                                <i class="fas fa-print"></i> 견적서 출력
                             </button>
-                            <button class="btn-reset" onclick="resetCalculator()">
+                            <button class="btn-pdf" onclick="openQuoteModal('pdf')"
+                                style="background:#ef4444; color:white; border:none; padding:12px; width:100%; border-radius:8px; font-weight:600; cursor:pointer; margin-top:10px;">
+                                <i class="fas fa-file-pdf"></i> PDF 다운로드
+                            </button>
+                            <button class="btn-reset" onclick="resetCalculator()" style="margin-top:10px;">
                                 <i class="fas fa-undo"></i> 모든 선택 초기화
                             </button>
                         </div>
@@ -148,12 +163,172 @@
     <!-- Footer -->
     <div id="footer-placeholder"></div>
 
+    <!-- App Modal Placeholder -->
+    <div id="app-modal-placeholder"></div>
+
+    <!-- Hidden Print Template (Premium Official V3) -->
+    <div id="printable-quote" style="display:none;">
+        <div class="quote-paper" style="padding: 0mm; font-family: 'Pretendard', sans-serif;">
+
+
+
+            <div style="text-align:center; padding:5px 0; margin-bottom:5px;">
+                <h1 style="margin:0; font-size:28px; letter-spacing:5px; font-weight:700; color:#111;">견 적 서</h1>
+            </div>
+
+            <!-- Info Grid (Clean Professional) -->
+            <div class="quote-header-grid"
+                style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; padding:20px 0; border-top:2px solid #333; border-bottom:1px solid #ccc;">
+                <!-- Left: Customer -->
+                <div class="header-left" style="font-size:13px; line-height:1.6; width:60%;">
+                    <div
+                        style="border-bottom:1px solid #eee; padding-bottom:3px; margin-bottom:3px; display:flex; align-items:center; padding-right:110px;">
+                        <strong style="display:inline-block; width:70px;">■
+                            수&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;신 :</strong>
+                        <span id="quote-customer-name" contenteditable="true"
+                            style="font-size:14px; flex-grow:1; padding-left:10px;">고객사명
+                            입력</span> 귀하
+                    </div>
+                    <div
+                        style="border-bottom:1px solid #eee; padding-bottom:3px; margin-bottom:3px; display:flex; align-items:center;">
+                        <strong style="display:inline-block; width:70px;">■
+                            참&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;조 :</strong>
+                        <span id="quote-ref-name" contenteditable="true" style="flex-grow:1; padding-left:10px;">담당자
+                            입력</span>
+                    </div>
+                    <div
+                        style="border-bottom:1px solid #eee; padding-bottom:3px; margin-bottom:3px; display:flex; align-items:center;">
+                        <strong style="display:inline-block; width:70px;">■ 견적 일자 :</strong>
+                        <span id="quote-date" style="flex-grow:1; padding-left:10px;"></span>
+                    </div>
+                    <div style="display:flex; align-items:center;">
+                        <strong style="display:inline-block; width:70px;">■ 유효 기간 :</strong>
+                        <span style="flex-grow:1; padding-left:10px;">견적일로부터 1개월</span>
+                    </div>
+                </div>
+
+                <!-- Right: Supplier -->
+                <div class="header-right"
+                    style="width:40%; position:relative; padding-left:30px; border-left:1px solid #eee;">
+                    <div style="font-size:14px; font-weight:bold; margin-bottom:5px;">주식회사 휴메카</div>
+                    <ul style="list-style:none; padding:0; margin:0; font-size:12px; line-height:1.4; color:#333;">
+                        <li>서울시 강남구 역삼동 675-3 KT-IDC</li>
+                        <li
+                            style="margin-top:3px; font-size:13px; position:relative; display:flex; align-items:center;">
+                            <strong>대 표 &nbsp; 박 제 군</strong>
+                            <span style="margin-left:5px;">(인)</span>
+                            <img src="images/stamp_humecca_v3.png"
+                                style="position:absolute; left:110px; top:-15px; width:50px; opacity:0.9; mix-blend-mode:multiply;">
+                        </li>
+                        <li style="margin-top:3px;"><strong>TEL :</strong> 02-418-7766</li>
+                        <li><strong>FAX :</strong> 02-418-3131</li>
+
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-bottom:5px; font-weight:bold; font-size:13px;">
+                아래와 같이 견적합니다.
+                <span style="float:right; font-weight:normal; font-size:11px;">&lt;단위: 원/월&gt;</span>
+            </div>
+
+            <!-- Table -->
+            <table class="quote-table-korea"
+                style="width:100%; border-collapse:collapse; border-top:2px solid #000; font-size:12px;">
+                <thead>
+                    <tr style="height:35px; font-family:'Pretendard', sans-serif;">
+                        <th style="width:15%; border:1px solid #333; background:#b91c1c; color:white; font-weight:700;">
+                            서비스명</th>
+                        <th style="width:45%; border:1px solid #333; background:#b91c1c; color:white; font-weight:700;">
+                            세부 내역</th>
+                        <th style="width:15%; border:1px solid #333; background:#b91c1c; color:white; font-weight:700;">
+                            공급가</th>
+                        <th style="width:10%; border:1px solid #333; background:#b91c1c; color:white; font-weight:700;">
+                            수량</th>
+                        <th style="width:15%; border:1px solid #333; background:#b91c1c; color:white; font-weight:700;">
+                            합 계</th>
+                    </tr>
+                </thead>
+                <tbody id="quote-table-body">
+                    <!-- Rows generated by JS -->
+                </tbody>
+                <tfoot>
+                    <tr style="height:35px; background:#ffedd5;">
+                        <td colspan="4" style="text-align:center; font-weight:bold; border:1px solid #000;">계 (VAT 별도)
+                        </td>
+                        <td class="price-cell" id="print-subtotal"
+                            style="text-align:right; padding-right:5px; border:1px solid #000; font-weight:bold;">0</td>
+                    </tr>
+                    <tr style="height:35px; background:#ffedd5;">
+                        <td colspan="4" style="text-align:center; font-weight:bold; border:1px solid #000;">계 (VAT 합계)
+                        </td>
+                        <td class="price-cell" id="print-total-final"
+                            style="text-align:right; padding-right:5px; border:1px solid #000; font-weight:bold;">0</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <!-- Footer Notes (Clean Horizontal Layout) -->
+            <div
+                style="margin-top:15px; padding-top:10px; border-top:1px solid #eee; display:flex; justify-content:space-between; align-items:flex-start;">
+                <!-- Left: Terms -->
+                <div style="width:65%; font-size:11px; color:#666; line-height:1.5;">
+                    <div style="font-weight:bold; color:#333; margin-bottom:3px;">■ 유의 사항</div>
+                    1. 상기 견적은 기본 사양 기준이며, 옵션 변경 시 금액이 변동될 수 있습니다.<br>
+                    2. 약정 기간 내 해지 시 위약금이 발생할 수 있습니다.
+                </div>
+
+                <!-- Right: Contact -->
+                <div style="width:30%; text-align:right; font-size:12px;">
+                    <div style="font-weight:bold; color:#333; margin-bottom:3px;">■ 문 의</div>
+                    <div style="color:#444;">
+                        <strong>영업팀</strong><br>
+                        02-418-7766<br>
+                        <span style="font-size:11px; letter-spacing:0;">support@humecca.co.kr</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Brand -->
+            <div
+                style="margin-top:15px; padding-top:10px; border-top:2px solid #b91c1c; text-align:center; color:#b91c1c; font-weight:700; font-size:15px;">
+                주식회사 휴메카
+            </div>
+        </div>
+    </div>
+
+    <!-- Quote Info Modal -->
+    <div id="quote-modal-overlay" class="quote-modal-overlay">
+        <div class="quote-modal-window">
+            <div class="quote-modal-title" style="border-bottom:2px solid #2563eb; padding-bottom:10px;">견적서 정보 입력</div>
+            <table class="quote-input-table">
+                <tr>
+                    <th>업체명</th>
+                    <td><input type="text" id="input-company" placeholder="예: (주)알파소프트"></td>
+                    <th>담당자</th>
+                    <td><input type="text" id="input-manager" placeholder="예: 홍길동 팀장"></td>
+                </tr>
+                <tr>
+                    <th>전화번호</th>
+                    <td><input type="text" id="input-phone" placeholder="예: 010-1234-5678"></td>
+                    <th>E-mail</th>
+                    <td><input type="text" id="input-email" placeholder="예: user@example.com"></td>
+                </tr>
+            </table>
+            <div class="quote-modal-actions">
+                <button class="btn-cancel" onclick="closeQuoteModal()">취소</button>
+                <button class="btn-confirm" onclick="confirmQuoteInfo()">적용 및 출력</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase_config.js"></script>
     <script src="components/loader.js"></script>
-    <script src="calculator_data.js"></script>
-    <script src="calculator.js"></script>
+    <script src="calculator_data.js?v=2.0"></script>
+    <script src="calculator.js?v=2.0"></script>
 </body>
 
 </html>

@@ -72,60 +72,10 @@
                 <p>비즈니스 규모에 맞는 최적의 플랜을 선택하세요.</p>
             </div>
 
-            <div class="pricing-grid compact-pricing">
-                <!-- Basic -->
-                <div class="plan-card popular">
-                    <h3 class="plan-title">Microsoft 365<br>Business Basic</h3>
-                    <div class="plan-price">
-                        <span class="amount">7,500</span> <span class="period">원 / 월</span>
-                    </div>
-                    <div class="plan-summary">사용자/월 (연간 약정시)</div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> <strong>웹 및 모바일용 Office 앱</strong></li>
-                        <li><i class="fas fa-check"></i> 1TB OneDrive 스토리지</li>
-                        <li><i class="fas fa-check"></i> 비즈니스용 이메일 (Exchange)</li>
-                        <li><i class="fas fa-check"></i> Teams 채팅 및 화상회의</li>
-                        <li><i class="fas fa-check"></i> 표준 보안</li>
-                    </ul>
-                    <button onclick="openAppModal('MS 365 - Business Basic', 'sol-ms365')" class="plan-btn solid"
-                        style="width:100%; border:none; cursor:pointer;">상담 신청하기</button>
-                </div>
-
-                <!-- Standard -->
-                <div class="plan-card popular">
-                    <div class="plan-badge">인기 상품</div>
-                    <h3 class="plan-title">Microsoft 365<br>Business Standard</h3>
-                    <div class="plan-price">
-                        <span class="amount">15,600</span> <span class="period">원 / 월</span>
-                    </div>
-                    <div class="plan-summary">사용자/월 (연간 약정시)</div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> <strong>데스크톱용 Office 앱 포함</strong></li>
-                        <li><i class="fas fa-check"></i> Word, Excel, PPT, Outlook 설치</li>
-                        <li><i class="fas fa-check"></i> 1TB OneDrive 스토리지</li>
-                        <li><i class="fas fa-check"></i> 웨비나 개최 기능</li>
-                        <li><i class="fas fa-check"></i> 고객 예약 관리 (Bookings)</li>
-                    </ul>
-                    <button onclick="openAppModal('MS 365 - Business Standard', 'sol-ms365')" class="plan-btn solid"
-                        style="width:100%; border:none; cursor:pointer;">상담 신청하기</button>
-                </div>
-
-                <!-- Premium -->
-                <div class="plan-card popular">
-                    <h3 class="plan-title">Microsoft 365<br>Business Premium</h3>
-                    <div class="plan-price">
-                        <span class="amount">27,500</span> <span class="period">원 / 월</span>
-                    </div>
-                    <div class="plan-summary">사용자/월 (연간 약정시)</div>
-                    <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> <strong>모든 Standard 기능 포함</strong></li>
-                        <li><i class="fas fa-check"></i> 고급 보안 및 사이버 위협 보호</li>
-                        <li><i class="fas fa-check"></i> PC 및 모바일 장치 관리</li>
-                        <li><i class="fas fa-check"></i> 데이터 손실 방지 (DLP)</li>
-                        <li><i class="fas fa-check"></i> Azure Virtual Desktop 지원</li>
-                    </ul>
-                    <button onclick="openAppModal('MS 365 - Business Premium', 'sol-ms365')" class="plan-btn solid"
-                        style="width:100%; border:none; cursor:pointer;">상담 신청하기</button>
+            <div id="pricing-grid-ms365" class="pricing-grid compact-pricing">
+                <!-- Data loaded dynamically via JS -->
+                <div style="text-align:center; padding:50px; width:100%; grid-column:1/-1;">
+                    <i class="fas fa-spinner fa-spin fa-2x" style="color:#ddd;"></i>
                 </div>
             </div>
 
@@ -148,6 +98,11 @@
     <script src="js/subpage-canvas.js"></script>
     <script src="js/application_modal.js"></script>
     <script src="js/data_loader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProductData('solution-ms365');
+        });
+    </script>
 </body>
 
 </html>

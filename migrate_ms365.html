@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Migrate MS365 Data</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <h2>Migrating MS365 Data...</h2>
+    <div id="log" style="white-space: pre-wrap; font-family: monospace;"></div>
+
+    <script>
+        const log = (msg) => document.getElementById('log').innerText += msg + '\n';
+
+        const _url = 'https://pfowkwodqsirbaqkpfmb.supabase.co';
+        // Note: Using the key found in data_loader.js
+        const _key = 'sb_publishable_i8wY_NmKlt9qUZJPKH1f2A_yOwp3qlA';
+        const supabase = window.supabase.createClient(_url, _key);
+
+        async function migrate() {
+            log('Starting migration...');
+
+            // 1. Ensure Product Group Exists
+            log('Checking parent product...');
+            let { data: product, error } = await supabase.from('products')
+                .select('id')
+                .eq('category', 'solution')
+                .eq('subcategory', 'solution')
+                .maybeSingle();
+
+            if (error) { log('Error checking product: ' + error.message); return; }
+
+            if (!product) {
+                log('Parent product not found. Creating...');
+                const { data: newProd, error: createError } = await supabase.from('products')
+                    .insert([{
+                        category: 'solution',
+                        subcategory: 'solution',
+                        name: '기업 솔루션',
+                        description: '기업 업무 효율을 위한 다양한 솔루션'
+                    }])
+                    .select()
+                    .single();
+
+                if (createError) { log('Error creating product: ' + createError.message); return; }
+                product = newProd;
+                log('Parent product created with ID: ' + product.id);
+            } else {
+                log('Parent product found: ' + product.id);
+            }
+
+            // 2. Prepare Plans
+            const plans = [
+                {
+                    product_id: product.id,
+                    plan_name: "Microsoft 365 Business Basic",
+                    plan_id: "ms365-basic",
+                    price: "7500",
+                    period: "월",
+                    badge: "",
+                    summary: "사용자/월 (연간 약정시)",
+                    features: ["웹 및 모바일용 Office 앱", "1TB OneDrive 스토리지", "비즈니스용 이메일 (Exchange)", "Teams 채팅 및 화상회의", "표준 보안"],
+                    sort_order: 1,
+                    active: true
+                },
+                {
+                    product_id: product.id,
+                    plan_name: "Microsoft 365 Business Standard",
+                    plan_id: "ms365-standard",
+                    price: "15600",
+                    period: "월",
+                    badge: "인기 상품",
+                    summary: "사용자/월 (연간 약정시)",
+                    features: ["데스크톱용 Office 앱 포함", "Word, Excel, PPT, Outlook 설치", "1TB OneDrive 스토리지", "웨비나 개최 기능", "고객 예약 관리 (Bookings)"],
+                    sort_order: 2,
+                    active: true
+                },
+                {
+                    product_id: product.id,
+                    plan_name: "Microsoft 365 Business Premium",
+                    plan_id: "ms365-premium",
+                    price: "27500",
+                    period: "월",
+                    badge: "",
+                    summary: "사용자/월 (연간 약정시)",
+                    features: ["모든 Standard 기능 포함", "고급 보안 및 사이버 위협 보호", "PC 및 모바일 장치 관리", "데이터 손실 방지 (DLP)", "Azure Virtual Desktop 지원"],
+                    sort_order: 3,
+                    active: true
+                }
+            ];
+
+            // 3. Insert Plans (Upsert based on plan_id if I could, but plan_id isn't unique key likely. Just creating checks)
+            for (const p of plans) {
+                // Check exist
+                const { data: exist } = await supabase.from('product_plans')
+                    .select('id')
+                    .eq('product_id', product.id)
+                    .eq('plan_id', p.plan_id)
+                    .maybeSingle();
+
+                if (exist) {
+                    log(`Plan ${p.plan_name} already exists. Skipping...`);
+
+                    // Option: Update
+                    // await supabase.from('product_plans').update(p).eq('id', exist.id);
+                    // log(`Updated ${p.plan_name}`);
+                } else {
+                    const { error: insErr } = await supabase.from('product_plans').insert([p]);
+                    if (insErr) log(`Error inserting ${p.plan_name}: ${insErr.message}`);
+                    else log(`Inserted ${p.plan_name}`);
+                }
+            }
+
+            log('Migration Verification Complete.');
+        }
+
+        migrate();
+    </script>
+</body>
+
+</html>

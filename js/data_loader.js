@@ -32,7 +32,12 @@ const PRODUCT_CATEGORIES = {
     'addon-cdn': { category: 'addon', subcategory: 'addon-cdn', containerId: 'pricing-grid-cdn' },
     'addon-recovery': { category: 'addon', subcategory: 'addon-recovery', containerId: 'pricing-grid-recovery' },
     'addon-management': { category: 'addon', subcategory: 'addon-management', containerId: 'pricing-grid-management' },
-    'addon-etc': { category: 'addon', subcategory: 'addon-etc', containerId: 'pricing-grid-etc' }
+    'addon-etc': { category: 'addon', subcategory: 'addon-etc', containerId: 'pricing-grid-etc' },
+
+    // Solutions
+    'solution-ms365': { category: 'solution', subcategory: 'solution', containerId: 'pricing-grid-ms365', renderType: 'addon' },
+    'solution-naver': { category: 'solution', subcategory: 'naverworks', containerId: 'pricing-grid-naver', renderType: 'addon' },
+    'solution-website': { category: 'solution', subcategory: 'website', containerId: 'pricing-grid-website', renderType: 'addon' }
 };
 
 async function loadProductData(pageKey) {

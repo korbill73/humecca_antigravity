@@ -526,7 +526,12 @@ body {
 .logo-link img {
     height: 40px;
     width: auto;
+    /* Prevent CLS (Cumulative Layout Shift) */
+    min-width: 140px;
+    aspect-ratio: 140 / 40;
     display: block;
+    object-fit: contain;
+    object-position: left center;
 }
 
 /* Navigation */
@@ -3089,7 +3094,7 @@ main.sub-content {
 }
 
 .plan-btn.solid:hover {
-    background: #d93d2b;
+    background: var(--accent-hover);
 }
 
 /* 1. Compact Pricing Grid */
@@ -3111,6 +3116,17 @@ main.sub-content {
 
 .compact-pricing .plan-title {
     font-size: 1.3rem;
+    /* [Chief Design Fix] Add structure for hover state */
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid transparent;
+    /* Reserve space */
+}
+
+/* On Hover: Show the separator line - Stronger Visibility */
+.compact-pricing .plan-card:hover .plan-title,
+.theme-blue .compact-pricing .plan-card:hover .plan-title {
+    border-bottom-color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .compact-pricing .amount {
@@ -3127,6 +3143,17 @@ main.sub-content {
     background-color: var(--accent);
     border-color: var(--accent);
     transform: translateY(-8px);
+}
+
+.theme-blue .compact-pricing .plan-card:hover {
+    background-color: #2563eb !important;
+    border-color: #2563eb !important;
+}
+
+/* Also ensure 'popular' card in blue theme isn't red by default if that's what's happening */
+.theme-blue .compact-pricing .plan-card.popular {
+    /* If popular makes it red, we need to override it here too, but users request was about "mouse effect" */
+    /* Let's stick to fixing hover strongly first. */
 }
 
 .compact-pricing .plan-card:hover .plan-title,
@@ -3163,10 +3190,44 @@ main.sub-content {
     color: var(--accent) !important;
 }
 
+.theme-blue .compact-pricing .plan-card:hover .plan-btn.solid {
+    color: #2563eb !important;
+}
+
 .compact-pricing .plan-badge {
-    z-index: 20;
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    /* Ensure it is above the card border */
     white-space: nowrap;
-    /* Prevent badge text wrapping */
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    /* Ensure it has a base style if not defined elsewhere */
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.theme-blue .compact-pricing .plan-badge {
+    background: #2563eb;
+}
+
+/* Fix Badge Visibility on Hover */
+.compact-pricing .plan-card:hover .plan-badge {
+    background-color: white !important;
+    color: var(--accent) !important;
+    border: 2px solid var(--accent) !important;
+    /* Added Border */
+}
+
+.theme-blue .compact-pricing .plan-card:hover .plan-badge {
+    color: #2563eb !important;
+    border-color: #2563eb !important;
+    /* Blue Border */
 }
 
 /* 2. Server Hosting Intro Diagram */

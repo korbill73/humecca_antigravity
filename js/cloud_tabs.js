@@ -37,13 +37,10 @@ function switchCloudTab(tabId, el) {
 
     if (target) {
         target.style.display = 'block'; // Show target
-        // Slight delay to allow display:block to apply before adding class (for CSS transitions if exist)
-        setTimeout(() => {
-            target.classList.add('active');
-        }, 10);
+        target.classList.add('active'); // Add class immediately
 
-        // Explicitly scroll to top so User sees the Hero section
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Explicitly scroll to top instantly to prevent jump/flicker
+        window.scrollTo(0, 0);
 
         // Avoid infinite loop if hash change triggered this
         const currentHash = window.location.hash.replace('#', '');

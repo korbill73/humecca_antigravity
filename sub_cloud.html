@@ -829,167 +829,168 @@
                             </table>
                         </div>
                     </div>
+                </div> <!-- End of Storage Tab -->
 
-                    <!-- 5. Network Tab -->
-                    <div id="tab-network" class="cloud-tab">
-                        <div class="content-header">
-                            <h2>Network</h2>
-                            <p>고성능 로드밸런서와 전용 회선을 통해 안정적인 네트워크 환경을 제공합니다.</p>
+                <!-- 5. Network Tab -->
+                <div id="tab-network" class="cloud-tab">
+                    <div class="content-header">
+                        <h2>Network</h2>
+                        <p>고성능 로드밸런서와 전용 회선을 통해 안정적인 네트워크 환경을 제공합니다.</p>
+                    </div>
+
+                    <!-- Moved Content: Network Traffic -->
+                    <div class="content-section">
+                        <div class="section-title">네트워크 (Outbound 트래픽)</div>
+                        <div class="section-subtitle">Inbound 트래픽은 무료, Outbound만 과금 (단위: 원/월, 부가세별도)<br>국내 기준
+                            (Seoul-M
+                            zone, Central-A/B zone, HA zone)</div>
+
+                        <p style="font-size: 13px; color: #374151; margin-bottom: 8px;"><strong>16GB Memory 이상
+                                VM:</strong> 월 사용량 2TB 이하 무료</p>
+
+                        <div class="table-responsive">
+                            <table class="pricing-table">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">구분</th>
+                                        <th colspan="4" class="highlight">사용 구간</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Cloud 서버 당 2TB 이하</th>
+                                        <th>2TB ~ 10TB</th>
+                                        <th>10TB ~ 20TB</th>
+                                        <th>20TB 이상</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>종량제 (GB당)</td>
+                                        <td>무료</td>
+                                        <td>90원</td>
+                                        <td>80원</td>
+                                        <td>70원</td>
+                                    </tr>
+                                    <tr>
+                                        <td>정액제 30TB</td>
+                                        <td colspan="4">2,000,000원/월</td>
+                                    </tr>
+                                    <tr>
+                                        <td>정액제 50TB</td>
+                                        <td colspan="4">3,000,000원/월</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
+                        <p style="font-size: 13px; color: #374151; margin-top: 16px; margin-bottom: 8px;">
+                            <strong>16GB
+                                Memory 미만 VM:</strong> 월 사용량 1TB 이하 무료
+                        </p>
 
-                        <!-- Moved Content: Network Traffic -->
-                        <div class="content-section">
-                            <div class="section-title">네트워크 (Outbound 트래픽)</div>
-                            <div class="section-subtitle">Inbound 트래픽은 무료, Outbound만 과금 (단위: 원/월, 부가세별도)<br>국내 기준
-                                (Seoul-M
-                                zone, Central-A/B zone, HA zone)</div>
+                        <div class="notes-list">
+                            <p>* 예시) 동일계정에서 4vCore 4GB 1대, 4vCore 16GB 1대를 사용하면 해당계정의 트래픽은 outbound 총 3TB(1TB +
+                                2TB)까지
+                                무료입니다.</p>
+                            <p>* server 정지 시에는 VM 별로 제공되는 네트워크 무료 트래픽(1TB~2TB)이 정지 기간만큼 조정되어 제공됩니다.</p>
+                        </div>
+                    </div>
+                </div>
 
-                            <p style="font-size: 13px; color: #374151; margin-bottom: 8px;"><strong>16GB Memory 이상
-                                    VM:</strong> 월 사용량 2TB 이하 무료</p>
-
-                            <div class="table-responsive">
-                                <table class="pricing-table">
-                                    <thead>
-                                        <tr>
-                                            <th rowspan="2">구분</th>
-                                            <th colspan="4" class="highlight">사용 구간</th>
-                                        </tr>
-                                        <tr>
-                                            <th>Cloud 서버 당 2TB 이하</th>
-                                            <th>2TB ~ 10TB</th>
-                                            <th>10TB ~ 20TB</th>
-                                            <th>20TB 이상</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>종량제 (GB당)</td>
-                                            <td>무료</td>
-                                            <td>90원</td>
-                                            <td>80원</td>
-                                            <td>70원</td>
-                                        </tr>
-                                        <tr>
-                                            <td>정액제 30TB</td>
-                                            <td colspan="4">2,000,000원/월</td>
-                                        </tr>
-                                        <tr>
-                                            <td>정액제 50TB</td>
-                                            <td colspan="4">3,000,000원/월</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                <!-- 6. Management Tab -->
+                <div id="tab-management" class="cloud-tab">
+                    <div class="content-header">
+                        <h2>Management</h2>
+                        <p>서버 모니터링, 백업, 보안 설정을 통합 관리할 수 있는 도구를 제공합니다.</p>
+                    </div>
+                    <div class="content-section">
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="icon"><i class="fas fa-desktop"></i></div>
+                                <h3>모니터링 (Watch)</h3>
+                                <p>CPU, Memory, Disk, Network 등<br>서버 자원 상태를 실시간으로 감시하고 알림을 발송합니다.</p>
                             </div>
-                            <p style="font-size: 13px; color: #374151; margin-top: 16px; margin-bottom: 8px;">
-                                <strong>16GB
-                                    Memory 미만 VM:</strong> 월 사용량 1TB 이하 무료
-                            </p>
-
-                            <div class="notes-list">
-                                <p>* 예시) 동일계정에서 4vCore 4GB 1대, 4vCore 16GB 1대를 사용하면 해당계정의 트래픽은 outbound 총 3TB(1TB +
-                                    2TB)까지
-                                    무료입니다.</p>
-                                <p>* server 정지 시에는 VM 별로 제공되는 네트워크 무료 트래픽(1TB~2TB)이 정지 기간만큼 조정되어 제공됩니다.</p>
+                            <div class="feature-card">
+                                <div class="icon"><i class="fas fa-user-cog"></i></div>
+                                <h3>매니지드 서비스</h3>
+                                <p>초기 구축부터 장애 처리, 기술 지원까지<br>전문적인 서버 관리 서비스를 제공합니다.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="icon"><i class="fas fa-file-invoice"></i></div>
+                                <h3>비용 분석</h3>
+                                <p>자원 사용량에 따른 예상 비용을 분석하고<br>최적의 비용 절감 방안을 제안합니다.</p>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- 6. Management Tab -->
-                    <div id="tab-management" class="cloud-tab">
-                        <div class="content-header">
-                            <h2>Management</h2>
-                            <p>서버 모니터링, 백업, 보안 설정을 통합 관리할 수 있는 도구를 제공합니다.</p>
-                        </div>
-                        <div class="content-section">
-                            <div class="feature-grid">
-                                <div class="feature-card">
-                                    <div class="icon"><i class="fas fa-desktop"></i></div>
-                                    <h3>모니터링 (Watch)</h3>
-                                    <p>CPU, Memory, Disk, Network 등<br>서버 자원 상태를 실시간으로 감시하고 알림을 발송합니다.</p>
-                                </div>
-                                <div class="feature-card">
-                                    <div class="icon"><i class="fas fa-user-cog"></i></div>
-                                    <h3>매니지드 서비스</h3>
-                                    <p>초기 구축부터 장애 처리, 기술 지원까지<br>전문적인 서버 관리 서비스를 제공합니다.</p>
-                                </div>
-                                <div class="feature-card">
-                                    <div class="icon"><i class="fas fa-file-invoice"></i></div>
-                                    <h3>비용 분석</h3>
-                                    <p>자원 사용량에 따른 예상 비용을 분석하고<br>최적의 비용 절감 방안을 제안합니다.</p>
-                                </div>
+                <!-- 7. VDI Tab -->
+                <div id="tab-vdi" class="cloud-tab">
+                    <div class="content-header">
+                        <h2>VDI (데스크탑 가상화)</h2>
+                        <p>언제 어디서나 안전하게 업무를 수행할 수 있는 스마트 워크 환경을 제공합니다.</p>
+                    </div>
+                    <div class="content-section">
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="icon"><i class="fas fa-laptop-house"></i></div>
+                                <h3>Smart Work</h3>
+                                <p>PC, 태블릿, 모바일 등 다양한 기기에서<br>언제 어디서나 업무 환경에 접속할 수 있습니다.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="icon"><i class="fas fa-user-check"></i></div>
+                                <h3>강력한 보안</h3>
+                                <p>모든 데이터가 중앙 서버에 저장되므로<br>단말기 분실 시에도 정보 유출 걱정이 없습니다.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="icon"><i class="fas fa-sliders-h"></i></div>
+                                <h3>유연한 관리</h3>
+                                <p>사용자별 권한 관리, SW 배포, 정책 설정을<br>중앙에서 일괄적으로 관리할 수 있습니다.</p>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- 7. VDI Tab -->
-                    <div id="tab-vdi" class="cloud-tab">
-                        <div class="content-header">
-                            <h2>VDI (데스크탑 가상화)</h2>
-                            <p>언제 어디서나 안전하게 업무를 수행할 수 있는 스마트 워크 환경을 제공합니다.</p>
-                        </div>
-                        <div class="content-section">
-                            <div class="feature-grid">
-                                <div class="feature-card">
-                                    <div class="icon"><i class="fas fa-laptop-house"></i></div>
-                                    <h3>Smart Work</h3>
-                                    <p>PC, 태블릿, 모바일 등 다양한 기기에서<br>언제 어디서나 업무 환경에 접속할 수 있습니다.</p>
-                                </div>
-                                <div class="feature-card">
-                                    <div class="icon"><i class="fas fa-user-check"></i></div>
-                                    <h3>강력한 보안</h3>
-                                    <p>모든 데이터가 중앙 서버에 저장되므로<br>단말기 분실 시에도 정보 유출 걱정이 없습니다.</p>
-                                </div>
-                                <div class="feature-card">
-                                    <div class="icon"><i class="fas fa-sliders-h"></i></div>
-                                    <h3>유연한 관리</h3>
-                                    <p>사용자별 권한 관리, SW 배포, 정책 설정을<br>중앙에서 일괄적으로 관리할 수 있습니다.</p>
-                                </div>
+                <!-- 8. Private Cloud Tab -->
+                <div id="tab-private" class="cloud-tab">
+                    <div class="content-header">
+                        <h2>Private Cloud</h2>
+                        <p>기업 전용의 독립된 클라우드 환경을 구축하여 보안과 안정성을 극대화합니다.</p>
+                    </div>
+                    <div class="content-section">
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="icon"><i class="fas fa-building"></i></div>
+                                <h3>Dedicated Zone</h3>
+                                <p>타 고객과 물리적으로 완벽히 분리된<br>단독 하드웨어 자원을 제공합니다.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="icon"><i class="fas fa-network-wired"></i></div>
+                                <h3>Hybrid Cloud</h3>
+                                <p>기존 On-Premise 환경과 Public Cloud를<br>연동하여 유연한 하이브리드 구성을 지원합니다.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="icon"><i class="fas fa-certificate"></i></div>
+                                <h3>보안 규제 준수</h3>
+                                <p>ISMS, 금융보안원 등 각종 보안 규제를<br>충족하는 인프라 환경을 설계합니다.</p>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- 8. Private Cloud Tab -->
-                    <div id="tab-private" class="cloud-tab">
-                        <div class="content-header">
-                            <h2>Private Cloud</h2>
-                            <p>기업 전용의 독립된 클라우드 환경을 구축하여 보안과 안정성을 극대화합니다.</p>
-                        </div>
-                        <div class="content-section">
-                            <div class="feature-grid">
-                                <div class="feature-card">
-                                    <div class="icon"><i class="fas fa-building"></i></div>
-                                    <h3>Dedicated Zone</h3>
-                                    <p>타 고객과 물리적으로 완벽히 분리된<br>단독 하드웨어 자원을 제공합니다.</p>
-                                </div>
-                                <div class="feature-card">
-                                    <div class="icon"><i class="fas fa-network-wired"></i></div>
-                                    <h3>Hybrid Cloud</h3>
-                                    <p>기존 On-Premise 환경과 Public Cloud를<br>연동하여 유연한 하이브리드 구성을 지원합니다.</p>
-                                </div>
-                                <div class="feature-card">
-                                    <div class="icon"><i class="fas fa-certificate"></i></div>
-                                    <h3>보안 규제 준수</h3>
-                                    <p>ISMS, 금융보안원 등 각종 보안 규제를<br>충족하는 인프라 환경을 설계합니다.</p>
-                                </div>
-                            </div>
+                <!-- 9. Limits Tab -->
+                <div id="tab-limits" class="cloud-tab">
+                    <div class="content-header">
+                        <h2>서비스별 제한사항</h2>
+                        <p>원활한 서비스 이용을 위해 각 상품별 제한 사항을 확인하시기 바랍니다.</p>
+                    </div>
+                    <div class="content-section">
+                        <div class="notes-list">
+                            <p>※ Data Disk 미제공: OS영역을 위한 기본디스크(Linux 20GB, Windows 50GB)만 제공, Data DISK는 미제공되며 DISK를
+                                추가하실 수 있습니다.</p>
+                            <p>※ 각 cloud 서버 사양별 선택 가능한 OS가 다르니, 반드시 확인하시기 바랍니다.</p>
+                            <p>※ 서버 사용요금은 서버 해지 전까지 이용요금이 발생합니다. 다만, 서버를 정지 시 정지요금으로 반영됩니다.</p>
                         </div>
                     </div>
-
-                    <!-- 9. Limits Tab -->
-                    <div id="tab-limits" class="cloud-tab">
-                        <div class="content-header">
-                            <h2>서비스별 제한사항</h2>
-                            <p>원활한 서비스 이용을 위해 각 상품별 제한 사항을 확인하시기 바랍니다.</p>
-                        </div>
-                        <div class="content-section">
-                            <div class="notes-list">
-                                <p>※ Data Disk 미제공: OS영역을 위한 기본디스크(Linux 20GB, Windows 50GB)만 제공, Data DISK는 미제공되며 DISK를
-                                    추가하실 수 있습니다.</p>
-                                <p>※ 각 cloud 서버 사양별 선택 가능한 OS가 다르니, 반드시 확인하시기 바랍니다.</p>
-                                <p>※ 서버 사용요금은 서버 해지 전까지 이용요금이 발생합니다. 다만, 서버를 정지 시 정지요금으로 반영됩니다.</p>
-                            </div>
-                        </div>
-                    </div>
+                </div>
 
             </main>
         </div>

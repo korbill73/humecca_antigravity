@@ -264,6 +264,33 @@ function initHeaderScripts() {
         }
     });
 
+    // [Cloud Page] Intercept Top Menu Links for Smooth Switching
+    // If we are on sub_cloud.html, use switchCloudTab instead of reloading
+    if (window.location.pathname.includes('sub_cloud.html') || window.location.href.includes('sub_cloud.html')) {
+        const cloudLinks = document.querySelectorAll('a[href*="sub_cloud.html#"]');
+        cloudLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (!href) return;
+
+                // Ensure it's a hash link
+                if (!href.includes('#')) return;
+
+                const hash = href.split('#')[1];
+                if (hash && typeof window.switchCloudTab === 'function') {
+                    e.preventDefault();
+                    console.log('[Loader] Intercepted Cloud Link -> Switching to:', hash);
+
+                    // Switch Tab
+                    window.switchCloudTab(hash);
+
+                    // Manually Close Dropdowns
+                    hideAllDropdowns();
+                }
+            });
+        });
+    }
+
     console.log('Header scripts initialized with improved menu control');
 }
 

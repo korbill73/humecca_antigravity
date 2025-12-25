@@ -460,6 +460,7 @@
                 <div class="tab" onclick="switchProductTab('vpn')" id="tab-vpn">VPN 전용선</div>
                 <div class="tab" onclick="switchProductTab('colocation')" id="tab-colocation">코로케이션</div>
                 <div class="tab" onclick="switchProductTab('security')" id="tab-security">보안 서비스</div>
+                <div class="tab" onclick="switchProductTab('solution')" id="tab-solution">기업 솔루션</div>
                 <div class="tab" onclick="switchProductTab('service')" id="tab-service">부가서비스</div>
             </div>
 
@@ -903,6 +904,125 @@
             </div>
 
             <!-- 5. 부가서비스 관리 섹션 -->
+            <!-- 5. 기업 솔루션 섹션 (New) -->
+            <div id="sub-solution" class="sub-content" style="display:none;">
+                <div class="card" style="margin-bottom:30px;">
+                    <div class="card-header">
+                        <h3 class="card-title">기업 솔루션 관리</h3>
+                        <div style="display:flex; gap:10px;">
+                            <select id="solution-type-select" class="form-input" style="width: 200px; padding: 5px;"
+                                onchange="renderProducts()">
+                                <option value="solution">MS365 / 그룹웨어</option>
+                                <option value="naverworks">네이버웍스</option>
+                                <option value="website">홈페이지 제작</option>
+                            </select>
+                            <button class="btn btn-primary" onclick="toggleProductForm('solution')">
+                                <i class="fas fa-plus"></i> 솔루션 상품 추가
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List (Moved Up) -->
+                <div class="card" style="margin-top:20px; margin-bottom: 30px;">
+                    <div style="overflow-x:auto;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th width="50">#</th>
+                                    <th>솔루션명</th>
+                                    <th>비용</th>
+                                    <th>설명/사양</th>
+                                    <th width="80">사용</th>
+                                    <th width="120">관리</th>
+                                </tr>
+                            </thead>
+                            <tbody id="product-list-solution">
+                                <!-- JS will load rows here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <div id="solution-form-container"
+                    style="display:none; padding: 25px; background: #1e293b; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2); border: 1px solid #334155;">
+                    <input type="hidden" id="solution-id-hidden">
+                    <h4
+                        style="margin-bottom: 20px; font-size: 1.1rem; color: #e2e8f0; border-left: 4px solid #ef4444; padding-left: 10px;">
+                        솔루션 상세 정보 입력</h4>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <!-- Left Column -->
+
+
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom: 5px; font-weight: 600; color: #cbd5e1;">솔루션
+                                명</label>
+                            <input type="text" id="solution-name" class="form-control"
+                                placeholder="예: Microsoft 365 Business Standard"
+                                style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0;">
+                        </div>
+
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom: 5px; font-weight: 600; color: #cbd5e1;">뱃지
+                                (Badge)</label>
+                            <input type="text" id="solution-badge" class="form-control" placeholder="예: 인기 상품, BEST, 추천"
+                                style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0;">
+                        </div>
+
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom: 5px; font-weight: 600; color: #cbd5e1;">요약
+                                (Summary)</label>
+                            <input type="text" id="solution-summary" class="form-control"
+                                placeholder="예: 사용자/월 (연간 약정시)"
+                                style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0;">
+                        </div>
+
+                        <div class="form-group">
+                            <label
+                                style="display:block; margin-bottom: 5px; font-weight: 600; color: #cbd5e1;">비용</label>
+                            <input type="text" id="solution-price" class="form-control"
+                                placeholder="예: 50000 (숫자만 입력) 또는 '문의'"
+                                style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0;">
+                        </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label style="display:block; margin-bottom: 5px; font-weight: 600; color: #cbd5e1;">솔루션
+                                특징/기능
+                                (한 줄에 하나씩 입력)</label>
+                            <textarea id="solution-features" class="form-control" rows="6"
+                                placeholder="웹 및 모바일용 Office 앱&#13;&#10;1TB OneDrive 스토리지&#13;&#10;..."
+                                style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0; resize: vertical;"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom: 5px; font-weight: 600; color: #cbd5e1;">표시
+                                순서</label>
+                            <input type="number" id="solution-sort" class="form-control" value="1"
+                                style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0;">
+                        </div>
+
+                        <div class="form-group" style="display: flex; align-items: center; padding-top: 25px;">
+                            <input type="checkbox" id="solution-active" checked
+                                style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer; accent-color: #ef4444;">
+                            <label for="solution-active" style="cursor: pointer; font-weight: 600; color: #cbd5e1;">사용
+                                (웹사이트에 표시)</label>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px; text-align: right; border-top: 1px solid #334155; padding-top: 20px;">
+                        <button class="btn btn-secondary" onclick="toggleProductForm('solution')"
+                            style="margin-right: 10px; padding: 10px 20px; background: #334155; color: #e2e8f0; border: none; border-radius: 6px; font-weight: 600;">취소</button>
+                        <button class="btn btn-primary" onclick="saveProduct(event, 'solution')"
+                            style="padding: 10px 30px; background: #ef4444; color: white; border: none; border-radius: 6px; font-weight: 600; box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.4);">저장완료</button>
+                    </div>
+                </div>
+                <!-- List -->
+
+            </div>
+
+            <!-- 6. 부가서비스 관리 섹션 -->
             <div id="sub-service" class="sub-content" style="display:none;">
 
                 <!-- 카테고리 선택 (부가서비스 내 세분화) -->
@@ -1410,6 +1530,14 @@
                         <i class="fas fa-sync"></i> 새로고침
                     </button>
                 </div>
+                <!-- FAQ Filter (Added) -->
+                <div class="status-tabs" style="padding: 15px 20px 0 20px;">
+                    <button class="status-tab-btn active" onclick="filterFaq('all', this)">전체</button>
+                    <button class="status-tab-btn" onclick="filterFaq('general', this)">일반</button>
+                    <button class="status-tab-btn" onclick="filterFaq('technical', this)">기술</button>
+                    <button class="status-tab-btn" onclick="filterFaq('billing', this)">요금</button>
+                    <button class="status-tab-btn" onclick="filterFaq('service', this)">서비스</button>
+                </div>
                 <div id="faq-list" style="min-height: 200px;"></div>
             </div>
         </div>
@@ -1593,7 +1721,7 @@
     </div>
 
     <script src="js/admin_backup.js"></script>
-    <script src="admin_logic_v7.js"></script>
+    <script src="admin_logic_v7.js?v=7.8"></script>
 </body>
 
 </html>

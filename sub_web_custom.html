@@ -61,51 +61,9 @@
             <p>합리적인 가격으로 최상의 퀄리티를 경험하세요.</p>
         </div>
 
-        <div class="pricing-grid-custom">
-            <!-- Basic -->
-            <div class="plan-card popular">
-                <h3 class="plan-title">일반형 (반응형)</h3>
-                <div class="plan-price">1,000,000<sub>원~</sub></div>
-                <ul class="plan-features">
-                    <li><i class="fas fa-check"></i> <strong>기본 5페이지 내외</strong></li>
-                    <li><i class="fas fa-check"></i> 반응형 웹 디자인 적용</li>
-                    <li><i class="fas fa-check"></i> 게시판/문의폼 기능</li>
-                    <li><i class="fas fa-check"></i> 기본 관리자 모드</li>
-                    <li><i class="fas fa-check"></i> 유지보수 1개월 무료</li>
-                </ul>
-                <button onclick="openAppModal('홈페이지 제작 - 일반형', 'website')" class="plan-btn solid"
-                    style="width:100%; border:none; cursor:pointer;">견적 문의</button>
-            </div>
-
-            <!-- Business -->
-            <div class="plan-card popular">
-                <div class="plan-badge">추천</div>
-                <h3 class="plan-title">비즈니스형</h3>
-                <div class="plan-price">2,000,000<sub>원~</sub></div>
-                <ul class="plan-features">
-                    <li><i class="fas fa-check"></i> <strong>페이지 수 제한 없음 (협의)</strong></li>
-                    <li><i class="fas fa-check"></i> 고급 디자인 및 퍼블리싱</li>
-                    <li><i class="fas fa-check"></i> 회원관리 / SMS 연동</li>
-                    <li><i class="fas fa-check"></i> 접속 통계 프로그램</li>
-                    <li><i class="fas fa-check"></i> 유지보수 3개월 무료</li>
-                </ul>
-                <button onclick="openAppModal('홈페이지 제작 - 비즈니스형', 'website')" class="plan-btn solid"
-                    style="width:100%; border:none; cursor:pointer;">견적 문의</button>
-            </div>
-
-            <!-- Custom -->
-            <div class="plan-card popular">
-                <h3 class="plan-title">프리미엄 쇼핑몰</h3>
-                <div class="plan-price">별도 협의</div>
-                <ul class="plan-features">
-                    <li><i class="fas fa-check"></i> <strong>독립형 쇼핑몰 구축</strong></li>
-                    <li><i class="fas fa-check"></i> 전자결제(PG) 연동</li>
-                    <li><i class="fas fa-check"></i> 상품/주문/배송 관리 시스템</li>
-                    <li><i class="fas fa-check"></i> 마케팅 툴 연동 (네이버쇼핑 등)</li>
-                    <li><i class="fas fa-check"></i> 맞춤 기능 개발 가능</li>
-                </ul>
-                <button onclick="openAppModal('홈페이지 제작 - 프리미엄 쇼핑몰', 'website')" class="plan-btn solid"
-                    style="width:100%; border:none; cursor:pointer;">견적 문의</button>
+        <div id="pricing-grid-website" class="pricing-grid compact-pricing">
+            <div style="text-align:center; padding:50px; width:100%; grid-column:1/-1;">
+                <i class="fas fa-spinner fa-spin fa-2x" style="color:#ddd;"></i>
             </div>
         </div>
 
@@ -121,6 +79,11 @@
 
     <script src="js/application_modal.js"></script>
     <script src="js/data_loader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProductData('solution-website');
+        });
+    </script>
 </body>
 
 </html>
