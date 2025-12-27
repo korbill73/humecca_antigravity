@@ -13,19 +13,20 @@
 <body>
     <!-- Header -->
     <!-- ========== HEADER PLACEHOLDER (Loaded via loader.js) ========== -->
-            <div id="header-placeholder"></div>
+    <div id="header-placeholder"></div>
 
 
     <!-- Subpage Hero -->
     <section class="sw-hero" style="background: #1a1f3c;">
         <div class="container">
-                        <div style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 20px;">
+            <div style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 20px;">
                 회사소개 <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 8px;"></i> 연혁
             </div>
-            <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; border: 1px solid rgba(255,255,255,0.2);">
+            <div
+                style="width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; border: 1px solid rgba(255,255,255,0.2);">
                 <i class="fas fa-history" style="font-size: 30px; color: white;"></i>
             </div>
-<h1>연혁</h1>
+            <h1>연혁</h1>
             <p>HUMECCA History</p>
         </div>
     </section>
@@ -65,7 +66,7 @@
 
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase_config.js"></script>
+    <script src="supabase_config.js?v=3.21"></script>
 
     <script>
         // ==================== CSS Injection for Animations ====================
@@ -86,13 +87,16 @@
 
         // ==================== 연혁 불러오기 ====================
         async function loadHistory() {
-            if (!supabase) {
-                console.error('Supabase not initialized');
+            // FIX: Use window.sb (initialized client) instead of global supabase object
+            const db = window.sb || window.supabase || supabase;
+
+            if (!db) {
+                console.error('Supabase not initialized (window.sb missing)');
                 return;
             }
 
             try {
-                const { data, error } = await supabase
+                const { data, error } = await db
                     .from('company_history')
                     .select('*')
                     .eq('active', true)
@@ -181,10 +185,38 @@
             }
         }
 
+        // ==================== 안전한 실행 로직 ====================
+        function waitForSb(maxRetries = 20, interval = 250) {
+            return new Promise((resolve, reject) => {
+                let count = 0;
+                const timer = setInterval(() => {
+                    count++;
+                    const db = window.sb || window.supabase;
+                    if (db && db.from) {
+                        clearInterval(timer);
+                        resolve(db);
+                    } else if (count >= maxRetries) {
+                        clearInterval(timer);
+                        reject('Supabase Client Timeout');
+                    }
+                }, interval);
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(loadHistory, 500);
+            // Wait for Supabase Client before loading history
+            waitForSb()
+                .then(() => {
+                    console.log('DB Ready, Loading history...');
+                    loadHistory();
+                })
+                .catch(err => {
+                    console.error('DB Init Failed:', err);
+                    document.getElementById('history-loading').innerHTML = '<p style="color:red; margin-top:20px;">시스템 지연으로 연결에 실패했습니다.<br>잠시 후 새로고침 해주세요.</p>';
+                });
 
             // Menu Fixes
+
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => {
                 const menu = item.querySelector('.dropdown-menu');
@@ -205,13 +237,3 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-

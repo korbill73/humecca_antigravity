@@ -506,9 +506,9 @@
                                 <input type="text" id="h-name" class="form-control" placeholder="상품명 입력" required>
                                 <small>예: 비즈니스</small>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display:none;">
                                 <label>고유 ID (영문/숫자)</label>
-                                <input type="text" id="h-id" class="form-control" placeholder="고유 ID 입력" required>
+                                <input type="text" id="h-id" class="form-control" placeholder="고유 ID 입력">
                                 <small>예: biz_01</small>
                             </div>
                             <div class="form-group">
@@ -617,9 +617,9 @@
                                 <input type="text" id="v-name" class="form-control" placeholder="상품명 입력" required>
                                 <small>예: Standard VPN</small>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display:none;">
                                 <label>고유 ID (영문/숫자)</label>
-                                <input type="text" id="v-id" class="form-control" placeholder="고유 ID 입력" required>
+                                <input type="text" id="v-id" class="form-control" placeholder="고유 ID 입력">
                                 <small>예: vpn_std</small>
                             </div>
                         </div>
@@ -729,9 +729,9 @@
                                 <input type="text" id="c-name" class="form-control" required placeholder="상품명 입력">
                                 <small>예: 1U Server</small>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display:none;">
                                 <label>상품 ID (Slug)</label>
-                                <input type="text" id="c-id" class="form-control" required placeholder="ID 입력">
+                                <input type="text" id="c-id" class="form-control" placeholder="ID 입력">
                                 <small>예: colo_1u</small>
                             </div>
                         </div>
@@ -851,9 +851,9 @@
                                 <input type="text" id="sec-name" class="form-control" placeholder="상품명 입력" required>
                                 <small>예: Standard</small>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display:none;">
                                 <label>상품 ID (유니크)</label>
-                                <input type="text" id="sec-id" class="form-control" placeholder="ID 입력" required>
+                                <input type="text" id="sec-id" class="form-control" placeholder="ID 입력">
                                 <small>예: waf-std</small>
                             </div>
                         </div>
@@ -1090,9 +1090,9 @@
                                 <input type="text" id="s-name" class="form-control" placeholder="서비스명 입력" required>
                                 <small>예: Windows Server 2019</small>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display:none;">
                                 <label class="form-label">서비스 ID (유니크)</label>
-                                <input type="text" id="s-id" class="form-control" placeholder="ID 입력" required>
+                                <input type="text" id="s-id" class="form-control" placeholder="ID 입력">
                                 <small>예: win_2019_std</small>
                             </div>
                         </div>
@@ -1319,6 +1319,23 @@
         <div id="tab-analytics" class="tab-content">
             <h2 class="page-title">웹로그 분석</h2>
             <p class="page-subtitle">방문자 현황 및 트래픽을 분석합니다.</p>
+
+            <!-- Google Analytics Report (Looker Studio) -->
+            <div class="card" style="margin-bottom: 30px;">
+                <div class="card-header">
+                    <h3 class="card-title">구글 웹로그 분석 리포트 (GA4)</h3>
+                    <a href="https://analytics.google.com/" target="_blank" class="btn btn-secondary">
+                        <i class="fas fa-external-link-alt"></i> GA4 원문 보기
+                    </a>
+                </div>
+                <div
+                    style="position: relative; width: 100%; height: 800px; background: #f8fafc; border-radius: 0 0 12px 12px; overflow: hidden;">
+                    <iframe
+                        src="https://lookerstudio.google.com/embed/reporting/534ba6aa-fe49-4948-9986-9837e5309592/page/1M"
+                        frameborder="0" style="border:0; width:100%; height:100%;" allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
 
             <div class="card">
                 <div class="card-header">
@@ -1723,7 +1740,7 @@
         </div>
     </div>
 
-    <script src="admin_logic_v7.js?v=3.21"></script>
+    <script src="admin_logic_v7.js?v=3.23"></script>
     <script src="js/admin_backup.js?v=1.0"></script>
     <script src="js/admin_analytics.js?v=1.0"></script> <!-- Analytics Script Added -->
     <script>

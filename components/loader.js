@@ -5,7 +5,7 @@
 
 // [Configuration] Current Application Version
 // Update this value manually whenever a deployment/update occurs
-const APP_VERSION = 'v.20251226.0305';
+const APP_VERSION = 'v.20251228.0147';
 
 
 
@@ -49,20 +49,16 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 async function logVisit() {
-    try {
-        const path = window.location.pathname;
-        const referrer = document.referrer;
-        const ua = navigator.userAgent;
+    // FIX: Use initialized client 'window.sb'
+    const db = window.sb || window.supabase;
+    if (!db || !db.from) return;
 
-        // Simple insert
-        await supabase.from('visit_logs').insert([{
-            page_path: path,
-            referrer: referrer,
-            user_agent: ua
-        }]);
+    try {
+        await db.from('visit_logs').insert([
+            { page: window.location.pathname, referrer: document.referrer }
+        ]);
     } catch (e) {
-        // Silent fail
-        console.warn('Analytics log failed:', e);
+        console.warn('Visit log failed:', e);
     }
 }
 

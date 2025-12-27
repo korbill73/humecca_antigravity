@@ -20,11 +20,15 @@ const DISCOUNTS = [
  * populates the global lists above
  */
 async function fetchCalculatorData() {
-    let db = window.supabase || window.sb;
-    if (!db && typeof supabase !== 'undefined') db = supabase;
+    // FIX: Prioritize 'window.sb' which is the initialized client from supabase_config.js
+    let db = window.sb;
 
     if (!db) {
-        console.error('Supabase SDK not loaded or client not initialized');
+        console.error('Supabase Client (window.sb) not found. Check supabase_config.js');
+        // Fallback or Alert
+        if (typeof supabase !== 'undefined' && supabase.createClient) {
+            // Worst case attempt: try to use global if it looks like a client (unlikely if name collision)
+        }
         alert('데이터베이스 연결 실패. 페이지를 새로고침 해주세요.');
         return;
     }

@@ -283,12 +283,12 @@ const CATEGORIES = {
 
 async function getOrCreateProduct(type) {
     const config = CATEGORIES[type] || { category: 'etc', subcategory: 'etc', name: '기타' };
-    const { data: existing } = await supabase.from('products')
+    const { data: existing } = await window.sb.from('products')
         .select('*').eq('category', config.category).eq('subcategory', config.subcategory).maybeSingle();
 
     if (existing) return existing;
 
-    const { data: newProd, error } = await supabase.from('products').insert([{
+    const { data: newProd, error } = await window.sb.from('products').insert([{
         category: config.category,
         subcategory: config.subcategory,
         name: config.name,
@@ -302,7 +302,7 @@ async function getOrCreateProduct(type) {
 async function addPlanToSupabase(type, p) {
     const prod = await getOrCreateProduct(type);
     if (!prod) return;
-    await supabase.from('product_plans').insert([{
+    await window.sb.from('product_plans').insert([{
         product_id: prod.id,
         plan_name: p.name,
         price: p.price,
@@ -331,7 +331,7 @@ window.migrateToSupabase = async () => {
         // Or deeper cleanup (products too?). For now, safely delete plans to avoid ID conflicts if referenced.
         // Actually better to delete plans directly. 
         // Note: If you want to delete products too, you need to delete plans first due to FK.
-        const { error } = await supabase.from('product_plans').delete().neq('id', 0); // Hack to delete all
+        const { error } = await window.sb.from('product_plans').delete().neq('id', 0); // Hack to delete all
         if (error) {
             console.error(error);
             alert('데이터 삭제 실패: ' + error.message);
@@ -384,10 +384,10 @@ window.migrateToSupabase = async () => {
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Admin Script V7 Loaded');
 
-    if (!window.supabase) {
-        console.error('Supabase client missing.');
+    if (!window.sb) {
+        console.error('Supabase client (window.sb) missing.');
     } else {
-        console.log('✅ Admin Page connected to Supabase');
+        console.log('✅ Admin Page connected to Supabase (window.sb)');
     }
 
     // [Fix] Resolve Tab State IMMEDIATELY before data load to prevent flicker
@@ -450,7 +450,7 @@ async function loadApplications() {
     listEl.innerHTML = '<tr><td colspan="7" align="center" style="padding:40px;"><i class="fas fa-spinner fa-spin fa-2x" style="color:#4f46e5;"></i></td></tr>';
 
     // Fetch Data
-    let query = supabase.from('applications').select('*').order('created_at', { ascending: false });
+    let query = window.sb.from('applications').select('*').order('created_at', { ascending: false });
 
     if (productFilter !== 'all') {
         if (productFilter === 'security') query = query.like('product_type', 'security%');
@@ -460,7 +460,7 @@ async function loadApplications() {
     const { data: allData, error } = await query;
 
     // Fetch Product Plans for Price Lookup (Retroactive Fix)
-    const { data: plans } = await supabase.from('product_plans').select('plan_name, price');
+    const { data: plans } = await window.sb.from('product_plans').select('plan_name, price');
     window.adminPriceMap = {};
     if (plans) {
         plans.forEach(p => {
@@ -647,7 +647,7 @@ window.updateApplicationStatus = async (id, newStatus) => {
     window.showToast('상태 변경 중...', 'info');
 
     // DB Update
-    const { data, error } = await supabase.from('applications').update({ status: newStatus }).eq('id', id).select();
+    const { data, error } = await window.sb.from('applications').update({ status: newStatus }).eq('id', id).select();
 
     if (error) {
         console.error('Update Error:', error);
@@ -687,7 +687,7 @@ window.openApplicationDetail = async (id) => {
     modalBody.innerHTML = '<div style="display:flex; justify-content:center; padding:50px;"><i class="fas fa-spinner fa-spin fa-3x" style="color:#e2e8f0;"></i></div>';
     modal.style.display = 'block';
 
-    const { data: item, error } = await supabase.from('applications').select('*').eq('id', id).single();
+    const { data: item, error } = await window.sb.from('applications').select('*').eq('id', id).single();
 
     if (error || !item) {
         modalBody.innerHTML = '<div style="text-align:center; padding:30px; color:#ef4444;">데이터를 불러올 수 없습니다.</div>';
@@ -822,7 +822,7 @@ window.deleteApplication = async (id) => {
         console.log('Deleting entry:', id, typeof id);
 
         // .select()를 추가하여 실제 삭제된 데이터를 반환받습니다.
-        const { data, error } = await supabase
+        const { data, error } = await window.sb
             .from('applications')
             .delete()
             .eq('id', id)
@@ -890,7 +890,7 @@ async function refreshDashboard() {
     const updateCount = async (table, id) => {
         const el = document.getElementById(id);
         if (!el) return;
-        const { count } = await supabase.from(table).select('*', { count: 'exact', head: true });
+        const { count } = await window.sb.from(table).select('*', { count: 'exact', head: true });
         el.innerText = count || 0;
     };
     await updateCount('notices', 'notice-count');
@@ -927,7 +927,7 @@ async function renderAnnouncements() {
         </div>`;
     }
 
-    const { data } = await supabase.from('notices').select('*').order('is_pinned', { ascending: false }).order('created_at', { ascending: false });
+    const { data } = await window.sb.from('notices').select('*').order('is_pinned', { ascending: false }).order('created_at', { ascending: false });
     const body = document.getElementById('notice-table-body');
     body.innerHTML = '';
 
@@ -1035,10 +1035,10 @@ document.getElementById('notice-form')?.addEventListener('submit', async (e) => 
 
         let error;
         if (id) {
-            const res = await supabase.from('notices').update(payload).eq('id', id);
+            const res = await window.sb.from('notices').update(payload).eq('id', id);
             error = res.error;
         } else {
-            const res = await supabase.from('notices').insert([payload]);
+            const res = await window.sb.from('notices').insert([payload]);
             error = res.error;
         }
 
@@ -1055,9 +1055,9 @@ document.getElementById('notice-form')?.addEventListener('submit', async (e) => 
         submitBtn.disabled = false;
     }
 });
-window.deleteNotice = async (id) => { if (confirm('삭제?')) { await supabase.from('notices').delete().eq('id', id); renderAnnouncements(); } };
+window.deleteNotice = async (id) => { if (confirm('삭제?')) { await window.sb.from('notices').delete().eq('id', id); renderAnnouncements(); } };
 window.editNotice = async (id) => {
-    const { data } = await supabase.from('notices').select('*').eq('id', id).single();
+    const { data } = await window.sb.from('notices').select('*').eq('id', id).single();
     if (!data) return;
     document.getElementById('notice-edit-id').value = data.id;
     document.getElementById('notice-title').value = data.title;
@@ -1167,7 +1167,7 @@ async function renderProducts() {
     }
 
     // 1. Get Product ID for this category
-    const { data: prodData } = await supabase.from('products').select('id').eq('category', category).eq('subcategory', subcategory).maybeSingle();
+    const { data: prodData } = await window.sb.from('products').select('id').eq('category', category).eq('subcategory', subcategory).maybeSingle();
 
     if (!prodData) {
         listEl.innerHTML = `<tr><td colspan="6" align="center">등록된 상품(그룹)이 없습니다. <button class="btn btn-sm btn-primary" onclick="migrateToSupabase()">마이그레이션</button>을 진행해주세요.</td></tr>`;
@@ -1175,7 +1175,7 @@ async function renderProducts() {
     }
 
     // 2. Get Plans
-    const { data: plans } = await supabase.from('product_plans')
+    const { data: plans } = await window.sb.from('product_plans')
         .select('*')
         .eq('product_id', prodData.id)
         .order('sort_order', { ascending: true });
@@ -1241,7 +1241,7 @@ window.openProductDetail = async (id) => {
     modal.style.display = 'block';
 
     // Fetch single plan
-    const { data: p, error } = await supabase.from('product_plans').select('*, products(name, category)').eq('id', id).single();
+    const { data: p, error } = await window.sb.from('product_plans').select('*, products(name, category)').eq('id', id).single();
 
     if (error || !p) {
         modalBody.innerHTML = '<p style="color:red; text-align:center;">데이터를 불러올 수 없습니다.</p>';
@@ -1306,14 +1306,14 @@ window.openProductDetail = async (id) => {
 
 window.deletePlan = async (id) => {
     if (confirm('정말 이 플랜을 삭제하시겠습니까?')) {
-        await supabase.from('product_plans').delete().eq('id', id);
+        await window.sb.from('product_plans').delete().eq('id', id);
         renderProducts();
     }
 };
 
 window.editProduct = async (id, prefix) => {
     // Join with products to get subcategory
-    const { data: p, error } = await supabase.from('product_plans')
+    const { data: p, error } = await window.sb.from('product_plans')
         .select('*, products(subcategory)')
         .eq('id', id)
         .single();
@@ -1450,10 +1450,18 @@ window.saveProduct = async (e, type) => {
     // Prepare Payload
     const featuresInput = getVal(`${p}-features`); // For non-solution types strictly, or overridden below
 
+    // Auto-generate ID if empty (User UI hidden)
+    let planId = getVal(`${p}-id`);
+    if (!planId) {
+        // Format: type_timestamp_random (e.g., h_1700000000_abcde)
+        planId = `${p}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+        console.log(`[Auto-Gen] Generated Plan ID: ${planId}`);
+    }
+
     const commonData = {
         product_id: prod.id,
         plan_name: getVal(`${p}-name`),
-        plan_id: getVal(`${p}-id`), // This is the Slug/User-facing ID
+        plan_id: planId, // This is the Slug/User-facing ID
         price: getVal(`${p}-price`),
         period: getVal(`${p}-period`),
         summary: getVal(`${p}-summary`),
@@ -1502,12 +1510,12 @@ window.saveProduct = async (e, type) => {
 
     if (hiddenId) {
         // Update
-        const { error } = await supabase.from('product_plans').update(commonData).eq('id', hiddenId);
+        const { error } = await window.sb.from('product_plans').update(commonData).eq('id', hiddenId);
         if (error) { alert('수정 실패: ' + error.message); return; }
         alert('상품 정보가 수정되었습니다.');
     } else {
         // Insert
-        const { error } = await supabase.from('product_plans').insert([commonData]);
+        const { error } = await window.sb.from('product_plans').insert([commonData]);
         if (error) { alert('등록 실패: ' + error.message); return; }
         alert('새로운 상품이 등록되었습니다.');
     }
@@ -1556,12 +1564,13 @@ window.loadTermEditor = async (type) => {
     });
 
     const textarea = document.getElementById('term-content');
-    if (!textarea) return;
+    if (!textarea) { console.error('Aborting: term-content textarea not found'); return; }
     textarea.value = '로딩 중...';
+    console.log(`[Debug] loadTermEditor starting for type: ${type}`);
 
     // Load from Supabase DB
     try {
-        const { data, error } = await supabase
+        const { data, error } = await window.sb
             .from('terms')
             .select('content')
             .eq('type', type)
@@ -1595,7 +1604,7 @@ window.saveCurrentTerm = async () => {
         console.log('[Debug] Saving term:', currentTermType);
 
         // 1. Check if exists
-        const { data: existing, error: fetchError } = await supabase
+        const { data: existing, error: fetchError } = await window.sb
             .from('terms')
             .select('id')
             .eq('type', currentTermType)
@@ -1608,7 +1617,7 @@ window.saveCurrentTerm = async () => {
         let error;
         if (existing) {
             // Update
-            const { data: updated, error: updateError } = await supabase
+            const { data: updated, error: updateError } = await window.sb
                 .from('terms')
                 .update({
                     content: content,
@@ -1624,7 +1633,7 @@ window.saveCurrentTerm = async () => {
             error = null;
         } else {
             // Insert
-            const { data: inserted, error: insertError } = await supabase
+            const { data: inserted, error: insertError } = await window.sb
                 .from('terms')
                 .insert([{
                     type: currentTermType,
@@ -1674,7 +1683,7 @@ async function renderAnalytics() {
         return d.toISOString().split('T')[0];
     });
 
-    const { data } = await supabase.from('web_logs').select('created_at').gte('created_at', dates[0]);
+    const { data } = await window.sb.from('web_logs').select('created_at').gte('created_at', dates[0]);
     const counts = dates.map(d => data.filter(r => r.created_at.startsWith(d)).length);
 
     if (logsChart) logsChart.destroy();
@@ -1694,7 +1703,7 @@ async function renderAnalytics() {
 async function renderCustomers() {
     const el = document.getElementById('customer-list');
     if (!el) return;
-    const { data } = await supabase.from('customers').select('*').order('sort_order', { ascending: true }); // Default sort by sort_order
+    const { data } = await window.sb.from('customers').select('*').order('sort_order', { ascending: true }); // Default sort by sort_order
     el.innerHTML = '';
 
     // Sort logic fallback if needed, but DB order is best. 
@@ -1728,13 +1737,13 @@ window.toggleNoticeForm = () => {
 
 window.deleteCustomer = async (id) => {
     if (confirm('정말 삭제하시겠습니까?')) {
-        await supabase.from('customers').delete().eq('id', id);
+        await window.sb.from('customers').delete().eq('id', id);
         renderCustomers();
     }
 };
 
 window.editCustomer = async (id) => {
-    const { data } = await supabase.from('customers').select('*').eq('id', id).single();
+    const { data } = await window.sb.from('customers').select('*').eq('id', id).single();
     if (!data) return;
 
     document.getElementById('customer-name').value = data.name;
@@ -1768,13 +1777,13 @@ document.getElementById('customer-form')?.addEventListener('submit', async (e) =
 
     if (id) {
         // Update
-        const { error } = await supabase.from('customers').update({ name, logo_url }).eq('id', id);
+        const { error } = await window.sb.from('customers').update({ name, logo_url }).eq('id', id);
         if (error) { alert('수정 실패: ' + error.message); return; }
         alert('고객사 정보가 수정되었습니다.');
     } else {
         // Insert
         // Get max sort_order to append? Or just insert.
-        const { error } = await supabase.from('customers').insert([{ name, logo_url }]);
+        const { error } = await window.sb.from('customers').insert([{ name, logo_url }]);
         if (error) { alert('추가 실패:' + error.message); return; }
         alert('추가되었습니다.');
     }
@@ -1801,7 +1810,7 @@ async function renderFaqs() {
     if (!el) return;
 
     // Fetch data
-    let query = supabase.from('faqs').select('*').order('sort_order', { ascending: true });
+    let query = window.sb.from('faqs').select('*').order('sort_order', { ascending: true });
     if (currentFaqFilter !== 'all') {
         query = query.eq('category', currentFaqFilter);
     }
@@ -1838,10 +1847,10 @@ async function renderFaqs() {
         </div>`;
     });
 }
-window.deleteFaq = async (id) => { if (confirm('정말 삭제하시겠습니까?')) { await supabase.from('faqs').delete().eq('id', id); renderFaqs(); } };
+window.deleteFaq = async (id) => { if (confirm('정말 삭제하시겠습니까?')) { await window.sb.from('faqs').delete().eq('id', id); renderFaqs(); } };
 document.getElementById('faq-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    await supabase.from('faqs').insert([{
+    await window.sb.from('faqs').insert([{
         question: document.getElementById('faq-question').value,
         answer: document.getElementById('faq-answer').value,
         category: document.getElementById('faq-category').value,
@@ -1855,7 +1864,7 @@ async function renderInquiries() {
     if (!el) return;
     if (!el.querySelector('table')) el.innerHTML = '<table class="admin-table"><thead><tr><th>Date</th><th>Name</th><th>Subject</th><th>Status</th><th>View</th></tr></thead><tbody id="inq-body"></tbody></table>';
 
-    const { data } = await supabase.from('inquiries').select('*').order('created_at', { ascending: false });
+    const { data } = await window.sb.from('inquiries').select('*').order('created_at', { ascending: false });
     const body = document.getElementById('inq-body');
     body.innerHTML = '';
     data?.forEach(i => {
@@ -1870,7 +1879,7 @@ async function renderInquiries() {
 async function renderTimeline() {
     const el = document.getElementById('history-list');
     if (!el) return;
-    const { data } = await supabase.from('company_history').select('*').order('year', { ascending: false }).order('month', { ascending: false }).order('sort_order', { ascending: true });
+    const { data } = await window.sb.from('company_history').select('*').order('year', { ascending: false }).order('month', { ascending: false }).order('sort_order', { ascending: true });
     el.innerHTML = '';
 
     if (!data || data.length === 0) {
@@ -1898,7 +1907,7 @@ async function renderTimeline() {
 
 window.deleteHistory = async (id) => {
     if (confirm('정말 삭제하시겠습니까?')) {
-        await supabase.from('company_history').delete().eq('id', id);
+        await window.sb.from('company_history').delete().eq('id', id);
         renderTimeline();
         refreshDashboard();
     }
@@ -1909,7 +1918,7 @@ window.deleteHistory = async (id) => {
 // Edit Notice
 window.editNotice = async (id) => {
     try {
-        const { data, error } = await supabase.from('notices').select('*').eq('id', id).single();
+        const { data, error } = await window.sb.from('notices').select('*').eq('id', id).single();
         if (error) throw error;
 
         document.getElementById('notice-edit-id').value = data.id;
@@ -1968,12 +1977,12 @@ document.getElementById('notice-form')?.addEventListener('submit', async (e) => 
 
     if (id) {
         // Update
-        const { error } = await supabase.from('notices').update(payload).eq('id', id);
+        const { error } = await window.sb.from('notices').update(payload).eq('id', id);
         if (error) { alert('수정 실패: ' + error.message); return; }
         alert('공지사항이 수정되었습니다.');
     } else {
         // Insert
-        const { error } = await supabase.from('notices').insert([payload]);
+        const { error } = await window.sb.from('notices').insert([payload]);
         if (error) { alert('등록 실패: ' + error.message); return; }
         alert('공지사항이 등록되었습니다.');
     }
@@ -1984,7 +1993,7 @@ document.getElementById('notice-form')?.addEventListener('submit', async (e) => 
 });
 
 window.editHistory = async (id) => {
-    const { data } = await supabase.from('company_history').select('*').eq('id', id).single();
+    const { data } = await window.sb.from('company_history').select('*').eq('id', id).single();
     if (!data) return;
 
     document.getElementById('history-year').value = data.year;
@@ -2025,12 +2034,12 @@ document.getElementById('history-form')?.addEventListener('submit', async (e) =>
 
     if (id) {
         // Update
-        const { error } = await supabase.from('company_history').update(payload).eq('id', id);
+        const { error } = await window.sb.from('company_history').update(payload).eq('id', id);
         if (error) { alert('수정 실패: ' + error.message); return; }
         alert('수정되었습니다.');
     } else {
         // Insert
-        const { error } = await supabase.from('company_history').insert([payload]);
+        const { error } = await window.sb.from('company_history').insert([payload]);
         if (error) { alert('등록 실패: ' + error.message); return; }
         alert('등록되었습니다.');
     }
@@ -2052,7 +2061,7 @@ window.openApplicationDetailNew = async (id) => {
     modalBody.innerHTML = '<div style="display:flex; justify-content:center; padding:50px;"><i class="fas fa-spinner fa-spin fa-3x" style="color:#e2e8f0;"></i></div>';
     modal.style.display = 'block';
 
-    const { data: item, error } = await supabase.from('applications').select('*').eq('id', id).single();
+    const { data: item, error } = await window.sb.from('applications').select('*').eq('id', id).single();
 
     if (error || !item) {
         modalBody.innerHTML = '<div style="text-align:center; padding:30px; color:#ef4444;">데이터를 불러올 수 없습니다.</div>';
@@ -2343,12 +2352,12 @@ window.saveProduct = async (e, type) => {
 
     if (hiddenId) {
         // Update
-        const { error } = await supabase.from('product_plans').update(commonData).eq('id', hiddenId);
+        const { error } = await window.sb.from('product_plans').update(commonData).eq('id', hiddenId);
         if (error) { alert('수정 실패: ' + error.message); return; }
         alert('상품 정보가 수정되었습니다.');
     } else {
         // Insert
-        const { error } = await supabase.from('product_plans').insert([commonData]);
+        const { error } = await window.sb.from('product_plans').insert([commonData]);
         if (error) { alert('등록 실패: ' + error.message); return; }
         alert('새로운 상품이 등록되었습니다.');
     }

@@ -288,8 +288,15 @@ async function submitApplication(e) {
     try {
         // A. Supabase Save
         let refId = null;
-        if (typeof supabase !== 'undefined') {
-            const { data: inserted, error } = await supabase
+        let db = window.sb;
+
+        // Fallback check if window.sb is not ready
+        if (!db && typeof supabase !== 'undefined' && supabase.from) {
+            db = supabase;
+        }
+
+        if (db && db.from) {
+            const { data: inserted, error } = await db
                 .from('applications')
                 .insert([data])
                 .select();
@@ -332,19 +339,36 @@ async function submitApplication(e) {
 }
 
 async function sendEmails(params) {
-    if (typeof emailjs === 'undefined') return;
+    console.log('[Email] Sending notification via server API...');
 
-    const p1 = emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID_MANAGER, {
-        ...params,
-        subject: `[신규상담] ${params.company_name} - ${params.product_name}`
-    });
+    try {
+        const response = await fetch('/api/send-notification', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(params)
+        });
 
-    const p2 = emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID_CUSTOMER, {
-        ...params,
-        subject: `[HUMECCA] 상담 신청이 접수되었습니다.`
-    });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Server email failed');
+        }
 
-    await Promise.allSettled([p1, p2]);
+        console.log('[Email] Server notification sent successfully');
+
+        // Optional: Keep EmailJS for customer auto-reply if needed, 
+        // but for now we prioritize server-side manager notification.
+        if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== "user_xxxxxxxxxxxxxxxxx") {
+            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID_CUSTOMER, {
+                ...params,
+                subject: `[HUMECCA] 상담 신청이 접수되었습니다.`
+            });
+        }
+    } catch (err) {
+        console.error('[Email] Failed to send notification:', err);
+        // Fallback or just log (we already saved to DB/Supabase)
+    }
 }
 
 function showSuccessView(prodName, refId, modal) {

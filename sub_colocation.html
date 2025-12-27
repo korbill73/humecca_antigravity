@@ -710,9 +710,11 @@
                 <div style="text-align: center; max-width: 1000px; margin: 0 auto;">
                     <h2 class="idc-sec-title" style="margin-bottom: 30px;">코로케이션의 필요성</h2>
                     <img src="images/colocation/colocation_concept.png" alt="Office vs Colocation Comparison"
-                        style="display: block; width: 100%; height: auto; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                        style="display: block; width: 80%; height: auto; margin: 0 auto; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
                 </div>
             </div>
+        </section>
+        </div>
         </section>
 
         <!-- Construction vs Colocation Analysis -->
@@ -799,14 +801,35 @@
 
                     /* Right Panel */
                     .comp-panel-right {
-                        background: #f8fafc;
+                        background: white;
                         border-radius: 20px;
-                        padding: 40px 30px;
-                        position: relative;
-                        overflow: hidden;
+                        padding: 30px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
                         border: 1px solid #e2e8f0;
                         display: flex;
                         flex-direction: column;
+                    }
+
+                    .comp-card.solution {
+                        background: #eff6ff;
+                        border-color: #dbeafe;
+                    }
+
+                    .comp-card.solution .comp-icon {
+                        color: #2563eb;
+                    }
+
+                    .comp-card.solution:hover {
+                        border-color: #bfdbfe;
+                        background: #f8fafc;
+                    }
+
+                    .tco-highlight-box {
+                        margin-top: 25px;
+                        background: #f8fafc;
+                        border-radius: 15px;
+                        padding: 25px;
+                        border: 1px dashed #cbd5e1;
                     }
 
                     .tco-chart {
@@ -1011,52 +1034,79 @@
 
                     <!-- Right: Solution -->
                     <div class="comp-panel-right">
-                        <h3 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; color: #1e293b;">휴메카 코로케이션,
-                            스마트한 선택</h3>
-                        <p style="font-size: 0.95rem; color: #475569; margin-bottom: 10px; line-height: 1.6;">
-                            비용은 줄이고, 초기 투자 없이,<br>운영 부담을 덜고 비즈니스 확장에 집중하세요.
-                        </p>
-
-                        <!-- Stylized CSS Chart -->
-                        <div class="tco-chart">
-                            <!-- Background Savings Viz -->
-                            <div class="tco-savings-area"></div>
-
-                            <!-- Savings Badge -->
-                            <div class="savings-badge">
-                                <i class="fas fa-arrow-down"></i> 비용 절감
+                        <h3
+                            style="text-align: center; font-size: 1.3rem; font-weight: 800; margin-bottom: 10px; color: #1e293b;">
+                            휴메카 코로케이션, 스마트한 선택</h3>
+                        <div class="comp-grid">
+                            <div class="comp-card solution">
+                                <i class="fas fa-snowflake comp-icon"></i>
+                                <h4>전용 냉방 인프라</h4>
+                                <p>IDC 전문 항온항습 설비<br>완벽 구비</p>
                             </div>
-
-                            <!-- Bar 1: Legacy -->
-                            <div class="tco-bar-group">
-                                <div class="tco-top-label">막대한 초기투자<br>& 지속적 운영비</div>
-                                <div class="tco-bar bar-red"
-                                    style="height: 55px; background: #ef4444; border-radius: 8px 8px 0 0;">초기구축</div>
-                                <div class="tco-bar bar-red" style="height: 75px; background: #dc2626;">운영비</div>
-                                <div class="tco-bar bar-red"
-                                    style="height: 55px; background: #b91c1c; border-radius: 0 0 8px 8px;">인건비</div>
-                                <div class="tco-label">자체 구축<br><span
-                                        style="font-size:0.8rem; color:#94a3b8; font-weight:400;">(Before)</span></div>
+                            <div class="comp-card solution">
+                                <i class="fas fa-shield-alt comp-icon"></i>
+                                <h4>이중화 전력 시스템</h4>
+                                <p>UPS 및 비상 발전기로<br>무정전 구현</p>
                             </div>
-
-                            <!-- Bar 2: Humecaa -->
-                            <div class="tco-bar-group">
-                                <div class="tco-top-label" style="margin-top:auto;">인프라 완비<br>초기비용 0원</div>
-                                <div class="tco-bar bar-blue"
-                                    style="height: 85px; display: flex; flex-direction: column; line-height: 1.2;">
-                                    <span>합리적인</span>
-                                    <span style="font-size:0.75rem; font-weight:400; opacity:0.9;">월 이용료</span>
-                                </div>
-                                <div class="tco-label">휴메카<br><span
-                                        style="font-size:0.8rem; color:#94a3b8; font-weight:400;">(After)</span></div>
+                            <div class="comp-card solution">
+                                <i class="fas fa-eye comp-icon"></i>
+                                <h4>24/7 전문 관제</h4>
+                                <p>국내 최고 수준 인력의<br>실시간 모니터링</p>
+                            </div>
+                            <div class="comp-card solution">
+                                <i class="fas fa-network-wired comp-icon"></i>
+                                <h4>100G 백본망</h4>
+                                <p>초고속 전용 회선으로<br>압도적 접속 속도</p>
+                            </div>
+                            <div class="comp-card solution">
+                                <i class="fas fa-hand-holding-usd comp-icon"></i>
+                                <h4>합리적 월 정액</h4>
+                                <p>초기 투자비 0원,<br>사용한 만큼만 지불</p>
+                            </div>
+                            <div class="comp-card solution">
+                                <i class="fas fa-user-check comp-icon"></i>
+                                <h4>엔지니어 기술지원</h4>
+                                <p>언제든 즉시 대응하는<br>숙련된 기술 인력</p>
                             </div>
                         </div>
 
-                        <ul class="check-list">
-                            <li><i class="fas fa-check-circle"></i> 최고 수준의 데이터센터 인프라 즉시 이용</li>
-                            <li><i class="fas fa-check-circle"></i> 검증된 전문 엔지니어의 24시간 기술 지원</li>
-                            <li><i class="fas fa-check-circle"></i> 유연한 확장성 및 탄력적인 비용 운영</li>
-                        </ul>
+                        <!-- Stylized CSS Chart inside a Highlight Box -->
+                        <div class="tco-highlight-box">
+                            <h4
+                                style="text-align:center; font-size:1rem; font-weight:700; color:#1e293b; margin-bottom:15px;">
+                                TCO(총 소유 비용) 절감 효과</h4>
+                            <div class="tco-chart" style="margin: 20px 0; height: 180px;">
+                                <!-- Background Savings Viz -->
+                                <div class="tco-savings-area" style="height: 160px; top: 10px;"></div>
+
+                                <!-- Bar 1: Legacy -->
+                                <div class="tco-bar-group">
+                                    <div class="tco-bar bar-red"
+                                        style="height: 30px; background: #ef4444; border-radius: 5px 5px 0 0;">초기구축
+                                    </div>
+                                    <div class="tco-bar bar-red" style="height: 50px; background: #dc2626;">운영비</div>
+                                    <div class="tco-bar bar-red"
+                                        style="height: 30px; background: #b91c1c; border-radius: 0 0 5px 5px;">인건비</div>
+                                    <div class="tco-label" style="font-size:0.8rem; width:80px; bottom:-30px;">자체 구축
+                                    </div>
+                                </div>
+
+                                <!-- Bar 2: Humecaa -->
+                                <div class="tco-bar-group">
+                                    <div class="tco-bar bar-blue"
+                                        style="height: 60px; display: flex; flex-direction: column; line-height: 1.2; border-radius: 5px;">
+                                        <span style="font-size:0.8rem;">합리적</span>
+                                        <span style="font-size:0.65rem; font-weight:400; opacity:0.9;">월 이용료</span>
+                                    </div>
+                                    <div class="tco-label" style="font-size:0.8rem; width:80px; bottom:-30px;">휴메카</div>
+                                </div>
+
+                                <!-- Savings Badge -->
+                                <div class="savings-badge" style="top: 50px; font-size: 0.75rem;">
+                                    <i class="fas fa-arrow-down"></i> 비용 대폭 절감
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1076,7 +1126,7 @@
                 <div
                     style="background:white; border-radius:20px; padding:40px; box-shadow:0 10px 30px rgba(0,0,0,0.05); text-align:center; overflow:hidden;">
                     <img src="images/colocation/100g_backbone_diagram.png" alt="100G Backbone Network Diagram"
-                        style="max-width:100%; height:auto;border-radius:10px; border:1px solid #e2e8f0;">
+                        style="width:80%; height:auto; margin: 0 auto; border-radius:10px; border:1px solid #e2e8f0;">
                     <div
                         style="display:grid; grid-template-columns: 1fr 1fr; gap:30px; margin-top:40px; text-align:left;">
                         <div style="padding:20px; background:#f8fafc; border-radius:15px;">

@@ -29,16 +29,12 @@
                     style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
 
                 <div class="idc-container" style="position: relative; z-index: 10;">
-                    <!-- Standardized Hero -->
-                    <div style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 20px;">
-                        IDC 서비스 <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 8px;"></i> 서버호스팅
-                    </div>
                     <div
-                        style="width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; border: 1px solid rgba(255,255,255,0.2);">
-                        <i class="fas fa-server" style="font-size: 30px; color: white;"></i>
+                        style="font-size: 16px; color: #EF4444; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">
+                        KT IDC Official Partner
                     </div>
-                    <h1>서버호스팅</h1>
-                    <p>고성능 전용 서버를 단독으로 사용하여<br>타협 없는 최고의 퍼포먼스를 경험하세요.</p>
+                    <h1>KT 강남 IDC 기반<br>고성능 서버호스팅</h1>
+                    <p>대한민국 IT 인프라의 중심, KT 강남 IDC에서<br>타협 없는 최고의 퍼포먼스를 경험하세요.</p>
                 </div>
 
                 <script>
@@ -161,7 +157,18 @@
                 </script>
             </section>
 
-            <section class="idc-section">
+            <nav class="sub-nav-sticky">
+                <div class="idc-container">
+                    <ul class="sub-nav-list">
+                        <li><a href="#section-pricing" class="active">요금제 안내</a></li>
+                        <li><a href="#section-intro">서비스 소개</a></li>
+                        <li><a href="#section-recommend">추천 고객</a></li>
+                        <li><a href="#section-comp">압도적 경쟁력</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <section class="idc-section" id="section-pricing">
                 <div class="idc-container">
                     <div class="idc-sec-header">
                         <span class="idc-sec-sub">PRICING PLANS</span>
@@ -181,7 +188,7 @@
             </section>
 
             <!-- NEW: What is Server Hosting Section -->
-            <section class="idc-section bg-gray">
+            <section class="idc-section bg-gray" id="section-intro">
                 <div class="idc-container">
                     <div class="idc-sec-header" style="margin-bottom: 50px;">
                         <h2 class="idc-sec-title" style="font-size: 2rem;">서버호스팅이란?</h2>
@@ -222,28 +229,133 @@
                             style="width: 100%; max-width: 900px; margin: 0 auto; display: block; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1)); border-radius: 20px;">
                     </div>
 
-                    <div style="margin-top: 60px;">
-                        <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">
-                            이런
-                            고객에게 서버호스팅을 추천합니다</h3>
-                        <ul
-                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; list-style: none; padding: 0;">
-                            <li
-                                style="background: white; padding: 20px; border-radius: 10px; border: 1px solid var(--border-light); display: flex; align-items: center; gap: 15px;">
-                                <i class="fas fa-check-circle" style="color: var(--accent); font-size: 1.2rem;"></i>
-                                <span style="color: var(--text-sub);">타사와 서버 자원을 공유하지 않는 단독 환경 필요</span>
-                            </li>
-                            <li
-                                style="background: white; padding: 20px; border-radius: 10px; border: 1px solid var(--border-light); display: flex; align-items: center; gap: 15px;">
-                                <i class="fas fa-check-circle" style="color: var(--accent); font-size: 1.2rem;"></i>
-                                <span style="color: var(--text-sub);">고성능 DB 서버 또는 대용량 트래픽 처리 필요</span>
-                            </li>
-                            <li
-                                style="background: white; padding: 20px; border-radius: 10px; border: 1px solid var(--border-light); display: flex; align-items: center; gap: 15px;">
-                                <i class="fas fa-check-circle" style="color: var(--accent); font-size: 1.2rem;"></i>
-                                <span style="color: var(--text-sub);">보안상 물리적으로 분리된 서버 환경 필요</span>
-                            </li>
-                        </ul>
+                    <div style="margin-top: 60px;" id="section-recommend">
+                        <h3
+                            style="font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-bottom: 30px; text-align: center;">
+                            이런 고객에게 서버호스팅을 추천합니다</h3>
+                        <div class="recommend-grid">
+                            <!-- Case 1: Security -->
+                            <div class="recommend-card">
+                                <div class="recommend-icon"><i class="fas fa-shield-halved"></i></div>
+                                <h4>물리적 보안 및 컴플라이언스</h4>
+                                <p>금융, 의료, 공공기관 등 엄격한 보안 가이드라인 준수가 필수적이며 데이터의 물리적 격리가 필요한 기업</p>
+                            </div>
+                            <!-- Case 2: HPC -->
+                            <div class="recommend-card">
+                                <div class="recommend-icon"><i class="fas fa-microchip"></i></div>
+                                <h4>고성능 연산 및 빅데이터</h4>
+                                <p>인공지능(AI) 모델 학습, 빅데이터 분석, 대규모 DB 운영 등 하드웨어 자원을 100% 점유해야 하는 서비스</p>
+                            </div>
+                            <!-- Case 3: Customization -->
+                            <div class="recommend-card">
+                                <div class="recommend-icon"><i class="fas fa-sliders"></i></div>
+                                <h4>완벽한 커스텀 및 제어 권한</h4>
+                                <p>독립된 하이퍼바이저 구축, 커스텀 커널 구성 등 인프라의 아주 세밀한 부분까지 직접 제어해야 하는 환경</p>
+                            </div>
+                            <!-- Case 4: Mission Critical -->
+                            <div class="recommend-card">
+                                <div class="recommend-icon"><i class="fas fa-heart-pulse"></i></div>
+                                <h4>미션 크리티컬 비즈니스</h4>
+                                <p>단 1초의 지연이나 장애도 허용되지 않는 핵심 비즈니스로서, 전용 인프라와 즉각적인 물리 대응이 필요한 경우</p>
+                            </div>
+                            <!-- Case 5: Cost Efficiency -->
+                            <div class="recommend-card">
+                                <div class="recommend-icon"><i class="fas fa-chart-line"></i></div>
+                                <h4>예측 가능한 인프라 비용</h4>
+                                <p>클라우드의 복잡한 종량제 비용에서 벗어나, 대규모 하드웨어 자원을 합리적인 고정 비용으로 운영하려는 기업</p>
+                            </div>
+                            <!-- Case 6: Compliance -->
+                            <div class="recommend-card">
+                                <div class="recommend-icon"><i class="fas fa-file-contract"></i></div>
+                                <h4>규제 준수 및 자산 증빙</h4>
+                                <p>데이터 주권 확보 및 IT 자산의 물리적 소유 증명이 필요한 대기업, 글로벌 법인 및 상장 준비 기업</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Competitiveness Section -->
+            <section class="idc-section" id="section-comp">
+                <div class="idc-container">
+                    <div class="idc-sec-header" style="margin-bottom: 60px;">
+                        <span class="idc-sec-sub">ADVANTAGE</span>
+                        <h2 class="idc-sec-title">KT 강남 IDC 서버호스팅의 압도적 경쟁력</h2>
+                        <p class="idc-sec-desc">비즈니스의 성공으로 이어지는 차별화된 인프라 가치를 제공합니다.</p>
+                    </div>
+
+                    <div class="comp-grid">
+                        <!-- Card 1 -->
+                        <div class="comp-card">
+                            <span class="comp-badge">Location</span>
+                            <div class="comp-icon-box">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="comp-info">
+                                <h3>최적의 위치 (Teheran-ro Center)</h3>
+                                <p>대한민국 IT 비즈니스의 중심인 테헤란로(Teheran-ro)에 위치하여 최상의 지연시간(Latency)과 뛰어난 물리적 접근성을 보장합니다.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="comp-card">
+                            <span class="comp-badge">Network</span>
+                            <div class="comp-icon-box">
+                                <i class="fas fa-network-wired"></i>
+                            </div>
+                            <div class="comp-info">
+                                <h3>초고속 백본망 (Unlimited Performance)</h3>
+                                <p>국내 최대 규모인 KT의 고성능 기가비트 백본에 직접 연결되어 중단 없는 대용량 트래픽 처리가 가능합니다.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="comp-card">
+                            <span class="comp-badge">Security</span>
+                            <div class="comp-icon-box">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <div class="comp-info">
+                                <h3>엔터프라이즈 보안 (Steel Security)</h3>
+                                <p>7단계 물리적 출입 통제와 KT의 365일 실시간 관제 시스템으로 기업의 자산을 가장 안전하게 보호합니다.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="comp-card">
+                            <span class="comp-badge">Support</span>
+                            <div class="comp-icon-box">
+                                <i class="fas fa-user-gear"></i>
+                            </div>
+                            <div class="comp-info">
+                                <h3>전문 엔지니어 상주 (Expert Management)</h3>
+                                <p>숙련된 휴메카 엔지니어가 24시간 상주하며 실시간 모니터링 및 즉각적인 장애 대응을 지원합니다.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 5 -->
+                        <div class="comp-card">
+                            <span class="comp-badge">Power</span>
+                            <div class="comp-icon-box">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="comp-info">
+                                <h3>무중단 인프라 (Stable Operation)</h3>
+                                <p>전력 이중화 및 비상 발전 시스템을 통해 어떠한 예기치 못한 상황에서도 가동률 99.9% 이상을 신뢰할 수 있습니다.</p>
+                            </div>
+                        </div>
+
+                        <!-- Card 6 -->
+                        <div class="comp-card">
+                            <span class="comp-badge">Space</span>
+                            <div class="comp-icon-box">
+                                <i class="fas fa-building-circle-check"></i>
+                            </div>
+                            <div class="comp-info">
+                                <h3>환경 최적화 (Optimized Facility)</h3>
+                                <p>서버 수명과 성능을 극대화하는 정밀 항온항습 및 안정적인 공간 구성을 통한 최고의 서비스 품질을 유지합니다.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -453,6 +565,51 @@
 
     <script src="js/subpage-canvas.js"></script>
     <script src="js/navigation.js"></script>
+
+    <!-- Sub-Nav Interaction Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('#section-pricing, #section-intro, #section-recommend, #section-comp');
+            const navLinks = document.querySelectorAll('.sub-nav-list a');
+            const navBar = document.querySelector('.sub-nav-sticky');
+            const offset = 80; // Only Nav height approx (since top: 0)
+
+            // Smooth Scroll
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        const targetPos = targetSection.offsetTop - offset + 10;
+                        window.scrollTo({
+                            top: targetPos,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // ScrollSpy
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (window.pageYOffset >= (sectionTop - offset - 20)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

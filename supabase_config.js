@@ -16,9 +16,9 @@ try {
     const { createClient } = supabaseLibrary;
     const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Expose globally as window.supabase (Overwriting the library) AND window.sb
-    window.supabase = client;
+    // Expose globally as window.sb for application logic
     window.sb = client;
+    // Do NOT overwrite window.supabase to avoid conflicts with CDN library object
 
     console.log('✅ Supabase 연결 성공! (Client Initialized)');
 } catch (error) {
