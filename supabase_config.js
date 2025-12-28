@@ -16,6 +16,12 @@ try {
     const { createClient } = supabaseLibrary;
     const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // Expose config for recovery usage
+    window.SupabaseConfig = {
+        url: SUPABASE_URL,
+        key: SUPABASE_ANON_KEY
+    };
+
     // Expose globally as window.sb for application logic
     window.sb = client;
     // Do NOT overwrite window.supabase to avoid conflicts with CDN library object

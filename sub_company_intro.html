@@ -269,7 +269,7 @@
 
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase_config.js"></script>
+    <script src="supabase_config.js?v=3.21"></script>
 
     <script>
         // ==================== CSS Injection for Animations ====================
@@ -430,13 +430,16 @@
 
         // ==================== 연혁 불러오기 ====================
         async function loadHistory() {
-            if (!supabase) {
-                console.error('Supabase not initialized');
+            // FIX: Use initialized client 'window.sb'
+            const db = window.sb || window.supabase;
+
+            if (!db) {
+                console.error('Supabase not initialized (window.sb missing)');
                 return;
             }
 
             try {
-                const { data, error } = await supabase
+                const { data, error } = await db
                     .from('company_history')
                     .select('*')
                     .eq('active', true)
@@ -525,10 +528,73 @@
             }
         }
 
+        // ==================== 안전한 실행 및 복구 로직 ====================
+        async function waitForSb(maxRetries = 30, interval = 200) {
+            return new Promise((resolve, reject) => {
+                let count = 0;
+
+                const check = () => {
+                    count++;
+                    const db = window.sb;
+
+                    // 1. Normal Success: window.sb exists
+                    if (db && db.from) {
+                        resolve(db);
+                        return;
+                    }
+
+                    // 2. Recovery Attempt: Library exists but client missing
+                    if (window.supabase && window.supabase.createClient && window.SupabaseConfig) {
+                        console.warn('[Intro] window.sb missing. Attempting recovery...');
+                        try {
+                            const newClient = window.supabase.createClient(
+                                window.SupabaseConfig.url,
+                                window.SupabaseConfig.key
+                            );
+                            window.sb = newClient; // Save for others
+                            resolve(newClient);
+                            return;
+                        } catch (e) {
+                            console.error('[Intro] Recovery failed:', e);
+                        }
+                    }
+
+                    // 3. Timeout
+                    if (count >= maxRetries) {
+                        reject({
+                            message: 'Connection Timeout',
+                            details: `sb:${!!window.sb}, lib:${!!window.supabase}, cfg:${!!window.SupabaseConfig}`
+                        });
+                        return;
+                    }
+
+                    // Retry
+                    setTimeout(check, interval);
+                };
+
+                check();
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(loadHistory, 500);
+            // Show detailed error on UI if verify fails
+            const loadingEl = document.getElementById('history-loading');
 
-
+            waitForSb()
+                .then((client) => {
+                    console.log('DB Ready (Intro Page), Loading data...');
+                    loadHistory();
+                })
+                .catch(err => {
+                    console.error('DB Init Critical Failure:', err);
+                    loadingEl.innerHTML = `
+                        <div style="color:#ef4444; background: #fee2e2; padding: 20px; border-radius: 8px; font-size: 14px;">
+                            <strong>데이터 로드 실패</strong><br>
+                            <span style="font-size:12px; color:#b91c1c;">${err.details || err}</span><br>
+                            <button onclick="location.reload()" style="margin-top:10px; padding: 5px 10px; background:white; border:1px solid #ef4444; border-radius:4px; cursor:pointer;">새로고침</button>
+                        </div>
+                    `;
+                });
         });
     </script>
 
