@@ -584,6 +584,7 @@
                 .then((client) => {
                     console.log('DB Ready (Intro Page), Loading data...');
                     loadHistory();
+                    switchLocation('hq'); // [Fix] Initialize Location Info immediately
                 })
                 .catch(err => {
                     console.error('DB Init Critical Failure:', err);
