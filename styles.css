@@ -3233,6 +3233,17 @@ main.sub-content {
     /* Blue Border */
 }
 
+/* Force 2x2 Grid for Software Pricing */
+#pricing-grid-software .plan-card {
+    flex: 0 1 calc(50% - 30px) !important;
+}
+
+@media (max-width: 768px) {
+    #pricing-grid-software .plan-card {
+        flex: 0 1 100% !important;
+    }
+}
+
 /* 2. Server Hosting Intro Diagram */
 .server-diagram-box {
     background: white;
