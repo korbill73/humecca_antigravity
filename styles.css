@@ -5199,7 +5199,177 @@ main.sub-content {
     #pricing-grid-cdn .plan-card,
     #pricing-grid-recovery .plan-card,
     #pricing-grid-management .plan-card,
-    #pricing-grid-etc .plan-card {
-        flex: 0 1 100% !important;
+    #pricing-grid-etc .plan-card {}
+}
+
+/* ========================================= */
+/* MS365 Tabbed Section */
+/* ========================================= */
+.ms365-tab-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.ms365-tab-btn {
+    padding: 12px 30px;
+    border-radius: 30px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ms365-tab-btn:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.ms365-tab-btn.active {
+    background: #1e293b;
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.ms365-tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.ms365-tab-content.active {
+    display: block;
+}
+
+/* Tab Grid Layout */
+.ms365-tab-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 30px;
+}
+
+/* Left Hero Card */
+.ms365-hero-card {
+    background: #f8fafc;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 400px;
+    border: 1px solid #e2e8f0;
+}
+
+.ms365-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.1;
+    /* Subtle bg pattern */
+    z-index: 0;
+}
+
+.ms365-hero-content {
+    position: relative;
+    z-index: 1;
+    /* Hero Content Enhancements */
+}
+
+.ms365-hero-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 12px;
+}
+
+.ms365-hero-desc {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.ms365-hero-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #1e293b;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.ms365-hero-btn:hover {
+    background: #334155;
+}
+
+/* Right App Grid */
+.ms365-app-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.ms365-app-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.2s ease;
+}
+
+.ms365-app-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border-color: #cbd5e1;
+}
+
+.ms365-app-icon {
+    font-size: 24px;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.ms365-app-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.ms365-app-desc {
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .ms365-tab-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ms365-app-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .ms365-app-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ms365-hero-card {
+        min-height: 300px;
     }
 }
