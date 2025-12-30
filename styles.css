@@ -4624,99 +4624,175 @@ main.sub-content {
 }
 
 /* ========================================= */
-/* Microsoft-Style Compact Redesign for Software Grid */
-/* User Request: Clean, balanced, not too big */
+/* Microsoft-Style Compact Redesign for ALL Add-on Grids */
+/* User Request: Unified clean, balanced design */
 /* ========================================= */
 
-/* Grid Layout Adjustment */
-#pricing-grid-software.compact-pricing {
+/* 1. Target All Add-on Pricing Grids */
+#pricing-grid-software.compact-pricing,
+#pricing-grid-backup.compact-pricing,
+#pricing-grid-ha.compact-pricing,
+#pricing-grid-monitoring.compact-pricing,
+#pricing-grid-lb.compact-pricing,
+#pricing-grid-cdn.compact-pricing,
+#pricing-grid-recovery.compact-pricing,
+#pricing-grid-management.compact-pricing,
+#pricing-grid-etc.compact-pricing {
     gap: 40px !important;
     padding: 0 10px !important;
 }
 
-/* Card Container - Cleaner Look */
-#pricing-grid-software .plan-card {
+/* 2. Card Container - Cleaner Look */
+#pricing-grid-software .plan-card,
+#pricing-grid-backup .plan-card,
+#pricing-grid-ha .plan-card,
+#pricing-grid-monitoring .plan-card,
+#pricing-grid-lb .plan-card,
+#pricing-grid-cdn .plan-card,
+#pricing-grid-recovery .plan-card,
+#pricing-grid-management .plan-card,
+#pricing-grid-etc .plan-card {
     flex: 0 1 calc(50% - 20px) !important;
-    /* Strictly 2 columns with 20px gap */
+    /* Strictly 2 columns with 40px gap logic (gap is space between) */
+    /* Note: If gap is 40px, 2 columns need calc(50% - 20px) */
     padding: 30px 24px !important;
-    /* Reduced padding from approx 40px */
     border-radius: 8px !important;
-    /* Smaller radius (Microsoft style) */
     border: 1px solid #e2e8f0 !important;
-    /* Subtle border */
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
-    /* Soft shadow */
     background: white !important;
     transition: all 0.2s ease-in-out !important;
     margin-bottom: 0 !important;
-    /* Remove any margin causing spacing issues */
 }
 
-/* Hover State - Subtle Lift, No Heavy Color Fill */
-#pricing-grid-software .plan-card:hover {
+/* 3. Hover State */
+#pricing-grid-software .plan-card:hover,
+#pricing-grid-backup .plan-card:hover,
+#pricing-grid-ha .plan-card:hover,
+#pricing-grid-monitoring .plan-card:hover,
+#pricing-grid-lb .plan-card:hover,
+#pricing-grid-cdn .plan-card:hover,
+#pricing-grid-recovery .plan-card:hover,
+#pricing-grid-management .plan-card:hover,
+#pricing-grid-etc .plan-card:hover {
     transform: translateY(-4px) !important;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
     border-color: #cbd5e1 !important;
     background-color: white !important;
-    /* Ensure it stays white */
 }
 
-/* Typography Reductions & Adjustments */
-#pricing-grid-software .plan-title {
+/* 4. Typography - Title */
+#pricing-grid-software .plan-title,
+#pricing-grid-backup .plan-title,
+#pricing-grid-ha .plan-title,
+#pricing-grid-monitoring .plan-title,
+#pricing-grid-lb .plan-title,
+#pricing-grid-cdn .plan-title,
+#pricing-grid-recovery .plan-title,
+#pricing-grid-management .plan-title,
+#pricing-grid-etc .plan-title {
     font-size: 1.25rem !important;
-    /* 20px - More professional size */
     font-weight: 700 !important;
     color: #1e293b !important;
-    /* Slate 800 */
     margin-bottom: 16px !important;
     padding-bottom: 16px !important;
     border-bottom: 1px solid #f1f5f9 !important;
-    /* Very subtle separator */
 }
 
-#pricing-grid-software .plan-price {
+/* Typography - Price Container */
+#pricing-grid-software .plan-price,
+#pricing-grid-backup .plan-price,
+#pricing-grid-ha .plan-price,
+#pricing-grid-monitoring .plan-price,
+#pricing-grid-lb .plan-price,
+#pricing-grid-cdn .plan-price,
+#pricing-grid-recovery .plan-price,
+#pricing-grid-management .plan-price,
+#pricing-grid-etc .plan-price {
     margin-bottom: 20px !important;
 }
 
-#pricing-grid-software .amount {
+/* Typography - Amount */
+#pricing-grid-software .amount,
+#pricing-grid-backup .amount,
+#pricing-grid-ha .amount,
+#pricing-grid-monitoring .amount,
+#pricing-grid-lb .amount,
+#pricing-grid-cdn .amount,
+#pricing-grid-recovery .amount,
+#pricing-grid-management .amount,
+#pricing-grid-etc .amount {
     font-size: 1.75rem !important;
-    /* 28px - Reduced from 2.5rem */
     color: #E94D36 !important;
-    /* Keep brand accent but cleaner */
     letter-spacing: -0.02em !important;
 }
 
-#pricing-grid-software .period {
+/* Typography - Period */
+#pricing-grid-software .period,
+#pricing-grid-backup .period,
+#pricing-grid-ha .period,
+#pricing-grid-monitoring .period,
+#pricing-grid-lb .period,
+#pricing-grid-cdn .period,
+#pricing-grid-recovery .period,
+#pricing-grid-management .period,
+#pricing-grid-etc .period {
     font-size: 0.95rem !important;
     color: #64748b !important;
 }
 
-/* Feature List Compactness */
-#pricing-grid-software .plan-features {
+/* 5. Features List */
+#pricing-grid-software .plan-features,
+#pricing-grid-backup .plan-features,
+#pricing-grid-ha .plan-features,
+#pricing-grid-monitoring .plan-features,
+#pricing-grid-lb .plan-features,
+#pricing-grid-cdn .plan-features,
+#pricing-grid-recovery .plan-features,
+#pricing-grid-management .plan-features,
+#pricing-grid-etc .plan-features {
     margin-bottom: 24px !important;
 }
 
-#pricing-grid-software .plan-features li {
+#pricing-grid-software .plan-features li,
+#pricing-grid-backup .plan-features li,
+#pricing-grid-ha .plan-features li,
+#pricing-grid-monitoring .plan-features li,
+#pricing-grid-lb .plan-features li,
+#pricing-grid-cdn .plan-features li,
+#pricing-grid-recovery .plan-features li,
+#pricing-grid-management .plan-features li,
+#pricing-grid-etc .plan-features li {
     padding: 8px 0 !important;
-    /* Tighter list spacing */
     font-size: 0.95rem !important;
     color: #4b5563 !important;
-    /* Slate 600 */
     border-bottom-color: #f8fafc !important;
 }
 
-#pricing-grid-software .plan-features i {
+#pricing-grid-software .plan-features i,
+#pricing-grid-backup .plan-features i,
+#pricing-grid-ha .plan-features i,
+#pricing-grid-monitoring .plan-features i,
+#pricing-grid-lb .plan-features i,
+#pricing-grid-cdn .plan-features i,
+#pricing-grid-recovery .plan-features i,
+#pricing-grid-management .plan-features i,
+#pricing-grid-etc .plan-features i {
     color: #E94D36 !important;
-    /* Icon brand color */
     font-size: 0.85rem !important;
 }
 
-/* Button Refinement */
-#pricing-grid-software .plan-btn {
+/* 6. Buttons */
+#pricing-grid-software .plan-btn,
+#pricing-grid-backup .plan-btn,
+#pricing-grid-ha .plan-btn,
+#pricing-grid-monitoring .plan-btn,
+#pricing-grid-lb .plan-btn,
+#pricing-grid-cdn .plan-btn,
+#pricing-grid-recovery .plan-btn,
+#pricing-grid-management .plan-btn,
+#pricing-grid-etc .plan-btn {
     padding: 12px !important;
-    /* standard padding */
     border-radius: 6px !important;
-    /* Slightly squared */
     font-size: 0.95rem !important;
     font-weight: 600 !important;
     background: #E94D36 !important;
@@ -4724,52 +4800,131 @@ main.sub-content {
     box-shadow: none !important;
 }
 
-#pricing-grid-software .plan-btn:hover {
+#pricing-grid-software .plan-btn:hover,
+#pricing-grid-backup .plan-btn:hover,
+#pricing-grid-ha .plan-btn:hover,
+#pricing-grid-monitoring .plan-btn:hover,
+#pricing-grid-lb .plan-btn:hover,
+#pricing-grid-cdn .plan-btn:hover,
+#pricing-grid-recovery .plan-btn:hover,
+#pricing-grid-management .plan-btn:hover,
+#pricing-grid-etc .plan-btn:hover {
     background: #dc2626 !important;
-    /* Darker red on hover */
     transform: none !important;
 }
 
-/* Reset Hover Text Colors (Override the 'compact-pricing' inversion) */
-#pricing-grid-software .plan-card:hover .plan-title {
+/* 7. Reset Hover Colors (Keep it clean white) */
+#pricing-grid-software .plan-card:hover .plan-title,
+#pricing-grid-backup .plan-card:hover .plan-title,
+#pricing-grid-ha .plan-card:hover .plan-title,
+#pricing-grid-monitoring .plan-card:hover .plan-title,
+#pricing-grid-lb .plan-card:hover .plan-title,
+#pricing-grid-cdn .plan-card:hover .plan-title,
+#pricing-grid-recovery .plan-card:hover .plan-title,
+#pricing-grid-management .plan-card:hover .plan-title,
+#pricing-grid-etc .plan-card:hover .plan-title {
     color: #1e293b !important;
     border-bottom-color: #f1f5f9 !important;
 }
 
-#pricing-grid-software .plan-card:hover .plan-summary {
+#pricing-grid-software .plan-card:hover .plan-summary,
+#pricing-grid-backup .plan-card:hover .plan-summary,
+#pricing-grid-ha .plan-card:hover .plan-summary,
+#pricing-grid-monitoring .plan-card:hover .plan-summary,
+#pricing-grid-lb .plan-card:hover .plan-summary,
+#pricing-grid-cdn .plan-card:hover .plan-summary,
+#pricing-grid-recovery .plan-card:hover .plan-summary,
+#pricing-grid-management .plan-card:hover .plan-summary,
+#pricing-grid-etc .plan-card:hover .plan-summary {
     color: #64748b !important;
 }
 
-#pricing-grid-software .plan-card:hover .amount {
+#pricing-grid-software .plan-card:hover .amount,
+#pricing-grid-backup .plan-card:hover .amount,
+#pricing-grid-ha .plan-card:hover .amount,
+#pricing-grid-monitoring .plan-card:hover .amount,
+#pricing-grid-lb .plan-card:hover .amount,
+#pricing-grid-cdn .plan-card:hover .amount,
+#pricing-grid-recovery .plan-card:hover .amount,
+#pricing-grid-management .plan-card:hover .amount,
+#pricing-grid-etc .plan-card:hover .amount {
     color: #E94D36 !important;
 }
 
-#pricing-grid-software .plan-card:hover .period {
+#pricing-grid-software .plan-card:hover .period,
+#pricing-grid-backup .plan-card:hover .period,
+#pricing-grid-ha .plan-card:hover .period,
+#pricing-grid-monitoring .plan-card:hover .period,
+#pricing-grid-lb .plan-card:hover .period,
+#pricing-grid-cdn .plan-card:hover .period,
+#pricing-grid-recovery .plan-card:hover .period,
+#pricing-grid-management .plan-card:hover .period,
+#pricing-grid-etc .plan-card:hover .period {
     color: #64748b !important;
 }
 
-#pricing-grid-software .plan-card:hover .plan-features li {
+#pricing-grid-software .plan-card:hover .plan-features li,
+#pricing-grid-backup .plan-card:hover .plan-features li,
+#pricing-grid-ha .plan-card:hover .plan-features li,
+#pricing-grid-monitoring .plan-card:hover .plan-features li,
+#pricing-grid-lb .plan-card:hover .plan-features li,
+#pricing-grid-cdn .plan-card:hover .plan-features li,
+#pricing-grid-recovery .plan-card:hover .plan-features li,
+#pricing-grid-management .plan-card:hover .plan-features li,
+#pricing-grid-etc .plan-card:hover .plan-features li {
     color: #4b5563 !important;
     border-bottom-color: #f8fafc !important;
 }
 
-#pricing-grid-software .plan-card:hover .plan-features i {
+#pricing-grid-software .plan-card:hover .plan-features i,
+#pricing-grid-backup .plan-card:hover .plan-features i,
+#pricing-grid-ha .plan-card:hover .plan-features i,
+#pricing-grid-monitoring .plan-card:hover .plan-features i,
+#pricing-grid-lb .plan-card:hover .plan-features i,
+#pricing-grid-cdn .plan-card:hover .plan-features i,
+#pricing-grid-recovery .plan-card:hover .plan-features i,
+#pricing-grid-management .plan-card:hover .plan-features i,
+#pricing-grid-etc .plan-card:hover .plan-features i {
     color: #E94D36 !important;
 }
 
-#pricing-grid-software .plan-card:hover .plan-btn {
+#pricing-grid-software .plan-card:hover .plan-btn,
+#pricing-grid-backup .plan-card:hover .plan-btn,
+#pricing-grid-ha .plan-card:hover .plan-btn,
+#pricing-grid-monitoring .plan-card:hover .plan-btn,
+#pricing-grid-lb .plan-card:hover .plan-btn,
+#pricing-grid-cdn .plan-card:hover .plan-btn,
+#pricing-grid-recovery .plan-card:hover .plan-btn,
+#pricing-grid-management .plan-card:hover .plan-btn,
+#pricing-grid-etc .plan-card:hover .plan-btn {
     color: white !important;
 }
 
-/* Badge Refinement */
-/* Badge Refinement */
-#pricing-grid-software .plan-badge {
+/* 8. Badge Hidden Everywhere */
+#pricing-grid-software .plan-badge,
+#pricing-grid-backup .plan-badge,
+#pricing-grid-ha .plan-badge,
+#pricing-grid-monitoring .plan-badge,
+#pricing-grid-lb .plan-badge,
+#pricing-grid-cdn .plan-badge,
+#pricing-grid-recovery .plan-badge,
+#pricing-grid-management .plan-badge,
+#pricing-grid-etc .plan-badge {
     display: none !important;
 }
 
-/* Mobile Responsiveness */
+/* 9. Mobile Responsiveness */
 @media (max-width: 768px) {
-    #pricing-grid-software .plan-card {
+
+    #pricing-grid-software .plan-card,
+    #pricing-grid-backup .plan-card,
+    #pricing-grid-ha .plan-card,
+    #pricing-grid-monitoring .plan-card,
+    #pricing-grid-lb .plan-card,
+    #pricing-grid-cdn .plan-card,
+    #pricing-grid-recovery .plan-card,
+    #pricing-grid-management .plan-card,
+    #pricing-grid-etc .plan-card {
         flex: 0 1 100% !important;
     }
 }
