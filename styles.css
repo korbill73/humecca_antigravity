@@ -4913,6 +4913,95 @@ main.sub-content {
     display: none !important;
 }
 
+/* ========================================= */
+/* Server Hosting - Microsoft Style (Keep Size) */
+/* ========================================= */
+
+#pricing-container .plan-card {
+    /* Layout: Keep existing width/flex (do NOT set flex-basis) */
+
+    /* Visuals: Apply Microsoft Style */
+    padding: 30px 24px !important;
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+    background: white !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+/* Hover Effect */
+#pricing-container .plan-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    border-color: #cbd5e1 !important;
+    background-color: white !important;
+}
+
+/* Typography Overrides */
+#pricing-container .plan-title {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    padding-bottom: 16px !important;
+    margin-bottom: 16px !important;
+}
+
+#pricing-container .amount {
+    font-size: 1.75rem !important;
+    color: #E94D36 !important;
+    letter-spacing: -0.02em !important;
+}
+
+#pricing-container .period {
+    font-size: 0.95rem !important;
+    color: #64748b !important;
+}
+
+#pricing-container .plan-features li {
+    font-size: 0.95rem !important;
+    color: #4b5563 !important;
+    border-bottom-color: #f8fafc !important;
+}
+
+#pricing-container .plan-features i {
+    color: #E94D36 !important;
+}
+
+#pricing-container .plan-btn {
+    background: #E94D36 !important;
+    color: white !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+}
+
+#pricing-container .plan-btn:hover {
+    background: #dc2626 !important;
+}
+
+/* Reset Colors on Hover */
+#pricing-container .plan-card:hover .plan-title {
+    color: #1e293b !important;
+}
+
+#pricing-container .plan-card:hover .amount {
+    color: #E94D36 !important;
+}
+
+#pricing-container .plan-card:hover .period {
+    color: #64748b !important;
+}
+
+#pricing-container .plan-card:hover .plan-btn {
+    color: white !important;
+}
+
+/* Hide Badge if any */
+#pricing-container .plan-badge {
+    display: none !important;
+}
+
 /* 9. Mobile Responsiveness */
 @media (max-width: 768px) {
 
