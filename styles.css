@@ -4637,11 +4637,17 @@ main.sub-content {
 #pricing-grid-cdn.compact-pricing,
 #pricing-grid-recovery.compact-pricing,
 #pricing-grid-management.compact-pricing,
-#pricing-grid-etc.compact-pricing {
+#pricing-grid-etc.compact-pricing,
+#pricing-grid-colocation.compact-pricing,
+#pricing-grid-security.compact-pricing,
+#pricing-grid-solution.compact-pricing,
+#pricing-grid-ms365.compact-pricing,
+#pricing-grid-naver.compact-pricing {
     gap: 40px !important;
     padding: 0 10px !important;
 }
 
+/* 2. Card Container - Cleaner Look */
 /* 2. Card Container - Cleaner Look */
 #pricing-grid-software .plan-card,
 #pricing-grid-backup .plan-card,
@@ -4651,7 +4657,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-card,
 #pricing-grid-recovery .plan-card,
 #pricing-grid-management .plan-card,
-#pricing-grid-etc .plan-card {
+#pricing-grid-etc .plan-card,
+#pricing-grid-colocation .plan-card,
+#pricing-grid-security .plan-card,
+#pricing-grid-solution .plan-card,
+#pricing-grid-ms365 .plan-card,
+#pricing-grid-naver .plan-card {
     flex: 0 1 calc(50% - 20px) !important;
     /* Strictly 2 columns with 40px gap logic (gap is space between) */
     /* Note: If gap is 40px, 2 columns need calc(50% - 20px) */
@@ -4665,6 +4676,7 @@ main.sub-content {
 }
 
 /* 3. Hover State */
+/* 3. Hover State */
 #pricing-grid-software .plan-card:hover,
 #pricing-grid-backup .plan-card:hover,
 #pricing-grid-ha .plan-card:hover,
@@ -4673,13 +4685,19 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover,
 #pricing-grid-recovery .plan-card:hover,
 #pricing-grid-management .plan-card:hover,
-#pricing-grid-etc .plan-card:hover {
+#pricing-grid-etc .plan-card:hover,
+#pricing-grid-colocation .plan-card:hover,
+#pricing-grid-security .plan-card:hover,
+#pricing-grid-solution .plan-card:hover,
+#pricing-grid-ms365 .plan-card:hover,
+#pricing-grid-naver .plan-card:hover {
     transform: translateY(-4px) !important;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
     border-color: #cbd5e1 !important;
     background-color: white !important;
 }
 
+/* 4. Typography - Title */
 /* 4. Typography - Title */
 #pricing-grid-software .plan-title,
 #pricing-grid-backup .plan-title,
@@ -4689,7 +4707,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-title,
 #pricing-grid-recovery .plan-title,
 #pricing-grid-management .plan-title,
-#pricing-grid-etc .plan-title {
+#pricing-grid-etc .plan-title,
+#pricing-grid-colocation .plan-title,
+#pricing-grid-security .plan-title,
+#pricing-grid-solution .plan-title,
+#pricing-grid-ms365 .plan-title,
+#pricing-grid-naver .plan-title {
     font-size: 1.25rem !important;
     font-weight: 700 !important;
     color: #1e293b !important;
@@ -4699,6 +4722,7 @@ main.sub-content {
 }
 
 /* Typography - Price Container */
+/* Typography - Price Container */
 #pricing-grid-software .plan-price,
 #pricing-grid-backup .plan-price,
 #pricing-grid-ha .plan-price,
@@ -4707,10 +4731,16 @@ main.sub-content {
 #pricing-grid-cdn .plan-price,
 #pricing-grid-recovery .plan-price,
 #pricing-grid-management .plan-price,
-#pricing-grid-etc .plan-price {
+#pricing-grid-etc .plan-price,
+#pricing-grid-colocation .plan-price,
+#pricing-grid-security .plan-price,
+#pricing-grid-solution .plan-price,
+#pricing-grid-ms365 .plan-price,
+#pricing-grid-naver .plan-price {
     margin-bottom: 20px !important;
 }
 
+/* Typography - Amount */
 /* Typography - Amount */
 #pricing-grid-software .amount,
 #pricing-grid-backup .amount,
@@ -4720,12 +4750,18 @@ main.sub-content {
 #pricing-grid-cdn .amount,
 #pricing-grid-recovery .amount,
 #pricing-grid-management .amount,
-#pricing-grid-etc .amount {
+#pricing-grid-etc .amount,
+#pricing-grid-colocation .amount,
+#pricing-grid-security .amount,
+#pricing-grid-solution .amount,
+#pricing-grid-ms365 .amount,
+#pricing-grid-naver .amount {
     font-size: 1.75rem !important;
     color: #E94D36 !important;
     letter-spacing: -0.02em !important;
 }
 
+/* Typography - Period */
 /* Typography - Period */
 #pricing-grid-software .period,
 #pricing-grid-backup .period,
@@ -4735,11 +4771,17 @@ main.sub-content {
 #pricing-grid-cdn .period,
 #pricing-grid-recovery .period,
 #pricing-grid-management .period,
-#pricing-grid-etc .period {
+#pricing-grid-etc .period,
+#pricing-grid-colocation .period,
+#pricing-grid-security .period,
+#pricing-grid-solution .period,
+#pricing-grid-ms365 .period,
+#pricing-grid-naver .period {
     font-size: 0.95rem !important;
     color: #64748b !important;
 }
 
+/* 5. Features List */
 /* 5. Features List */
 #pricing-grid-software .plan-features,
 #pricing-grid-backup .plan-features,
@@ -4749,7 +4791,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-features,
 #pricing-grid-recovery .plan-features,
 #pricing-grid-management .plan-features,
-#pricing-grid-etc .plan-features {
+#pricing-grid-etc .plan-features,
+#pricing-grid-colocation .plan-features,
+#pricing-grid-security .plan-features,
+#pricing-grid-solution .plan-features,
+#pricing-grid-ms365 .plan-features,
+#pricing-grid-naver .plan-features {
     margin-bottom: 24px !important;
 }
 
@@ -4761,7 +4808,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-features li,
 #pricing-grid-recovery .plan-features li,
 #pricing-grid-management .plan-features li,
-#pricing-grid-etc .plan-features li {
+#pricing-grid-etc .plan-features li,
+#pricing-grid-colocation .plan-features li,
+#pricing-grid-security .plan-features li,
+#pricing-grid-solution .plan-features li,
+#pricing-grid-ms365 .plan-features li,
+#pricing-grid-naver .plan-features li {
     padding: 8px 0 !important;
     font-size: 0.95rem !important;
     color: #4b5563 !important;
@@ -4776,11 +4828,17 @@ main.sub-content {
 #pricing-grid-cdn .plan-features i,
 #pricing-grid-recovery .plan-features i,
 #pricing-grid-management .plan-features i,
-#pricing-grid-etc .plan-features i {
+#pricing-grid-etc .plan-features i,
+#pricing-grid-colocation .plan-features i,
+#pricing-grid-security .plan-features i,
+#pricing-grid-solution .plan-features i,
+#pricing-grid-ms365 .plan-features i,
+#pricing-grid-naver .plan-features i {
     color: #E94D36 !important;
     font-size: 0.85rem !important;
 }
 
+/* 6. Buttons */
 /* 6. Buttons */
 #pricing-grid-software .plan-btn,
 #pricing-grid-backup .plan-btn,
@@ -4790,7 +4848,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-btn,
 #pricing-grid-recovery .plan-btn,
 #pricing-grid-management .plan-btn,
-#pricing-grid-etc .plan-btn {
+#pricing-grid-etc .plan-btn,
+#pricing-grid-colocation .plan-btn,
+#pricing-grid-security .plan-btn,
+#pricing-grid-solution .plan-btn,
+#pricing-grid-ms365 .plan-btn,
+#pricing-grid-naver .plan-btn {
     padding: 12px !important;
     border-radius: 6px !important;
     font-size: 0.95rem !important;
@@ -4808,7 +4871,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-btn:hover,
 #pricing-grid-recovery .plan-btn:hover,
 #pricing-grid-management .plan-btn:hover,
-#pricing-grid-etc .plan-btn:hover {
+#pricing-grid-etc .plan-btn:hover,
+#pricing-grid-colocation .plan-btn:hover,
+#pricing-grid-security .plan-btn:hover,
+#pricing-grid-solution .plan-btn:hover,
+#pricing-grid-ms365 .plan-btn:hover,
+#pricing-grid-naver .plan-btn:hover {
     background: #dc2626 !important;
     transform: none !important;
 }
@@ -4822,7 +4890,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .plan-title,
 #pricing-grid-recovery .plan-card:hover .plan-title,
 #pricing-grid-management .plan-card:hover .plan-title,
-#pricing-grid-etc .plan-card:hover .plan-title {
+#pricing-grid-etc .plan-card:hover .plan-title,
+#pricing-grid-colocation .plan-card:hover .plan-title,
+#pricing-grid-security .plan-card:hover .plan-title,
+#pricing-grid-solution .plan-card:hover .plan-title,
+#pricing-grid-ms365 .plan-card:hover .plan-title,
+#pricing-grid-naver .plan-card:hover .plan-title {
     color: #1e293b !important;
     border-bottom-color: #f1f5f9 !important;
 }
@@ -4835,7 +4908,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .plan-summary,
 #pricing-grid-recovery .plan-card:hover .plan-summary,
 #pricing-grid-management .plan-card:hover .plan-summary,
-#pricing-grid-etc .plan-card:hover .plan-summary {
+#pricing-grid-etc .plan-card:hover .plan-summary,
+#pricing-grid-colocation .plan-card:hover .plan-summary,
+#pricing-grid-security .plan-card:hover .plan-summary,
+#pricing-grid-solution .plan-card:hover .plan-summary,
+#pricing-grid-ms365 .plan-card:hover .plan-summary,
+#pricing-grid-naver .plan-card:hover .plan-summary {
     color: #64748b !important;
 }
 
@@ -4847,7 +4925,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .amount,
 #pricing-grid-recovery .plan-card:hover .amount,
 #pricing-grid-management .plan-card:hover .amount,
-#pricing-grid-etc .plan-card:hover .amount {
+#pricing-grid-etc .plan-card:hover .amount,
+#pricing-grid-colocation .plan-card:hover .amount,
+#pricing-grid-security .plan-card:hover .amount,
+#pricing-grid-solution .plan-card:hover .amount,
+#pricing-grid-ms365 .plan-card:hover .amount,
+#pricing-grid-naver .plan-card:hover .amount {
     color: #E94D36 !important;
 }
 
@@ -4859,7 +4942,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .period,
 #pricing-grid-recovery .plan-card:hover .period,
 #pricing-grid-management .plan-card:hover .period,
-#pricing-grid-etc .plan-card:hover .period {
+#pricing-grid-etc .plan-card:hover .period,
+#pricing-grid-colocation .plan-card:hover .period,
+#pricing-grid-security .plan-card:hover .period,
+#pricing-grid-solution .plan-card:hover .period,
+#pricing-grid-ms365 .plan-card:hover .period,
+#pricing-grid-naver .plan-card:hover .period {
     color: #64748b !important;
 }
 
@@ -4871,7 +4959,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .plan-features li,
 #pricing-grid-recovery .plan-card:hover .plan-features li,
 #pricing-grid-management .plan-card:hover .plan-features li,
-#pricing-grid-etc .plan-card:hover .plan-features li {
+#pricing-grid-etc .plan-card:hover .plan-features li,
+#pricing-grid-colocation .plan-card:hover .plan-features li,
+#pricing-grid-security .plan-card:hover .plan-features li,
+#pricing-grid-solution .plan-card:hover .plan-features li,
+#pricing-grid-ms365 .plan-card:hover .plan-features li,
+#pricing-grid-naver .plan-card:hover .plan-features li {
     color: #4b5563 !important;
     border-bottom-color: #f8fafc !important;
 }
@@ -4884,7 +4977,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .plan-features i,
 #pricing-grid-recovery .plan-card:hover .plan-features i,
 #pricing-grid-management .plan-card:hover .plan-features i,
-#pricing-grid-etc .plan-card:hover .plan-features i {
+#pricing-grid-etc .plan-card:hover .plan-features i,
+#pricing-grid-colocation .plan-card:hover .plan-features i,
+#pricing-grid-security .plan-card:hover .plan-features i,
+#pricing-grid-solution .plan-card:hover .plan-features i,
+#pricing-grid-ms365 .plan-card:hover .plan-features i,
+#pricing-grid-naver .plan-card:hover .plan-features i {
     color: #E94D36 !important;
 }
 
@@ -4896,7 +4994,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .plan-btn,
 #pricing-grid-recovery .plan-card:hover .plan-btn,
 #pricing-grid-management .plan-card:hover .plan-btn,
-#pricing-grid-etc .plan-card:hover .plan-btn {
+#pricing-grid-etc .plan-card:hover .plan-btn,
+#pricing-grid-colocation .plan-card:hover .plan-btn,
+#pricing-grid-security .plan-card:hover .plan-btn,
+#pricing-grid-solution .plan-card:hover .plan-btn,
+#pricing-grid-ms365 .plan-card:hover .plan-btn,
+#pricing-grid-naver .plan-card:hover .plan-btn {
     color: white !important;
 }
 
@@ -4909,7 +5012,12 @@ main.sub-content {
 #pricing-grid-cdn .plan-badge,
 #pricing-grid-recovery .plan-badge,
 #pricing-grid-management .plan-badge,
-#pricing-grid-etc .plan-badge {
+#pricing-grid-etc .plan-badge,
+#pricing-grid-colocation .plan-badge,
+#pricing-grid-security .plan-badge,
+#pricing-grid-solution .plan-badge,
+#pricing-grid-ms365 .plan-badge,
+#pricing-grid-naver .plan-badge {
     display: none !important;
 }
 
@@ -4983,6 +5091,7 @@ main.sub-content {
 /* Reset Colors on Hover */
 #pricing-container .plan-card:hover .plan-title {
     color: #1e293b !important;
+    border-bottom-color: #f1f5f9 !important;
 }
 
 #pricing-container .plan-card:hover .amount {
@@ -4993,8 +5102,21 @@ main.sub-content {
     color: #64748b !important;
 }
 
+#pricing-container .plan-card:hover .plan-features li {
+    color: #4b5563 !important;
+    border-bottom-color: #f8fafc !important;
+}
+
+#pricing-container .plan-card:hover .plan-features i {
+    color: #E94D36 !important;
+}
+
 #pricing-container .plan-card:hover .plan-btn {
     color: white !important;
+}
+
+#pricing-container .plan-card:hover .plan-summary {
+    color: #64748b !important;
 }
 
 /* Hide Badge if any */
