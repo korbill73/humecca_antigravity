@@ -44,14 +44,19 @@ function setupEventDelegation() {
     }
 
     document.body.addEventListener('click', (e) => {
+        // [Debug] Log every click to see if we satisfy the selector
+        // console.log('Click detected on:', e.target); 
+
         const btn = e.target.closest('.js-open-modal');
         if (btn) {
+            console.log('[Debug] Modal Trigger Clicked:', btn);
+            console.log('Data Attributes:', btn.dataset);
             e.preventDefault();
             const name = btn.dataset.name || '';
             const type = btn.dataset.type || '';
             const details = btn.dataset.details || '';
             const price = btn.dataset.price || '';
-            console.log('Modal trigger clicked:', { name, type, details, price });
+            console.log('Modal trigger data:', { name, type, details, price });
             openAppModal(name, type, details, price);
         }
     });
@@ -244,10 +249,15 @@ async function submitApplication(e) {
 
     // 4. Collect Data (CRITICAL: Mapping to DB Columns)
     const form = e.target;
+    console.log('[Debug] Form Submit Triggered. Form Elements:', form.elements);
+
     // Use form.elements to safely get values from the CURRENT form, ignoring conflicting IDs elsewhere
     const typeVal = form.elements['product_type'].value;
     const nameVal = form.elements['product_name'].value;
     const detailsVal = form.elements['product_details'].value;
+
+    console.log('[Debug] Captured Values:', { typeVal, nameVal, detailsVal });
+
 
     let finalProductName = nameVal;
     if (detailsVal) finalProductName += ` (${detailsVal})`;

@@ -37,7 +37,7 @@ h4,
     width: 40px;
     height: 4px;
     background: var(--humecca-red);
-    margin-top: 12px;
+    margin: 12px auto 0;
     border-radius: 2px;
 }
 

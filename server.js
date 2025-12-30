@@ -320,6 +320,8 @@ const transporter = nodemailer.createTransport({
 // [API] Send Email Notification
 app.post('/api/send-notification', async (req, res) => {
     const data = req.body;
+    console.log('[Debug] Server received email request:', JSON.stringify(data, null, 2));
+
     const now = new Date();
     const dateStr = `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일`;
 
