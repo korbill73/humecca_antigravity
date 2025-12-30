@@ -62,11 +62,176 @@
                 </div>
             </div>
 
-            <!-- Pricing Section -->
-            <div class="section-header">
-                <h2>서비스 요금 안내</h2>
-                <p>비즈니스 규모에 맞는 최적의 플랜을 선택하세요.</p>
+            <!-- YouTube Video Section -->
+            <div
+                style="margin-bottom: 80px; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div style="position: relative; padding-bottom: 56.25%; height: 0;">
+                    <iframe src="https://www.youtube.com/embed/GDZDry9X9N8" title="Microsoft 365 Introduction"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                    </iframe>
+                </div>
             </div>
+
+            <!-- Tabbed Content Section: Create, Connect, Protect -->
+            <div class="section-header">
+                <h2>최고의 작업을 수행하는 데 필요한 도구</h2>
+                <p>비즈니스 성장에 필요한 모든 앱과 서비스를 한곳에서 만나보세요.</p>
+            </div>
+
+            <div class="ms365-tabs-container" style="margin-bottom: 100px;">
+                <!-- Tab Navigation -->
+                <div class="ms365-tab-nav">
+                    <button class="ms365-tab-btn active" onclick="openMsTab(event, 'tab-create')">만들기</button>
+                    <button class="ms365-tab-btn" onclick="openMsTab(event, 'tab-connect')">연결</button>
+                    <button class="ms365-tab-btn" onclick="openMsTab(event, 'tab-protect')">보호</button>
+                </div>
+
+                <!-- Tab 1: Create (만들기) -->
+                <div id="tab-create" class="ms365-tab-content active">
+                    <div class="ms365-tab-grid">
+                        <!-- Left Hero -->
+                        <div class="ms365-hero-card">
+                            <div class="ms365-hero-content">
+                                <span
+                                    style="display:block; font-weight:600; color:#64748b; margin-bottom:8px;">만들기</span>
+                                <h3 class="ms365-hero-title">제작 앱</h3>
+                                <p class="ms365-hero-desc">익숙한 앱을 사용하여 비즈니스를 구축하고 고객에게 가치를 제공하세요.</p>
+                                <a href="#" class="ms365-hero-btn">모두 살펴보기</a>
+                            </div>
+                        </div>
+                        <!-- Right App Grid -->
+                        <div class="ms365-app-grid">
+                            <div class="ms365-app-card">
+                                <i class="fas fa-file-word ms365-app-icon" style="color: #2b579a;"></i>
+                                <div class="ms365-app-title">Word</div>
+                                <p class="ms365-app-desc">언제 어디서나 글쓰기의 수준을 높이고 아름다운 문서를 만들 수 있습니다.</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-file-excel ms365-app-icon" style="color: #217346;"></i>
+                                <div class="ms365-app-title">Excel</div>
+                                <p class="ms365-app-desc">무료 및 프리미엄 스프레드시트를 통해 데이터에서 인사이트 얻기</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-file-powerpoint ms365-app-icon" style="color: #d24726;"></i>
+                                <div class="ms365-app-title">PowerPoint</div>
+                                <p class="ms365-app-desc">아이디어를 멋진 프레젠테이션으로 변환</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-video ms365-app-icon" style="color: #643fa1;"></i>
+                                <div class="ms365-app-title">Clipchamp</div>
+                                <p class="ms365-app-desc">이전 경험 없이 몇 분 만에 전문가 수준의 비디오를 만듭니다.</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-pen-nib ms365-app-icon" style="color: #0f6cbd;"></i>
+                                <div class="ms365-app-title">편집기</div>
+                                <p class="ms365-app-desc">어디서 작성하든 명료하고 간결하게 글을 쓸 수 있습니다.</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-robot ms365-app-icon" style="color: #64748b;"></i>
+                                <!-- Generic fallback for Copilot -->
+                                <div class="ms365-app-title">Copilot</div>
+                                <p class="ms365-app-desc">최신 웹 데이터를 활용하는 AI 채팅으로 브레인스토밍하고 작성해 보세요.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Connect (연결) -->
+                <div id="tab-connect" class="ms365-tab-content">
+                    <div class="ms365-tab-grid">
+                        <!-- Left Hero -->
+                        <div class="ms365-hero-card">
+                            <div class="ms365-hero-content">
+                                <span
+                                    style="display:block; font-weight:600; color:#64748b; margin-bottom:8px;">연결</span>
+                                <h3 class="ms365-hero-title">연결할 앱</h3>
+                                <p class="ms365-hero-desc">모임, 공동 작업, 전자 메일 솔루션을 통해 어디에 있든지 연결할 수 있습니다.</p>
+                                <a href="#" class="ms365-hero-btn">모두 살펴보기</a>
+                            </div>
+                        </div>
+                        <!-- Right App Grid -->
+                        <div class="ms365-app-grid">
+                            <div class="ms365-app-card">
+                                <i class="fas fa-users ms365-app-icon" style="color: #6264a7;"></i>
+                                <div class="ms365-app-title">Teams</div>
+                                <p class="ms365-app-desc">모두가 한 곳에서 회의, 채팅, 통화, 공동 작업을 진행할 수 있습니다.</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-cloud ms365-app-icon" style="color: #0078d4;"></i>
+                                <div class="ms365-app-title">OneDrive</div>
+                                <p class="ms365-app-desc">파일과 사진을 저장하고, 액세스하고, 편집하고, 공유할 수 있습니다.</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-share-alt ms365-app-icon" style="color: #038387;"></i>
+                                <div class="ms365-app-title">SharePoint</div>
+                                <p class="ms365-app-desc">팀 사이트를 만들어서 정보, 파일, 리소스를 공유하세요.</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-envelope ms365-app-icon" style="color: #0078d4;"></i>
+                                <div class="ms365-app-title">Outlook</div>
+                                <p class="ms365-app-desc">한곳에서 전자 메일, 일정, 작업, 연락처를 함께 관리합니다.</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-exchange-alt ms365-app-icon" style="color: #0078d4;"></i>
+                                <div class="ms365-app-title">Exchange</div>
+                                <p class="ms365-app-desc">비즈니스급 전자 메일과 일정 기능을 통해 더 효율적으로 작업하세요.</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-infinity ms365-app-icon" style="color: #881798;"></i>
+                                <div class="ms365-app-title">Loop</div>
+                                <p class="ms365-app-desc">팀 구성원과 공동 제작하고 동기화 상태를 유지하세요.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Protect (보호) -->
+                <div id="tab-protect" class="ms365-tab-content">
+                    <div class="ms365-tab-grid">
+                        <!-- Left Hero -->
+                        <div class="ms365-hero-card">
+                            <div class="ms365-hero-content">
+                                <span
+                                    style="display:block; font-weight:600; color:#64748b; margin-bottom:8px;">보호</span>
+                                <h3 class="ms365-hero-title">보호할 앱</h3>
+                                <p class="ms365-hero-desc">스팸 및 전자 메일 필터링과 맬웨어 방지를 통해 비즈니스를 보호합니다.</p>
+                                <a href="#" class="ms365-hero-btn">모두 살펴보기</a>
+                            </div>
+                        </div>
+                        <!-- Right App Grid -->
+                        <div class="ms365-app-grid">
+                            <div class="ms365-app-card">
+                                <i class="fas fa-shield-halved ms365-app-icon" style="color: #0078d4;"></i>
+                                <div class="ms365-app-title">Defender (Biz)</div>
+                                <p class="ms365-app-desc">사이버 공격으로부터 보호하고 공격을 탐지해 대응할 수 있도록 지원합니다.</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-laptop-medical ms365-app-icon" style="color: #0078d4;"></i>
+                                <div class="ms365-app-title">Intune</div>
+                                <p class="ms365-app-desc">보안 정책을 적용하여 사용자의 모든 디바이스에서 데이터를 보호합니다.</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-id-card ms365-app-icon" style="color: #0078d4;"></i>
+                                <div class="ms365-app-title">Entra ID</div>
+                                <p class="ms365-app-desc">ID 및 액세스 관리를 통해 환경을 보호합니다.</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-file-shield ms365-app-icon" style="color: #0078d4;"></i>
+                                <div class="ms365-app-title">Info Protection</div>
+                                <p class="ms365-app-desc">전자 메일, 문서, 중요한 데이터를 제어하고 보호하는 데 도움을 줍니다.</p>
+                            </div>
+                            <div class="ms365-app-card">
+                                <i class="fas fa-user-shield ms365-app-icon" style="color: #0078d4;"></i>
+                                <div class="ms365-app-title">Defender (O365)</div>
+                                <p class="ms365-app-desc">전자 메일 바이러스, 스팸, 피싱 공격으로부터 보호합니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <div id="pricing-grid-ms365" class="pricing-grid compact-pricing">
                 <!-- Data loaded dynamically via JS -->
@@ -100,6 +265,27 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadProductData('solution-ms365');
         });
+
+        // Tab Switching Logic
+        function openMsTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            // Hide all tab content
+            tabcontent = document.getElementsByClassName("ms365-tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+
+            // Remove active class from all buttons
+            tablinks = document.getElementsByClassName("ms365-tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab and add active to button
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
     </script>
 </body>
 
