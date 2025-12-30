@@ -4622,3 +4622,158 @@ main.sub-content {
         transform: none !important;
     }
 }
+
+/* ========================================= */
+/* Microsoft-Style Compact Redesign for Software Grid */
+/* User Request: Clean, balanced, not too big */
+/* ========================================= */
+
+/* Grid Layout Adjustment */
+#pricing-grid-software.compact-pricing {
+    gap: 20px !important;
+    padding: 0 10px !important;
+}
+
+/* Card Container - Cleaner Look */
+#pricing-grid-software .plan-card {
+    flex: 0 1 calc(50% - 20px) !important;
+    /* Strictly 2 columns with 20px gap */
+    padding: 30px 24px !important;
+    /* Reduced padding from approx 40px */
+    border-radius: 8px !important;
+    /* Smaller radius (Microsoft style) */
+    border: 1px solid #e2e8f0 !important;
+    /* Subtle border */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+    /* Soft shadow */
+    background: white !important;
+    transition: all 0.2s ease-in-out !important;
+    margin-bottom: 0 !important;
+    /* Remove any margin causing spacing issues */
+}
+
+/* Hover State - Subtle Lift, No Heavy Color Fill */
+#pricing-grid-software .plan-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    border-color: #cbd5e1 !important;
+    background-color: white !important;
+    /* Ensure it stays white */
+}
+
+/* Typography Reductions & Adjustments */
+#pricing-grid-software .plan-title {
+    font-size: 1.25rem !important;
+    /* 20px - More professional size */
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    /* Slate 800 */
+    margin-bottom: 16px !important;
+    padding-bottom: 16px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    /* Very subtle separator */
+}
+
+#pricing-grid-software .plan-price {
+    margin-bottom: 20px !important;
+}
+
+#pricing-grid-software .amount {
+    font-size: 1.75rem !important;
+    /* 28px - Reduced from 2.5rem */
+    color: #E94D36 !important;
+    /* Keep brand accent but cleaner */
+    letter-spacing: -0.02em !important;
+}
+
+#pricing-grid-software .period {
+    font-size: 0.95rem !important;
+    color: #64748b !important;
+}
+
+/* Feature List Compactness */
+#pricing-grid-software .plan-features {
+    margin-bottom: 24px !important;
+}
+
+#pricing-grid-software .plan-features li {
+    padding: 8px 0 !important;
+    /* Tighter list spacing */
+    font-size: 0.95rem !important;
+    color: #4b5563 !important;
+    /* Slate 600 */
+    border-bottom-color: #f8fafc !important;
+}
+
+#pricing-grid-software .plan-features i {
+    color: #E94D36 !important;
+    /* Icon brand color */
+    font-size: 0.85rem !important;
+}
+
+/* Button Refinement */
+#pricing-grid-software .plan-btn {
+    padding: 12px !important;
+    /* standard padding */
+    border-radius: 6px !important;
+    /* Slightly squared */
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    background: #E94D36 !important;
+    color: white !important;
+    box-shadow: none !important;
+}
+
+#pricing-grid-software .plan-btn:hover {
+    background: #dc2626 !important;
+    /* Darker red on hover */
+    transform: none !important;
+}
+
+/* Reset Hover Text Colors (Override the 'compact-pricing' inversion) */
+#pricing-grid-software .plan-card:hover .plan-title {
+    color: #1e293b !important;
+    border-bottom-color: #f1f5f9 !important;
+}
+
+#pricing-grid-software .plan-card:hover .plan-summary {
+    color: #64748b !important;
+}
+
+#pricing-grid-software .plan-card:hover .amount {
+    color: #E94D36 !important;
+}
+
+#pricing-grid-software .plan-card:hover .period {
+    color: #64748b !important;
+}
+
+#pricing-grid-software .plan-card:hover .plan-features li {
+    color: #4b5563 !important;
+    border-bottom-color: #f8fafc !important;
+}
+
+#pricing-grid-software .plan-card:hover .plan-features i {
+    color: #E94D36 !important;
+}
+
+#pricing-grid-software .plan-card:hover .plan-btn {
+    color: white !important;
+}
+
+/* Badge Refinement */
+#pricing-grid-software .plan-badge {
+    top: -10px !important;
+    padding: 4px 12px !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    background: #E94D36 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    #pricing-grid-software .plan-card {
+        flex: 0 1 100% !important;
+    }
+}
