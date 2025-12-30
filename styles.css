@@ -4630,7 +4630,7 @@ main.sub-content {
 
 /* Grid Layout Adjustment */
 #pricing-grid-software.compact-pricing {
-    gap: 20px !important;
+    gap: 40px !important;
     padding: 0 10px !important;
 }
 
@@ -4762,13 +4762,9 @@ main.sub-content {
 }
 
 /* Badge Refinement */
+/* Badge Refinement */
 #pricing-grid-software .plan-badge {
-    top: -10px !important;
-    padding: 4px 12px !important;
-    font-size: 0.75rem !important;
-    font-weight: 700 !important;
-    background: #E94D36 !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    display: none !important;
 }
 
 /* Mobile Responsiveness */
