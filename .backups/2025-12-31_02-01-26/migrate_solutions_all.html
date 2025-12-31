@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Migrate All Solutions</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <h2>Migrating All Solutions (MS365, Naver Works, Homepage)...</h2>
+    <div id="log" style="white-space: pre-wrap; font-family: monospace;"></div>
+
+    <script>
+        const log = (msg) => document.getElementById('log').innerText += msg + '\n';
+
+        const _url = 'https://pfowkwodqsirbaqkpfmb.supabase.co';
+        const _key = 'sb_publishable_i8wY_NmKlt9qUZJPKH1f2A_yOwp3qlA';
+        const supabase = window.supabase.createClient(_url, _key);
+
+        async function getOrCreateProduct(category, subcategory, name, desc) {
+            log(`Checking product: ${name} (${category}/${subcategory})...`);
+            let { data: product, error } = await supabase.from('products')
+                .select('id')
+                .eq('category', category)
+                .eq('subcategory', subcategory)
+                .maybeSingle();
+
+            if (error) { log('Error checking product: ' + error.message); return null; }
+
+            if (!product) {
+                log('Product not found. Creating...');
+                const { data: newProd, error: createError } = await supabase.from('products')
+                    .insert([{
+                        category: category,
+                        subcategory: subcategory,
+                        name: name,
+                        description: desc
+                    }])
+                    .select()
+                    .single();
+
+                if (createError) { log('Error creating product: ' + createError.message); return null; }
+                product = newProd;
+                log('Product created with ID: ' + product.id);
+            } else {
+                log('Product found: ' + product.id);
+            }
+            return product;
+        }
+
+        async function upsertPlans(product, plans) {
+            if (!product) return;
+            for (const p of plans) {
+                p.product_id = product.id;
+                // Check exist by plan_name (assuming name is unique enough here for migration)
+                const { data: exist } = await supabase.from('product_plans')
+                    .select('id')
+                    .eq('product_id', product.id)
+                    .eq('plan_id', p.plan_id)
+                    .maybeSingle();
+
+                if (exist) {
+                    log(`Plan ${p.plan_name} already exists. Skipping...`);
+                } else {
+                    const { error: insErr } = await supabase.from('product_plans').insert([p]);
+                    if (insErr) log(`Error inserting ${p.plan_name}: ${insErr.message}`);
+                    else log(`Inserted ${p.plan_name}`);
+                }
+            }
+        }
+
+        async function migrate() {
+            log('Starting migration...');
+
+            // 1. MS365
+            const pMS = await getOrCreateProduct('solution', 'solution', '기업 솔루션 (MS365)', '기업 업무 효율을 위한 다양한 솔루션');
+            // Plans already migrated, but let's re-run just in case (upsert logic handles skip)
+            const plansMS = [
+                {
+                    plan_name: "Microsoft 365 Business Basic",
+                    plan_id: "ms365-basic",
+                    price: "7500",
+                    period: "월",
+                    badge: "",
+                    summary: "사용자/월 (연간 약정시)",
+                    features: ["웹 및 모바일용 Office 앱", "1TB OneDrive 스토리지", "비즈니스용 이메일 (Exchange)", "Teams 채팅 및 화상회의", "표준 보안"],
+                    sort_order: 1,
+                    active: true
+                },
+                {
+                    plan_name: "Microsoft 365 Business Standard",
+                    plan_id: "ms365-standard",
+                    price: "15600",
+                    period: "월",
+                    badge: "인기 상품",
+                    summary: "사용자/월 (연간 약정시)",
+                    features: ["데스크톱용 Office 앱 포함", "Word, Excel, PPT, Outlook 설치", "1TB OneDrive 스토리지", "웨비나 개최 기능", "고객 예약 관리 (Bookings)"],
+                    sort_order: 2,
+                    active: true
+                },
+                {
+                    plan_name: "Microsoft 365 Business Premium",
+                    plan_id: "ms365-premium",
+                    price: "27500",
+                    period: "월",
+                    badge: "",
+                    summary: "사용자/월 (연간 약정시)",
+                    features: ["모든 Standard 기능 포함", "고급 보안 및 사이버 위협 보호", "PC 및 모바일 장치 관리", "데이터 손실 방지 (DLP)", "Azure Virtual Desktop 지원"],
+                    sort_order: 3,
+                    active: true
+                }
+            ];
+            await upsertPlans(pMS, plansMS);
+
+
+            // 2. Naver Works (New)
+            const pNaver = await getOrCreateProduct('solution', 'naverworks', '네이버웍스 (Naver Works)', '네이버가 만든 업무 협업 도구');
+            const plansNaver = [
+                {
+                    plan_name: "Lite",
+                    plan_id: "naver-lite",
+                    price: "3000",
+                    period: "월",
+                    badge: "",
+                    summary: "사용자/월 (연간 약정시)",
+                    features: ["메시지 (채팅/음성/영상 통화)", "게시판, 캘린더, 주소록", "설문, 할 일", "공용 용량 10GB/1인"],
+                    sort_order: 1,
+                    active: true
+                },
+                {
+                    plan_name: "Basic",
+                    plan_id: "naver-basic",
+                    price: "6000",
+                    period: "월",
+                    badge: "추천",
+                    summary: "사용자/월 (연간 약정시)",
+                    features: ["Lite 기능 전체 포함", "메일 (30GB/1인)", "드라이브 (30GB/1인)", "화상회의 (최대 200명)"],
+                    sort_order: 2,
+                    active: true
+                },
+                {
+                    plan_name: "Premium",
+                    plan_id: "naver-premium",
+                    price: "10000",
+                    period: "월",
+                    badge: "",
+                    summary: "사용자/월 (연간 약정시)",
+                    features: ["Basic 기능 전체 포함", "드라이브 용량 무제한", "아카이빙(보존)", "고급 보안 설정", "감사 로그"],
+                    sort_order: 3,
+                    active: true
+                }
+            ];
+            await upsertPlans(pNaver, plansNaver);
+
+
+            // 3. Homepage (Website)
+            const pWeb = await getOrCreateProduct('solution', 'website', '홈페이지 제작', '맞춤형 웹사이트 제작 서비스');
+            const plansWeb = [
+                {
+                    plan_name: "일반형 (반응형)",
+                    plan_id: "web-basic",
+                    price: "1000000",
+                    period: "건",
+                    badge: "",
+                    summary: "기본 5페이지 내외",
+                    features: ["반응형 웹 디자인 적용", "게시판/문의폼 기능", "기본 관리자 모드", "유지보수 1개월 무료"],
+                    sort_order: 1,
+                    active: true
+                },
+                {
+                    plan_name: "비즈니스형",
+                    plan_id: "web-business",
+                    price: "2000000",
+                    period: "건",
+                    badge: "추천",
+                    summary: "페이지 수 제한 없음 (협의)",
+                    features: ["고급 디자인 및 퍼블리싱", "회원관리 / SMS 연동", "접속 통계 프로그램", "유지보수 3개월 무료"],
+                    sort_order: 2,
+                    active: true
+                },
+                {
+                    plan_name: "프리미엄 쇼핑몰",
+                    plan_id: "web-premium",
+                    price: "문의",
+                    period: "건",
+                    badge: "",
+                    summary: "독립형 쇼핑몰 구축",
+                    features: ["전자결제(PG) 연동", "상품/주문/배송 관리 시스템", "마케팅 툴 연동", "맞춤 기능 개발 가능"],
+                    sort_order: 3,
+                    active: true
+                }
+            ];
+            await upsertPlans(pWeb, plansWeb);
+
+            log('All Migrations Complete.');
+        }
+
+        migrate();
+    </script>
+</body>
+
+</html>

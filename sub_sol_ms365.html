@@ -6,9 +6,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HUMECCA - MS 365 Service</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css?v=3.20"> <!-- Global Styles -->
+    <link rel="stylesheet" href="styles.css?v=20251231_FINAL">
+    <!-- FontAwesome -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
         rel="stylesheet">
+    <style>
+        /* Internal FAQ Styles to bypass cache issues */
+        .ms365-faq-container {
+            max-width: 900px;
+            margin: 0 auto 120px auto;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .ms365-faq-item {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .ms365-faq-question {
+            width: 100%;
+            text-align: left;
+            padding: 24px 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+            transition: all 0.2s ease;
+        }
+
+        .ms365-faq-question:hover {
+            color: #2563eb;
+            background: #f8fafc;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .ms365-faq-toggle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            transition: transform 0.3s ease;
+        }
+
+        .ms365-faq-item.active .ms365-faq-toggle {
+            transform: rotate(45deg);
+            color: #2563eb;
+        }
+
+        .ms365-faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.3s ease;
+            opacity: 0;
+            background: #f8fafc;
+        }
+
+        .ms365-faq-item.active .ms365-faq-answer {
+            max-height: 500px;
+            opacity: 1;
+            padding: 0 20px 24px 20px;
+        }
+
+        .ms365-faq-answer p {
+            color: #475569;
+            line-height: 1.7;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .ms365-faq-answer ul {
+            margin: 12px 0 0 20px;
+            padding: 0;
+            color: #475569;
+        }
+
+        .ms365-faq-answer li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 
 <body class="theme-blue">
@@ -62,17 +141,7 @@
                 </div>
             </div>
 
-            <!-- YouTube Video Section -->
-            <div
-                style="margin-bottom: 80px; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                <div style="position: relative; padding-bottom: 56.25%; height: 0;">
-                    <iframe src="https://www.youtube.com/embed/GDZDry9X9N8" title="Microsoft 365 Introduction"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-                    </iframe>
-                </div>
-            </div>
+
 
             <!-- Tabbed Content Section: Create, Connect, Protect -->
             <div class="section-header">
@@ -95,10 +164,9 @@
                         <div class="ms365-hero-card">
                             <div class="ms365-hero-content">
                                 <span
-                                    style="display:block; font-weight:600; color:#64748b; margin-bottom:8px;">만들기</span>
+                                    style="display:block; font-weight:600; color:#64748b; margin-bottom:12px;">만들기</span>
                                 <h3 class="ms365-hero-title">제작 앱</h3>
                                 <p class="ms365-hero-desc">익숙한 앱을 사용하여 비즈니스를 구축하고 고객에게 가치를 제공하세요.</p>
-                                <a href="#" class="ms365-hero-btn">모두 살펴보기</a>
                             </div>
                         </div>
                         <!-- Right App Grid -->
@@ -145,10 +213,9 @@
                         <div class="ms365-hero-card">
                             <div class="ms365-hero-content">
                                 <span
-                                    style="display:block; font-weight:600; color:#64748b; margin-bottom:8px;">연결</span>
+                                    style="display:block; font-weight:600; color:#64748b; margin-bottom:12px;">연결</span>
                                 <h3 class="ms365-hero-title">연결할 앱</h3>
                                 <p class="ms365-hero-desc">모임, 공동 작업, 전자 메일 솔루션을 통해 어디에 있든지 연결할 수 있습니다.</p>
-                                <a href="#" class="ms365-hero-btn">모두 살펴보기</a>
                             </div>
                         </div>
                         <!-- Right App Grid -->
@@ -194,10 +261,9 @@
                         <div class="ms365-hero-card">
                             <div class="ms365-hero-content">
                                 <span
-                                    style="display:block; font-weight:600; color:#64748b; margin-bottom:8px;">보호</span>
+                                    style="display:block; font-weight:600; color:#64748b; margin-bottom:12px;">보호</span>
                                 <h3 class="ms365-hero-title">보호할 앱</h3>
                                 <p class="ms365-hero-desc">스팸 및 전자 메일 필터링과 맬웨어 방지를 통해 비즈니스를 보호합니다.</p>
-                                <a href="#" class="ms365-hero-btn">모두 살펴보기</a>
                             </div>
                         </div>
                         <!-- Right App Grid -->
@@ -239,6 +305,193 @@
                     <i class="fas fa-spinner fa-spin fa-2x" style="color:#ddd;"></i>
                 </div>
             </div>
+
+            <!-- YouTube Video Section (Resized & Centered) -->
+            <div
+                style="max-width: 800px; margin: 80px auto; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div style="position: relative; padding-bottom: 56.25%; height: 0;">
+                    <iframe src="https://www.youtube.com/embed/GDZDry9X9N8" title="Microsoft 365 Introduction"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="section-header" style="margin-top: 100px;">
+                <h2>자주 묻는 질문 (FAQ)</h2>
+                <p>Microsoft 365 도입과 관련하여 궁금한 점을 확인하세요.</p>
+            </div>
+
+            <div class="ms365-faq-container" style="margin-bottom: 120px;">
+                <!-- FAQ 1 -->
+                <div class="ms365-faq-item">
+                    <button class="ms365-faq-question" onclick="toggleMsFaq(this)">
+                        <span>01. 어떤 결제 방식을 사용할 수 있나요?</span>
+                        <i class="fas fa-plus ms365-faq-toggle"></i>
+                    </button>
+                    <div class="ms365-faq-answer">
+                        <p>모든 주요 신용 카드를 사용할 수 있습니다. 구독 금액은 카드 명세서에 표시됩니다. 기존 고객은 청구서를 이용하여 지불할 수 있습니다. 이 결제 방법을 이용할 자격이
+                            되는지 알아보려면 지원부로 문의하세요. Microsoft 365 플랜의 경우 선택한 서비스에 따라 월간 또는 연간 요금이 청구됩니다.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="ms365-faq-item">
+                    <button class="ms365-faq-question" onclick="toggleMsFaq(this)">
+                        <span>02. 월간 약정 구독과 연간 약정 구독의 차이점은 무엇인가요?</span>
+                        <i class="fas fa-plus ms365-faq-toggle"></i>
+                    </button>
+                    <div class="ms365-faq-answer">
+                        <p>최대한 유연하게 서비스를 이용할 수 있도록 다양한 약정 조건과 결제 옵션이 준비되어 있습니다.</p>
+                        <ul>
+                            <li><strong>월간 약정, 월별 결제:</strong> 월간 구독에 가입하고 매달 결제하세요. 언제든지 취소할 수 있습니다.</li>
+                            <li><strong>연간 약정, 월별 결제:</strong> 1년 약정 구독에 가입하고 매달 결제하세요.</li>
+                            <li><strong>연간 약정, 연별 결제:</strong> 1년 약정 구독에 가입하고, 1년치 요금을 선불로 결제하세요.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="ms365-faq-item">
+                    <button class="ms365-faq-question" onclick="toggleMsFaq(this)">
+                        <span>03. 비즈니스 플랜 옵션에서는 Microsoft 365 Personal 및 Family에는 없는 어떤 이점을 얻을 수 있나요?</span>
+                        <i class="fas fa-plus ms365-faq-toggle"></i>
+                    </button>
+                    <div class="ms365-faq-answer">
+                        <p>Microsoft 365 Business Basic, Business Standard, Business Premium은 다음과 같이 비즈니스를 위해 특별히 설계된 고급
+                            도구와 기능을 제공합니다.</p>
+                        <ul>
+                            <li><strong>전문 비즈니스 전자 메일:</strong> 비즈니스 도메인(예: yourname@yourbusiness.com)을 사용하여 브랜드 전자 메일
+                                주소를 만들고 사용하세요.</li>
+                            <li><strong>관리자 및 IT 관리 제어:</strong> 비즈니스용으로 설계된 Microsoft 365 관리 센터를 통해 액세스, 권한, 디바이스를
+                                관리하세요.</li>
+                            <li><strong>확장성:</strong> 변화하는 요구 사항에 맞게 조정할 수 있는 유연한 라이선스 옵션을 통해 비즈니스 성장에 맞게 쉽게 사용자를 추가하거나
+                                플랜을 업그레이드하세요.</li>
+                            <li><strong>보안 기능 향상:</strong> Exchange Online Protection을 사용하여 이메일 피싱, 스팸, 맬웨어로부터 비즈니스를
+                                보호하세요. Business Premium에는 자동 위협 중단, 고급 바이러스 백신 기능, 취약성 관리 도구를 통해 랜섬웨어 보호를 제공하는 비즈니스용
+                                Microsoft Defender도 포함되어 있습니다.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="ms365-faq-item">
+                    <button class="ms365-faq-question" onclick="toggleMsFaq(this)">
+                        <span>04. Microsoft 365 Business Basic, Business Standard, Business Premium 및 엔터프라이즈 플랜 옵션의 차이점은
+                            무엇인가요?</span>
+                        <i class="fas fa-plus ms365-faq-toggle"></i>
+                    </button>
+                    <div class="ms365-faq-answer">
+                        <p>Microsoft에는 중소기업을 위한 다양한 생산성 및 보안 관리 제품이 있으며, 각각의 제품은 강력한 기능과 성능을 제공합니다.</p>
+                        <ul>
+                            <li><strong>Microsoft 365 Business Basic</strong>은 Word, Excel, PowerPoint와 같은 정품 앱 및 모바일
+                                버전은 물론 비즈니스 이메일, 클라우드 저장소에 대한 액세스를 제공합니다. (Teams가 없는 플랜과 있는 플랜 중 선택 가능)</li>
+                            <li><strong>Microsoft 365 Business Standard</strong>는 Business Basic에서 사용할 수 있는 서비스에 더해
+                                Word, Excel, PowerPoint와 같은 앱의 강력한 데스크톱, 웹, 모바일 버전과 Clipchamp 등의 추가 앱을 제공합니다.</li>
+                            <li><strong>Microsoft 365 Business Premium</strong>에는 동일한 앱 및 서비스가 모두 포함되며, 고급 사이버 위협 보호 및
+                                디바이스 관리 기능도 제공합니다.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="ms365-faq-item">
+                    <button class="ms365-faq-question" onclick="toggleMsFaq(this)">
+                        <span>05. Microsoft 365 추가 기능 서비스를 구매하여 구독을 보완할 수 있나요?</span>
+                        <i class="fas fa-plus ms365-faq-toggle"></i>
+                    </button>
+                    <div class="ms365-faq-answer">
+                        <p>많은 고객이 Microsoft 365 기본 구독을 구매한 다음, 필요에 따라 원하는 추가 기능 서비스를 구입하여 구독을 보완합니다. 또한 고객은 Microsoft
+                            365 Store를 통해 수천 곳의 공급업체가 제공하는 앱을 구매할 수도 있습니다.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 6 -->
+                <div class="ms365-faq-item">
+                    <button class="ms365-faq-question" onclick="toggleMsFaq(this)">
+                        <span>06. 비즈니스 플랜 옵션으로 어떤 유형의 AI 기능을 이용할 수 있나요?</span>
+                        <i class="fas fa-plus ms365-faq-toggle"></i>
+                    </button>
+                    <div class="ms365-faq-answer">
+                        <p>Microsoft 편집기를 통한 문법 및 스타일 제안, Outlook의 중요 받은 편지함 및 추천 회신, Teams가 포함된 플랜을 통한 라이브 캡션 및 모임 대화
+                            내용 기록을 포함한 AI 기능을 이용할 수 있습니다. Microsoft Entra ID로 로그인한 비즈니스 사용자를 위해 Microsoft 365 Copilot
+                            Chat은 엔터프라이즈 데이터 보호 기능을 갖춘 제한된 AI 기반 채팅을 제공합니다.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 7 -->
+                <div class="ms365-faq-item">
+                    <button class="ms365-faq-question" onclick="toggleMsFaq(this)">
+                        <span>07. Microsoft 365 Copilot은 어떻게 구매할 수 있나요?</span>
+                        <i class="fas fa-plus ms365-faq-toggle"></i>
+                    </button>
+                    <div class="ms365-faq-answer">
+                        <p>Microsoft 365 Copilot을 구매하려면 별도의 적격 Microsoft 365 플랜 라이선스가 필요합니다. 적격 플랜이 이미 있는 경우 Microsoft
+                            365 관리 센터를 통해 구독에 Copilot을 추가하고 관리할 수 있습니다.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 8 -->
+                <div class="ms365-faq-item">
+                    <button class="ms365-faq-question" onclick="toggleMsFaq(this)">
+                        <span>08. 대량 구매 할인이 제공되나요?</span>
+                        <i class="fas fa-plus ms365-faq-toggle"></i>
+                    </button>
+                    <div class="ms365-faq-answer">
+                        <p>볼륨 라이선싱을 통해 구매하려는 기업 계약 고객(일반적으로 라이선스 250개 이상)에게 할인 혜택이 제공됩니다. Microsoft 전문가의 도움을 받아 대기업을 위한
+                            구매 옵션을 검토하고 가장 적합한 옵션을 결정할 수 있습니다.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 9 -->
+                <div class="ms365-faq-item">
+                    <button class="ms365-faq-question" onclick="toggleMsFaq(this)">
+                        <span>09. 이미 Microsoft 365 플랜을 구독하고 있는 경우 다른 플랜으로 전환할 수 있나요?</span>
+                        <i class="fas fa-plus ms365-faq-toggle"></i>
+                    </button>
+                    <div class="ms365-faq-answer">
+                        <p>예, 조직의 요구 사항에 변화가 있는 경우 계정을 다른 플랜으로 전환할 수 있습니다.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 10 -->
+                <div class="ms365-faq-item">
+                    <button class="ms365-faq-question" onclick="toggleMsFaq(this)">
+                        <span>10. 여러 Microsoft 365 플랜을 결합할 수 있나요?</span>
+                        <i class="fas fa-plus ms365-faq-toggle"></i>
+                    </button>
+                    <div class="ms365-faq-answer">
+                        <p>비즈니스용 Microsoft 365 기본 플랜(사용자당 요금 청구)은 최대 300명의 사용자가 있는 조직을 위해 설계되었습니다. 사용자가 300명이 넘는 조직은
+                            엔터프라이즈용 Microsoft 365 플랜 구독을 고려해야 합니다.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 11 -->
+                <div class="ms365-faq-item">
+                    <button class="ms365-faq-question" onclick="toggleMsFaq(this)">
+                        <span>11. 구독은 언제든지 취소할 수 있나요?</span>
+                        <i class="fas fa-plus ms365-faq-toggle"></i>
+                    </button>
+                    <div class="ms365-faq-answer">
+                        <p>언제든지 구독을 취소할 수 있습니다. 그러나 제품 및 구독에 따라 계약 만료 전에 취소하는 경우 위약금이 부과될 수 있습니다. 월간 약정 구독의 경우 언제든지 계약을
+                            취소해도 위약금이 부과되지 않습니다.</p>
+                    </div>
+                </div>
+                <!-- FAQ 12 -->
+                <div class="ms365-faq-item">
+                    <button class="ms365-faq-question" onclick="toggleMsFaq(this)">
+                        <span>12. 구독을 취소할 경우 내 데이터는 어떻게 되나요?</span>
+                        <i class="fas fa-plus ms365-faq-toggle"></i>
+                    </button>
+                    <div class="ms365-faq-answer">
+                        <p>데이터의 소유권은 고객에게 있습니다. Microsoft 365 구독을 취소하는 경우 이메일 및 팀 사이트 문서 등의 데이터를 다운로드하여 다른 곳에 저장할 수
+                            있습니다. 취소하기 전에 데이터를 저장해야 합니다.</p>
+                    </div>
+                </div>
+            </div>
+
 
             <div
                 style="margin-top: 40px; background: #f9fafb; padding: 20px; border-radius: 8px; font-size: 14px; color: #666;">
@@ -285,6 +538,26 @@
             // Show the current tab and add active to button
             document.getElementById(tabName).className += " active";
             evt.currentTarget.className += " active";
+        }
+
+        // FAQ Toggle Logic
+        function toggleMsFaq(btn) {
+            const item = btn.parentElement;
+            const wasActive = item.classList.contains('active');
+
+            // Optional: Close others (Accordion style)
+            // const allItems = document.querySelectorAll('.ms365-faq-item');
+            // allItems.forEach(i => i.classList.remove('active'));
+
+            if (!wasActive) {
+                item.classList.add('active');
+                // Change icon to minus
+                btn.querySelector('.ms365-faq-toggle').className = "fas fa-minus ms365-faq-toggle";
+            } else {
+                item.classList.remove('active');
+                // Change icon back to plus
+                btn.querySelector('.ms365-faq-toggle').className = "fas fa-plus ms365-faq-toggle";
+            }
         }
     </script>
 </body>

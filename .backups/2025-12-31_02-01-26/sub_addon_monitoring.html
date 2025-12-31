@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUMECCA - Monitoring Service</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=3.20">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+    <!-- Header -->
+    <!-- ========== HEADER PLACEHOLDER (Loaded via loader.js) ========== -->
+    <div id="header-placeholder"></div>
+
+
+    <!-- Hero -->
+    <section class="sw-hero" style="background-color: #1a237e; position: relative; overflow: hidden;">
+
+        <!-- Canvas Background for Light Ray Effect -->
+        <canvas id="addon-canvas"
+            style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
+
+        <div class="container" style="position: relative; z-index: 10;">
+            <div style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 20px;">
+                부가서비스 <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 8px;"></i> 모니터링
+            </div>
+            <div
+                style="width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; border: 1px solid rgba(255,255,255,0.2);">
+                <i class="fas fa-desktop" style="font-size: 30px; color: white;"></i>
+            </div>
+
+
+            <h1>모니터링 (Monitoring)</h1>
+            <p style="max-width: 800px; color: rgba(255,255,255,0.8); line-height: 1.6;">
+                24시간 365일 서버 상태를 실시간으로 모니터링합니다.<br>
+                CPU, 메모리, 디스크, 네트워크 등 주요 지표를 체크하고, 이상 징후 발견 시 즉시 알림을 보내드립니다.
+            </p>
+        </div>
+    </section>
+
+    <!-- PRTG Introduction Section -->
+    <section class="section" style="padding-bottom: 40px;">
+        <div class="container" style="position: relative; z-index: 10;">
+            <div style="display: flex; gap: 60px; align-items: center; flex-wrap: wrap;">
+                <!-- Left: Text Content -->
+                <div style="flex: 1; min-width: 500px;">
+                    <span
+                        style="display: inline-block; padding: 6px 16px; background: #fee2e2; color: #dc2626; border-radius: 20px; font-weight: 700; font-size: 14px; margin-bottom: 20px;">Global
+                        No.1 Monitoring Tool</span>
+                    <h2
+                        style="font-size: 36px; font-weight: 800; color: #111827; line-height: 1.3; margin-bottom: 24px;">
+                        세계가 검증한<br><span style="color: #EF4444;">PRTG Network Monitor</span>
+                    </h2>
+                    <p style="font-size: 17px; color: #4b5563; line-height: 1.8; margin-bottom: 30px;">
+                        HUMECCA는 전 세계 20만 관리자가 선택한 <strong>Paessler PRTG</strong>를 통해<br>
+                        고객님의 소중한 IT 인프라를 24시간 빈틈없이 감시합니다.
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px;">
+                        <div class="feature-item">
+                            <h4 style="font-size: 18px; font-weight: 700; color: #1f2937; margin-bottom: 10px;">
+                                <i class="fas fa-eye" style="color: #EF4444; margin-right: 8px;"></i> 직관적인 대시보드
+                            </h4>
+                            <p style="font-size: 14px; color: #6b7280; line-height: 1.6;">
+                                복잡한 네트워크 상태를 한눈에 파악할 수 있는 지도 및 시각화 대시보드를 제공합니다.
+                            </p>
+                        </div>
+                        <div class="feature-item">
+                            <h4 style="font-size: 18px; font-weight: 700; color: #1f2937; margin-bottom: 10px;">
+                                <i class="fas fa-bell" style="color: #EF4444; margin-right: 8px;"></i> 강력한 알림 시스템
+                            </h4>
+                            <p style="font-size: 14px; color: #6b7280; line-height: 1.6;">
+                                임계치 도달 시 Email, SMS, Push 알림 등 맞춤형 알람으로 즉각 대응이 가능합니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <button onclick="openAppModal('모니터링 문의', 'monitoring')" class="btn-premium">
+                        서비스 도입 문의하기 <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <style>
+                        .btn-premium {
+                            padding: 16px 32px;
+                            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            font-size: 16px;
+                            font-weight: 700;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+                        }
+
+                        .btn-premium:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 15px 30px rgba(239, 68, 68, 0.4);
+                        }
+                    </style>
+                </div>
+
+                <!-- Right: Image/Visual (Placeholder styling) -->
+                <div style="flex: 1; min-width: 400px; text-align: center;">
+                    <div
+                        style="background: white; border-radius: 20px; padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border: 1px solid #f3f4f6; position: relative;">
+                        <!-- Mockup Circle -->
+                        <div
+                            style="width: 120px; height: 120px; background: #fee2e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; position: relative; z-index: 2;">
+                            <i class="fas fa-network-wired" style="font-size: 50px; color: #EF4444;"></i>
+                        </div>
+                        <h3 style="font-size: 22px; font-weight: 800; color: #111827; margin-bottom: 10px;">All-In-One
+                            Monitoring</h3>
+                        <p style="color: #6b7280; font-size: 15px; margin-bottom: 30px;">Server, Cloud, Database, App
+                        </p>
+
+                        <!-- Floating Badges -->
+                        <div
+                            style="display: inline-flex; gap: 10px; flex-wrap: wrap; justify-content: center; opacity: 0.8;">
+                            <span
+                                style="padding: 6px 14px; background: #f3f4f6; border-radius: 20px; font-size: 13px; font-weight: 600; color: #4b5563;">SNMP</span>
+                            <span
+                                style="padding: 6px 14px; background: #f3f4f6; border-radius: 20px; font-size: 13px; font-weight: 600; color: #4b5563;">WMI</span>
+                            <span
+                                style="padding: 6px 14px; background: #f3f4f6; border-radius: 20px; font-size: 13px; font-weight: 600; color: #4b5563;">Ping</span>
+                            <span
+                                style="padding: 6px 14px; background: #f3f4f6; border-radius: 20px; font-size: 13px; font-weight: 600; color: #4b5563;">HTTP</span>
+                            <span
+                                style="padding: 6px 14px; background: #f3f4f6; border-radius: 20px; font-size: 13px; font-weight: 600; color: #4b5563;">SQL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section" style="padding: 80px 0; background: #f9fafb;">
+        <div class="container" style="position: relative; z-index: 10;">
+            <div class="section-header" style="text-align: center; margin-bottom: 60px;">
+                <h2 style="font-size: 32px; font-weight: 800; color: #111827;">모니터링 서비스 요금</h2>
+                <p style="color: #6b7280; font-size: 18px; margin-top: 10px;">안정적인 서비스 운영을 위한 필수 투자를 시작하세요.</p>
+            </div>
+
+            <div id="pricing-grid-monitoring" class="pricing-grid compact-pricing">
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">
+                    <i class="fas fa-spinner fa-spin"></i> 로딩 중...
+                </div>
+            </div>
+            <div
+                style="margin-top: 40px; background: white; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e5e7eb;">
+                <p style="margin: 0; color: #4b5563; font-size: 15px;">
+                    <i class="fas fa-info-circle" style="color: #EF4444; margin-right: 6px;"></i> <strong>매니지드
+                        서비스</strong> 이용 고객님께는 <strong>Pro 모니터링</strong>이 기본으로 제공됩니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature & Benefit Section (Moved to Bottom) -->
+    <section class="section" style="padding: 100px 0; background: white;">
+        <div class="container">
+            <div class="section-header" style="text-align: center; margin-bottom: 70px;">
+                <span style="color: #EF4444; font-weight: 700; font-size: 14px; letter-spacing: 1px;">WHY PRTG?</span>
+                <h2 style="font-size: 36px; font-weight: 800; color: #111827; margin-top: 10px;">왜 PRTG 모니터링인가요?</h2>
+                <p style="color: #6b7280; font-size: 18px; margin-top: 16px;">전 세게 표준 모니터링 도구의 강력한 기능을 경험하세요</p>
+            </div>
+
+            <!-- Features Grid -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 80px;">
+                <!-- Feature 1 -->
+                <div class="feature-card-premium"
+                    style="padding: 40px; border-radius: 20px; background: #f8fafc; transition: all 0.3s; border: 1px solid #f1f5f9;">
+                    <div
+                        style="width: 60px; height: 60px; background: white; border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 24px;">
+                        <i class="fas fa-network-wired" style="font-size: 24px; color: #EF4444;"></i>
+                    </div>
+                    <h3 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 12px;">Agentless 모니터링
+                    </h3>
+                    <p style="font-size: 15px; color: #64748b; line-height: 1.6;">
+                        서버에 무거운 에이전트를 설치할 필요가 없습니다.<br>
+                        SNMP, WMI, SSH, HTTP 등 업계 표준 프로토콜을 사용하여 가볍고 안전하게 시스템을 감시합니다.
+                    </p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="feature-card-premium"
+                    style="padding: 40px; border-radius: 20px; background: #f8fafc; transition: all 0.3s; border: 1px solid #f1f5f9;">
+                    <div
+                        style="width: 60px; height: 60px; background: white; border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 24px;">
+                        <i class="fas fa-th-large" style="font-size: 24px; color: #EF4444;"></i>
+                    </div>
+                    <h3 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 12px;">모든 것을 하나로 통합
+                    </h3>
+                    <p style="font-size: 15px; color: #64748b; line-height: 1.6;">
+                        서버, 네트워크 장비, 가상화 환경, 클라우드까지.<br>
+                        이질적인 모든 인프라 자원을 단 하나의 직관적인 대시보드에서 통합 관리할 수 있습니다.
+                    </p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="feature-card-premium"
+                    style="padding: 40px; border-radius: 20px; background: #f8fafc; transition: all 0.3s; border: 1px solid #f1f5f9;">
+                    <div
+                        style="width: 60px; height: 60px; background: white; border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 24px;">
+                        <i class="fas fa-mobile-alt" style="font-size: 24px; color: #EF4444;"></i>
+                    </div>
+                    <h3 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 12px;">언제 어디서나 접속</h3>
+                    <p style="font-size: 15px; color: #64748b; line-height: 1.6;">
+                        iOS 및 Android 전용 모바일 앱을 제공합니다.<br>
+                        이동 중에도 실시간으로 상태를 확인하고, 푸시 알림을 통해 장애에 즉각 대응하세요.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Humecca Customer Benefit Section -->
+            <div
+                style="background: linear-gradient(135deg, #111827 0%, #1f2937 100%); border-radius: 24px; padding: 60px; color: white; margin-bottom: 80px; position: relative; overflow: hidden;">
+                <div
+                    style="position: absolute; top: 0; right: 0; width: 300px; height: 300px; background: radial-gradient(circle, rgba(239, 68, 68, 0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none;">
+                </div>
+
+                <div style="position: relative; z-index: 2; text-align: center; max-width: 800px; margin: 0 auto;">
+                    <span
+                        style="display: inline-block; padding: 6px 16px; background: rgba(239, 68, 68, 0.2); color: #EF4444; border-radius: 20px; font-weight: 700; font-size: 14px; margin-bottom: 20px; border: 1px solid rgba(239, 68, 68, 0.3);">
+                        HUMECCA 고객 특별 혜택
+                    </span>
+                    <h3 style="font-size: 32px; font-weight: 800; margin-bottom: 24px;">복잡한 설정 없이, 즉시 시작하세요</h3>
+                    <p style="font-size: 18px; color: #9ca3af; line-height: 1.7; margin-bottom: 40px;">
+                        휴메카 인프라 이용 고객님은 별도의 라이선스 구매나 복잡한 초기 구성이 필요 없습니다.<br>
+                        전문 엔지니어가 최적화된 모니터링 환경을 <strong>One-Click</strong> 수준으로 구축해 드립니다.
+                    </p>
+
+                    <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+                        <div
+                            style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.05); padding: 24px; border-radius: 16px;">
+                            <i class="fas fa-tools" style="font-size: 28px; color: #EF4444; margin-bottom: 16px;"></i>
+                            <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">초기 설치 지원</h4>
+                            <p style="font-size: 14px; color: #9ca3af;">전문가의 센서 구성 및 <br>임계치 튜닝 제공</p>
+                        </div>
+                        <div
+                            style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.05); padding: 24px; border-radius: 16px;">
+                            <i class="fas fa-user-shield"
+                                style="font-size: 28px; color: #EF4444; margin-bottom: 16px;"></i>
+                            <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">운영 대행 옵션</h4>
+                            <p style="font-size: 14px; color: #9ca3af;">24/7 관제 센터를 통한<br>완벽한 장애 대응</p>
+                        </div>
+                        <div
+                            style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.05); padding: 24px; border-radius: 16px;">
+                            <i class="fas fa-file-invoice"
+                                style="font-size: 28px; color: #EF4444; margin-bottom: 16px;"></i>
+                            <h4 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">합리적인 비용</h4>
+                            <p style="font-size: 14px; color: #9ca3af;">고가의 라이선스 구입비 없이<br>월 요금으로 이용 가능</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- YouTube Video Section -->
+            <div style="max-width: 1000px; margin: 0 auto; text-align: center; margin-bottom: 80px;">
+                <h3 style="font-size: 28px; font-weight: 800; color: #111827; margin-bottom: 30px;">PRTG 소개 영상</h3>
+                <div
+                    style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.1);">
+                    <iframe src="https://www.youtube.com/embed/UATRm_eEEQg?cc_load_policy=1&cc_lang_pref=ko&hl=ko"
+                        title="PRTG Network Monitor Intro" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                    </iframe>
+                </div>
+                <div
+                    style="margin-top: 24px; text-align: left; background: #f3f4f6; padding: 20px; border-radius: 12px; font-size: 15px; color: #4b5563; line-height: 1.6;">
+                    <strong style="display: block; color: #111827; margin-bottom: 8px;"><i
+                            class="fas fa-closed-captioning" style="margin-right: 6px;"></i> 영상 핵심 요약</strong>
+                    PRTG는 전 세계적으로 가장 신뢰받는 네트워크 모니터링 솔루션입니다. <br>
+                    복잡한 IT 인프라(네트워크, 서버, 클라우드, 애플리케이션)를 <strong>직관적인 하나의 대시보드</strong>에서 통합 관리할 수 있으며,
+                    장애 발생 시 즉각적인 알림을 통해 신속한 대응이 가능합니다.
+                    <strong>에이전트 설치가 필요 없는(Agentless)</strong> 방식이라 도입이 매우 간편합니다.
+                </div>
+            </div>
+
+            <!-- Expected Effects (List Style) -->
+            <div
+                style="max-width: 1000px; margin: 0 auto; background: #111827; border-radius: 24px; padding: 60px; color: white; position: relative; overflow: hidden;">
+                <!-- Decor -->
+                <div
+                    style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(239, 68, 68, 0.2); border-radius: 50%; filter: blur(50px);">
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 50px; position: relative; z-index: 2;">
+                    <div style="flex: 1;">
+                        <h3 style="font-size: 28px; font-weight: 700; margin-bottom: 20px;">도입 후 기대 효과</h3>
+                        <p style="color: #9ca3af; font-size: 16px; line-height: 1.7; margin-bottom: 0;">
+                            체계적인 모니터링 시스템 구축은 IT 운영 비용을 절감하고 비즈니스 연속성을 보장합니다.
+                        </p>
+                    </div>
+                    <div style="flex: 1.2;">
+                        <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 20px;">
+                            <li
+                                style="display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.05); padding: 16px 20px; border-radius: 12px;">
+                                <i class="fas fa-check-circle" style="color: #EF4444; font-size: 20px;"></i>
+                                <span style="font-size: 16px; font-weight: 500;">장애 발생 전 사전 징후 포착 및 예방</span>
+                            </li>
+                            <li
+                                style="display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.05); padding: 16px 20px; border-radius: 12px;">
+                                <i class="fas fa-check-circle" style="color: #EF4444; font-size: 20px;"></i>
+                                <span style="font-size: 16px; font-weight: 500;">평균 복구 시간(MTTR) 50% 이상 단축</span>
+                            </li>
+                            <li
+                                style="display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.05); padding: 16px 20px; border-radius: 12px;">
+                                <i class="fas fa-check-circle" style="color: #EF4444; font-size: 20px;"></i>
+                                <span style="font-size: 16px; font-weight: 500;">SLA 기반의 안정적인 서비스 품질 유지</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .feature-card-premium:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+            background: white !important;
+            border-color: #EF4444 !important;
+        }
+    </style>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+    <!-- App Modal Placeholder -->
+    <div id="app-modal-placeholder"></div>
+    <!-- Supabase Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase_config.js"></script>
+    <script src="components/loader.js?v=3.20"></script>
+    <script src="js/application_modal.js"></script>
+    <script src="js/data_loader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProductData('addon-monitoring');
+        });
+    </script>
+
+    <script src="js/subpage-canvas.js"></script>
+</body>
+
+</html>

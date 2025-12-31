@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUMECCA DB Seeding Tool</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            padding: 40px;
+            background: #f8fafc;
+            color: #334155;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #1e293b;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+
+        #status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+    </style>
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase_config.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🛠️ FAQ 데이터 일괄 등록</h1>
+        <p>경쟁사 분석을 기반으로 한 <strong>26개의 고품질 FAQ 데이터</strong>를 데이터베이스에 등록합니다.</p>
+        <p>기존 데이터는 유지되며, 새로운 데이터가 추가됩니다.</p>
+
+        <div style="margin-top: 30px;">
+            <button id="seedBtn" onclick="seedFaqs()">데이터 생성 시작</button>
+        </div>
+
+        <div id="status"></div>
+        <pre id="log">대기 중...</pre>
+    </div>
+
+    <script>
+        const faqs = [
+            // ==================== [일반 - General] ====================
+            {
+                category: 'general',
+                question: '서비스 신청 절차는 어떻게 되나요?',
+                answer: '홈페이지 상단의 [서비스 신청] 메뉴를 통해 원하시는 상품을 선택하신 후, 온라인 신청서를 작성해 주시면 됩니다. 신청서 접수 후 담당자가 확인하여 결제 및 서버 세팅 안내 전화를 드립니다. 입금 확인 후 서버 세팅이 진행되며, 완료 시 이메일과 문자로 접속 정보를 발송해 드립니다.',
+                sort_order: 1
+            },
+            {
+                category: 'general',
+                question: '세금계산서 발행이 가능한가요?',
+                answer: '네, 가능합니다. 서비스 신청 시 사업자 등록증 사본을 제출해 주시면 전자세금계산서를 발행해 드립니다. 계산서는 결제일 기준 익월 10일 이내에 이메일로 발송됩니다.',
+                sort_order: 2
+            },
+            {
+                category: 'general',
+                question: 'IDC 센터 위치는 어디인가요? 방문 가능한가요?',
+                answer: '휴메카 IDC는 서울 강남구와 서초구, 그리고 분당 클라우드 센터를 운영하고 있습니다. 사전 방문 예약 시 엔지니어의 안내를 받아 센터 견학 및 장비 입고가 가능합니다. 방문 희망 시 고객센터(02-418-4442)로 문의 바랍니다.',
+                sort_order: 3
+            },
+            {
+                category: 'general',
+                question: '서비스 해지 절차는 어떻게 되나요?',
+                answer: '서비스 해지는 약정 만료 30일 전까지 고객센터 또는 1:1 문의 게시판을 통해 접수해 주셔야 합니다. 중도 해지 시 약관에 따라 위약금이 발생할 수 있으며, 데이터는 해지 후 즉시 삭제되니 사전에 백업하시기 바랍니다.',
+                sort_order: 4
+            },
+            {
+                category: 'general',
+                question: '명의 변경이나 소유권 이전이 가능한가요?',
+                answer: '네, 가능합니다. 양도인과 양수인의 동의서 및 사업자등록증 등 필요 서류를 제출해 주시면 명의 변경 처리를 도와드립니다. 단, 미납 요금이 있는 경우 완납 후 처리가 가능합니다.',
+                sort_order: 5
+            },
+            {
+                category: 'general',
+                question: '고객센터 운영 시간은 어떻게 되나요?',
+                answer: '일반 상담 및 기술 문의는 평일 09:00 ~ 18:00에 가능합니다. 단, 서버 장애 및 긴급 네트워크 장애 처리는 24시간 365일 전문 엔지니어가 상주하여 대응하고 있습니다.',
+                sort_order: 6
+            },
+
+            // ==================== [기술 - Technical] ====================
+            {
+                category: 'technical',
+                question: '서버 OS 설치 및 재설치는 어떻게 하나요?',
+                answer: '초기 OS 설치(Linux, Windows 등)는 무상으로 제공해 드립니다. 사용 중 OS 재설치가 필요한 경우, 월 1회에 한해 무상으로 지원해 드리며(직접 설치 시 KVM 지원), 엔지니어 대행 시 소정의 작업 비용이 청구될 수 있습니다.',
+                sort_order: 7
+            },
+            {
+                category: 'technical',
+                question: '서버 관리자(Root/Administrator) 비밀번호를 분실했습니다.',
+                answer: '보안상 당사는 고객님의 비밀번호를 별도로 저장하지 않습니다. 비밀번호 분실 시 싱글 모드로 부팅하여 재설정 작업을 도와드릴 수 있으나, 이 과정에서 서버 재부팅이 필요합니다. 기술지원센터로 연락 주시면 본인 확인 후 지원해 드립니다.',
+                sort_order: 8
+            },
+            {
+                category: 'technical',
+                question: '서버 재부팅은 어떻게 요청하나요?',
+                answer: '긴급한 서버 재부팅이 필요한 경우, 24시간 기술지원센터(02-418-4442)로 전화 주시거나 [마이페이지 > 기술지원 요청]을 통해 신청해 주시면 엔지니어가 즉시 처리해 드립니다. 원격 전원 제어 장치(IPMI/iDRAC)를 이용 중이신 고객님은 직접 재부팅이 가능합니다.',
+                sort_order: 9
+            },
+            {
+                category: 'technical',
+                question: '백업 서비스는 어떻게 제공되나요?',
+                answer: '기본적으로 데이터 백업의 의무는 고객님께 있습니다. 당사는 별도의 백업 스토리지 임대 및 자동 백업 솔루션을 유료 부가 서비스로 제공하고 있습니다. 중요한 데이터는 반드시 이중 백업을 권장합니다.',
+                sort_order: 10
+            },
+            {
+                category: 'technical',
+                question: '방화벽이나 보안 서비스는 제공되나요?',
+                answer: '네, 기본적으로 상단 네트워크 방화벽을 통해 불필요한 포트를 차단해 드립니다. 웹 방화벽(WAF), IPS(침입방지시스템), DDoS 방어 서비스 등은 고객님의 필요에 따라 맞춤형 보안 관제 서비스로 제공 가능합니다.',
+                sort_order: 11
+            },
+            {
+                category: 'technical',
+                question: '트래픽 사용량은 어떻게 확인하나요?',
+                answer: '제공해 드리는 MRTG(트래픽 모니터링) 페이지를 통해 실시간 트래픽 사용량을 그래프로 확인하실 수 있습니다. 임계치 초과 시 SMS 알람 서비스도 설정 가능합니다.',
+                sort_order: 12
+            },
+            {
+                category: 'technical',
+                question: '하드웨어(HDD/RAM) 장애 시 처리는?',
+                answer: '임대형 서버를 이용 중이신 경우, 하드웨어 장애 발생 시 무상으로 즉시 교체해 드립니다. 구매형(소유권 이전형) 서버의 경우 제조사 워런티 정책에 따라 AS 대행을 지원해 드립니다.',
+                sort_order: 13
+            },
+
+            // ==================== [요금 - Billing] ====================
+            {
+                category: 'billing',
+                question: '결제 방법에는 어떤 것들이 있나요?',
+                answer: '무통장 입금, 신용카드 자동 결제, 실시간 계좌이체 등 다양한 결제 수단을 지원합니다. 자동이체를 신청하시면 매월 번거로움 없이 요금 납부가 가능합니다.',
+                sort_order: 14
+            },
+            {
+                category: 'billing',
+                question: '요금 미납 시 서비스가 중단되나요?',
+                answer: '납기일로부터 7일 이상 연체 시 서비스가 일시 정지될 수 있으며, 30일 이상 장기 연체 시 직권 해지 및 데이터 삭제가 진행될 수 있습니다. 부득이한 사정으로 납부가 늦어질 경우 미리 고객센터로 연락 주시기 바랍니다.',
+                sort_order: 15
+            },
+            {
+                category: 'billing',
+                question: '트래픽 초과 요금은 얼마인가요?',
+                answer: '기본 제공 트래픽을 초과한 경우, 초과된 용량(GB) 또는 대역폭(Mbps)에 따라 추가 요금이 발생합니다. 요금은 계약된 요금제에 따라 다르며, 트래픽 사용량이 지속적으로 높을 경우 대역폭 종량제 또는 전용 회선 계약으로 변경하시는 것이 경제적입니다.',
+                sort_order: 16
+            },
+            {
+                category: 'billing',
+                question: '장기 약정 시 할인이 되나요?',
+                answer: '네, 6개월 선납 시 5%, 12개월 선납 시 10%의 요금 할인 혜택을 드립니다. 또한 다량의 서버를 이용하시는 기업 고객님께는 별도의 기업 맞춤형 할인을 제안해 드립니다.',
+                sort_order: 17
+            },
+            {
+                category: 'billing',
+                question: '현금영수증 발행이 가능한가요?',
+                answer: '개인 고객님의 경우 현금영수증(소득공제용/지출증빙용) 발행이 가능합니다. 입금 후 고객센터로 신청해 주시면 국세청에 신고 후 발급해 드립니다.',
+                sort_order: 18
+            },
+
+            // ==================== [서비스 - Service] ====================
+            {
+                category: 'service',
+                question: '서버 호스팅과 코로케이션의 차이는 무엇인가요?',
+                answer: '서버 호스팅은 서버 장비와 회선, 상면 공간을 모두 당사가 임대해 드리는 서비스이며, 코로케이션은 고객님이 보유하신 서버를 당사 IDC에 입고하여 회선과 상면 공간만을 이용하시는 서비스입니다.',
+                sort_order: 19
+            },
+            {
+                category: 'service',
+                question: '매니지드 서비스(위탁 운영)란 무엇인가요?',
+                answer: '서버 운영 전문 인력이 없는 고객사를 위해, 당사의 전문 엔지니어가 OS 설치, 보안 설정, 정기 점검, 장애 처리 등 서버 운영 전반을 대행해 드리는 프리미엄 기술 지원 서비스입니다. (Basic / Pro / Premium 단계별 선택 가능)',
+                sort_order: 20
+            },
+            {
+                category: 'service',
+                question: '공인 IP를 추가할 수 있나요?',
+                answer: '네, 기본 제공되는 IP 외에 추가 IP가 필요하신 경우 유료로 추가 할당이 가능합니다. 단, 스팸 메일 발송 등 불법적인 용도로의 사용은 엄격히 금지됩니다.',
+                sort_order: 21
+            },
+            {
+                category: 'service',
+                question: 'CDN 서비스도 이용 가능한가요?',
+                answer: '네, 대용량 이미지나 동영상 스트리밍 서비스가 필요한 경우 글로벌 CDN 서비스와 연동하여 사용하실 수 있습니다. 기술팀과 상담 후 최적의 구성을 제안해 드립니다.',
+                sort_order: 22
+            },
+            {
+                category: 'service',
+                question: '해외망(국제 회선) 서비스도 제공하나요?',
+                answer: '네, 해외(중국, 동남아, 미국 등) 사용자를 대상으로 하는 서비스를 위해 국제망 전용 회선 서비스를 제공하고 있습니다. 글로벌 비즈니스를 준비 중이시라면 별도 견적을 요청해 주세요.',
+                sort_order: 23
+            },
+            {
+                category: 'service',
+                question: '디도스(DDoS) 방어 서비스가 포함되어 있나요?',
+                answer: '기본적인 UDP/ICMP 등 소규모 공격은 상단에서 차단되지만, 정밀한 방어가 필요한 서비스(게임, 아이템 거래 등)는 별도의 [DDoS 보안 존] 서비스를 이용하셔야 안전합니다. 최대 100G급 방어존을 운영 중입니다.',
+                sort_order: 24
+            }
+        ];
+
+        async function seedFaqs() {
+            const btn = document.getElementById('seedBtn');
+            const log = document.getElementById('log');
+            const status = document.getElementById('status');
+
+            btn.disabled = true;
+            btn.textContent = '등록 중...';
+            log.textContent = 'DB 연결 확인 중...\n';
+
+            if (typeof supabase === 'undefined') {
+                log.textContent += '❌ Supabase 클라이언트를 찾을 수 없습니다. (supabase_config.js 로드 실패)\n';
+                btn.disabled = false;
+                return;
+            }
+
+            let successCount = 0;
+            let failCount = 0;
+
+            for (let i = 0; i < faqs.length; i++) {
+                const item = faqs[i];
+                log.textContent += `[${i + 1}/${faqs.length}] 등록 시도: ${item.question.substring(0, 15)}... `;
+
+                try {
+                    const { error } = await supabase.from('faqs').insert([{
+                        category: item.category,
+                        question: item.question,
+                        answer: item.answer,
+                        sort_order: item.sort_order,
+                        active: true,
+                        created_at: new Date()
+                    }]);
+
+                    if (error) throw error;
+
+                    log.textContent += '✅ 성공\n';
+                    successCount++;
+                } catch (err) {
+                    log.textContent += `❌ 실패 (${err.message})\n`;
+                    failCount++;
+                }
+
+                // Slight delay to prevent rate limiting
+                await new Promise(r => setTimeout(r, 50));
+
+                // Scroll to bottom
+                log.scrollTop = log.scrollHeight;
+            }
+
+            log.textContent += '\n================================\n';
+            log.textContent += `완료! 성공: ${successCount}건, 실패: ${failCount}건`;
+
+            status.style.display = 'block';
+            if (failCount === 0) {
+                status.className = 'success';
+                status.innerHTML = '<strong>🎉 모든 데이터가 성공적으로 등록되었습니다!</strong><br>이제 관리자 페이지에서 FAQ를 확인하세요.';
+            } else if (successCount > 0) {
+                status.className = 'error';
+                status.innerHTML = `<strong>⚠️ 일부 데이터 등록 실패</strong><br>성공: ${successCount}, 실패: ${failCount}. 로그를 확인해주세요. (RLS 권한 문제일 수 있습니다)`;
+            } else {
+                status.className = 'error';
+                status.innerHTML = '<strong>❌ 모든 데이터 등록 실패</strong><br>Supabase 권한 설정(RLS)을 확인해주세요. (INSERT 권한 필요)';
+            }
+
+            btn.disabled = false;
+            btn.textContent = '다시 시도';
+        }
+    </script>
+</body>
+
+</html>

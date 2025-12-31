@@ -4637,17 +4637,11 @@ main.sub-content {
 #pricing-grid-cdn.compact-pricing,
 #pricing-grid-recovery.compact-pricing,
 #pricing-grid-management.compact-pricing,
-#pricing-grid-etc.compact-pricing,
-#pricing-grid-colocation.compact-pricing,
-#pricing-grid-security.compact-pricing,
-#pricing-grid-solution.compact-pricing,
-#pricing-grid-ms365.compact-pricing,
-#pricing-grid-naver.compact-pricing {
+#pricing-grid-etc.compact-pricing {
     gap: 40px !important;
     padding: 0 10px !important;
 }
 
-/* 2. Card Container - Cleaner Look */
 /* 2. Card Container - Cleaner Look */
 #pricing-grid-software .plan-card,
 #pricing-grid-backup .plan-card,
@@ -4657,12 +4651,7 @@ main.sub-content {
 #pricing-grid-cdn .plan-card,
 #pricing-grid-recovery .plan-card,
 #pricing-grid-management .plan-card,
-#pricing-grid-etc .plan-card,
-#pricing-grid-colocation .plan-card,
-#pricing-grid-security .plan-card,
-#pricing-grid-solution .plan-card,
-#pricing-grid-ms365 .plan-card,
-#pricing-grid-naver .plan-card {
+#pricing-grid-etc .plan-card {
     flex: 0 1 calc(50% - 20px) !important;
     /* Strictly 2 columns with 40px gap logic (gap is space between) */
     /* Note: If gap is 40px, 2 columns need calc(50% - 20px) */
@@ -4676,7 +4665,6 @@ main.sub-content {
 }
 
 /* 3. Hover State */
-/* 3. Hover State */
 #pricing-grid-software .plan-card:hover,
 #pricing-grid-backup .plan-card:hover,
 #pricing-grid-ha .plan-card:hover,
@@ -4685,19 +4673,13 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover,
 #pricing-grid-recovery .plan-card:hover,
 #pricing-grid-management .plan-card:hover,
-#pricing-grid-etc .plan-card:hover,
-#pricing-grid-colocation .plan-card:hover,
-#pricing-grid-security .plan-card:hover,
-#pricing-grid-solution .plan-card:hover,
-#pricing-grid-ms365 .plan-card:hover,
-#pricing-grid-naver .plan-card:hover {
+#pricing-grid-etc .plan-card:hover {
     transform: translateY(-4px) !important;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
     border-color: #cbd5e1 !important;
     background-color: white !important;
 }
 
-/* 4. Typography - Title */
 /* 4. Typography - Title */
 #pricing-grid-software .plan-title,
 #pricing-grid-backup .plan-title,
@@ -4707,12 +4689,7 @@ main.sub-content {
 #pricing-grid-cdn .plan-title,
 #pricing-grid-recovery .plan-title,
 #pricing-grid-management .plan-title,
-#pricing-grid-etc .plan-title,
-#pricing-grid-colocation .plan-title,
-#pricing-grid-security .plan-title,
-#pricing-grid-solution .plan-title,
-#pricing-grid-ms365 .plan-title,
-#pricing-grid-naver .plan-title {
+#pricing-grid-etc .plan-title {
     font-size: 1.25rem !important;
     font-weight: 700 !important;
     color: #1e293b !important;
@@ -4722,7 +4699,6 @@ main.sub-content {
 }
 
 /* Typography - Price Container */
-/* Typography - Price Container */
 #pricing-grid-software .plan-price,
 #pricing-grid-backup .plan-price,
 #pricing-grid-ha .plan-price,
@@ -4731,16 +4707,10 @@ main.sub-content {
 #pricing-grid-cdn .plan-price,
 #pricing-grid-recovery .plan-price,
 #pricing-grid-management .plan-price,
-#pricing-grid-etc .plan-price,
-#pricing-grid-colocation .plan-price,
-#pricing-grid-security .plan-price,
-#pricing-grid-solution .plan-price,
-#pricing-grid-ms365 .plan-price,
-#pricing-grid-naver .plan-price {
+#pricing-grid-etc .plan-price {
     margin-bottom: 20px !important;
 }
 
-/* Typography - Amount */
 /* Typography - Amount */
 #pricing-grid-software .amount,
 #pricing-grid-backup .amount,
@@ -4750,18 +4720,12 @@ main.sub-content {
 #pricing-grid-cdn .amount,
 #pricing-grid-recovery .amount,
 #pricing-grid-management .amount,
-#pricing-grid-etc .amount,
-#pricing-grid-colocation .amount,
-#pricing-grid-security .amount,
-#pricing-grid-solution .amount,
-#pricing-grid-ms365 .amount,
-#pricing-grid-naver .amount {
+#pricing-grid-etc .amount {
     font-size: 1.75rem !important;
     color: #E94D36 !important;
     letter-spacing: -0.02em !important;
 }
 
-/* Typography - Period */
 /* Typography - Period */
 #pricing-grid-software .period,
 #pricing-grid-backup .period,
@@ -4771,17 +4735,11 @@ main.sub-content {
 #pricing-grid-cdn .period,
 #pricing-grid-recovery .period,
 #pricing-grid-management .period,
-#pricing-grid-etc .period,
-#pricing-grid-colocation .period,
-#pricing-grid-security .period,
-#pricing-grid-solution .period,
-#pricing-grid-ms365 .period,
-#pricing-grid-naver .period {
+#pricing-grid-etc .period {
     font-size: 0.95rem !important;
     color: #64748b !important;
 }
 
-/* 5. Features List */
 /* 5. Features List */
 #pricing-grid-software .plan-features,
 #pricing-grid-backup .plan-features,
@@ -4791,12 +4749,7 @@ main.sub-content {
 #pricing-grid-cdn .plan-features,
 #pricing-grid-recovery .plan-features,
 #pricing-grid-management .plan-features,
-#pricing-grid-etc .plan-features,
-#pricing-grid-colocation .plan-features,
-#pricing-grid-security .plan-features,
-#pricing-grid-solution .plan-features,
-#pricing-grid-ms365 .plan-features,
-#pricing-grid-naver .plan-features {
+#pricing-grid-etc .plan-features {
     margin-bottom: 24px !important;
 }
 
@@ -4808,12 +4761,7 @@ main.sub-content {
 #pricing-grid-cdn .plan-features li,
 #pricing-grid-recovery .plan-features li,
 #pricing-grid-management .plan-features li,
-#pricing-grid-etc .plan-features li,
-#pricing-grid-colocation .plan-features li,
-#pricing-grid-security .plan-features li,
-#pricing-grid-solution .plan-features li,
-#pricing-grid-ms365 .plan-features li,
-#pricing-grid-naver .plan-features li {
+#pricing-grid-etc .plan-features li {
     padding: 8px 0 !important;
     font-size: 0.95rem !important;
     color: #4b5563 !important;
@@ -4828,17 +4776,11 @@ main.sub-content {
 #pricing-grid-cdn .plan-features i,
 #pricing-grid-recovery .plan-features i,
 #pricing-grid-management .plan-features i,
-#pricing-grid-etc .plan-features i,
-#pricing-grid-colocation .plan-features i,
-#pricing-grid-security .plan-features i,
-#pricing-grid-solution .plan-features i,
-#pricing-grid-ms365 .plan-features i,
-#pricing-grid-naver .plan-features i {
+#pricing-grid-etc .plan-features i {
     color: #E94D36 !important;
     font-size: 0.85rem !important;
 }
 
-/* 6. Buttons */
 /* 6. Buttons */
 #pricing-grid-software .plan-btn,
 #pricing-grid-backup .plan-btn,
@@ -4848,12 +4790,7 @@ main.sub-content {
 #pricing-grid-cdn .plan-btn,
 #pricing-grid-recovery .plan-btn,
 #pricing-grid-management .plan-btn,
-#pricing-grid-etc .plan-btn,
-#pricing-grid-colocation .plan-btn,
-#pricing-grid-security .plan-btn,
-#pricing-grid-solution .plan-btn,
-#pricing-grid-ms365 .plan-btn,
-#pricing-grid-naver .plan-btn {
+#pricing-grid-etc .plan-btn {
     padding: 12px !important;
     border-radius: 6px !important;
     font-size: 0.95rem !important;
@@ -4871,12 +4808,7 @@ main.sub-content {
 #pricing-grid-cdn .plan-btn:hover,
 #pricing-grid-recovery .plan-btn:hover,
 #pricing-grid-management .plan-btn:hover,
-#pricing-grid-etc .plan-btn:hover,
-#pricing-grid-colocation .plan-btn:hover,
-#pricing-grid-security .plan-btn:hover,
-#pricing-grid-solution .plan-btn:hover,
-#pricing-grid-ms365 .plan-btn:hover,
-#pricing-grid-naver .plan-btn:hover {
+#pricing-grid-etc .plan-btn:hover {
     background: #dc2626 !important;
     transform: none !important;
 }
@@ -4890,12 +4822,7 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .plan-title,
 #pricing-grid-recovery .plan-card:hover .plan-title,
 #pricing-grid-management .plan-card:hover .plan-title,
-#pricing-grid-etc .plan-card:hover .plan-title,
-#pricing-grid-colocation .plan-card:hover .plan-title,
-#pricing-grid-security .plan-card:hover .plan-title,
-#pricing-grid-solution .plan-card:hover .plan-title,
-#pricing-grid-ms365 .plan-card:hover .plan-title,
-#pricing-grid-naver .plan-card:hover .plan-title {
+#pricing-grid-etc .plan-card:hover .plan-title {
     color: #1e293b !important;
     border-bottom-color: #f1f5f9 !important;
 }
@@ -4908,12 +4835,7 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .plan-summary,
 #pricing-grid-recovery .plan-card:hover .plan-summary,
 #pricing-grid-management .plan-card:hover .plan-summary,
-#pricing-grid-etc .plan-card:hover .plan-summary,
-#pricing-grid-colocation .plan-card:hover .plan-summary,
-#pricing-grid-security .plan-card:hover .plan-summary,
-#pricing-grid-solution .plan-card:hover .plan-summary,
-#pricing-grid-ms365 .plan-card:hover .plan-summary,
-#pricing-grid-naver .plan-card:hover .plan-summary {
+#pricing-grid-etc .plan-card:hover .plan-summary {
     color: #64748b !important;
 }
 
@@ -4925,12 +4847,7 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .amount,
 #pricing-grid-recovery .plan-card:hover .amount,
 #pricing-grid-management .plan-card:hover .amount,
-#pricing-grid-etc .plan-card:hover .amount,
-#pricing-grid-colocation .plan-card:hover .amount,
-#pricing-grid-security .plan-card:hover .amount,
-#pricing-grid-solution .plan-card:hover .amount,
-#pricing-grid-ms365 .plan-card:hover .amount,
-#pricing-grid-naver .plan-card:hover .amount {
+#pricing-grid-etc .plan-card:hover .amount {
     color: #E94D36 !important;
 }
 
@@ -4942,12 +4859,7 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .period,
 #pricing-grid-recovery .plan-card:hover .period,
 #pricing-grid-management .plan-card:hover .period,
-#pricing-grid-etc .plan-card:hover .period,
-#pricing-grid-colocation .plan-card:hover .period,
-#pricing-grid-security .plan-card:hover .period,
-#pricing-grid-solution .plan-card:hover .period,
-#pricing-grid-ms365 .plan-card:hover .period,
-#pricing-grid-naver .plan-card:hover .period {
+#pricing-grid-etc .plan-card:hover .period {
     color: #64748b !important;
 }
 
@@ -4959,12 +4871,7 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .plan-features li,
 #pricing-grid-recovery .plan-card:hover .plan-features li,
 #pricing-grid-management .plan-card:hover .plan-features li,
-#pricing-grid-etc .plan-card:hover .plan-features li,
-#pricing-grid-colocation .plan-card:hover .plan-features li,
-#pricing-grid-security .plan-card:hover .plan-features li,
-#pricing-grid-solution .plan-card:hover .plan-features li,
-#pricing-grid-ms365 .plan-card:hover .plan-features li,
-#pricing-grid-naver .plan-card:hover .plan-features li {
+#pricing-grid-etc .plan-card:hover .plan-features li {
     color: #4b5563 !important;
     border-bottom-color: #f8fafc !important;
 }
@@ -4977,12 +4884,7 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .plan-features i,
 #pricing-grid-recovery .plan-card:hover .plan-features i,
 #pricing-grid-management .plan-card:hover .plan-features i,
-#pricing-grid-etc .plan-card:hover .plan-features i,
-#pricing-grid-colocation .plan-card:hover .plan-features i,
-#pricing-grid-security .plan-card:hover .plan-features i,
-#pricing-grid-solution .plan-card:hover .plan-features i,
-#pricing-grid-ms365 .plan-card:hover .plan-features i,
-#pricing-grid-naver .plan-card:hover .plan-features i {
+#pricing-grid-etc .plan-card:hover .plan-features i {
     color: #E94D36 !important;
 }
 
@@ -4994,12 +4896,7 @@ main.sub-content {
 #pricing-grid-cdn .plan-card:hover .plan-btn,
 #pricing-grid-recovery .plan-card:hover .plan-btn,
 #pricing-grid-management .plan-card:hover .plan-btn,
-#pricing-grid-etc .plan-card:hover .plan-btn,
-#pricing-grid-colocation .plan-card:hover .plan-btn,
-#pricing-grid-security .plan-card:hover .plan-btn,
-#pricing-grid-solution .plan-card:hover .plan-btn,
-#pricing-grid-ms365 .plan-card:hover .plan-btn,
-#pricing-grid-naver .plan-card:hover .plan-btn {
+#pricing-grid-etc .plan-card:hover .plan-btn {
     color: white !important;
 }
 
@@ -5012,180 +4909,8 @@ main.sub-content {
 #pricing-grid-cdn .plan-badge,
 #pricing-grid-recovery .plan-badge,
 #pricing-grid-management .plan-badge,
-#pricing-grid-etc .plan-badge,
-#pricing-grid-colocation .plan-badge,
-#pricing-grid-security .plan-badge,
-#pricing-grid-solution .plan-badge,
-#pricing-grid-ms365 .plan-badge,
-#pricing-grid-naver .plan-badge {
+#pricing-grid-etc .plan-badge {
     display: none !important;
-}
-
-/* ========================================= */
-/* Server Hosting - Microsoft Style (Keep Size) */
-/* ========================================= */
-
-#pricing-container .plan-card {
-    /* Layout: Keep existing width/flex (do NOT set flex-basis) */
-
-    /* Visuals: Apply Microsoft Style */
-    padding: 30px 24px !important;
-    border-radius: 8px !important;
-    border: 1px solid #e2e8f0 !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
-    background: white !important;
-    transition: all 0.2s ease-in-out !important;
-}
-
-/* Hover Effect */
-#pricing-container .plan-card:hover {
-    transform: translateY(-4px) !important;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-    border-color: #cbd5e1 !important;
-    background-color: white !important;
-}
-
-/* Typography Overrides */
-#pricing-container .plan-title {
-    font-size: 1.25rem !important;
-    font-weight: 700 !important;
-    color: #1e293b !important;
-    border-bottom: 1px solid #f1f5f9 !important;
-    padding-bottom: 16px !important;
-    margin-bottom: 16px !important;
-}
-
-#pricing-container .amount {
-    font-size: 1.75rem !important;
-    color: #E94D36 !important;
-    letter-spacing: -0.02em !important;
-}
-
-#pricing-container .period {
-    font-size: 0.95rem !important;
-    color: #64748b !important;
-}
-
-#pricing-container .plan-features li {
-    font-size: 0.95rem !important;
-    color: #4b5563 !important;
-    border-bottom-color: #f8fafc !important;
-}
-
-#pricing-container .plan-features i {
-    color: #E94D36 !important;
-}
-
-#pricing-container .plan-btn {
-    background: #E94D36 !important;
-    color: white !important;
-    border-radius: 6px !important;
-    font-weight: 600 !important;
-    box-shadow: none !important;
-}
-
-#pricing-container .plan-btn:hover {
-    background: #dc2626 !important;
-}
-
-/* Reset Colors on Hover */
-#pricing-container .plan-card:hover .plan-title {
-    color: #1e293b !important;
-    border-bottom-color: #f1f5f9 !important;
-}
-
-#pricing-container .plan-card:hover .amount {
-    color: #E94D36 !important;
-}
-
-#pricing-container .plan-card:hover .period {
-    color: #64748b !important;
-}
-
-#pricing-container .plan-card:hover .plan-features li {
-    color: #4b5563 !important;
-    border-bottom-color: #f8fafc !important;
-}
-
-#pricing-container .plan-card:hover .plan-features i {
-    color: #E94D36 !important;
-}
-
-#pricing-container .plan-card:hover .plan-btn {
-    color: white !important;
-}
-
-#pricing-container .plan-card:hover .plan-summary {
-    color: #64748b !important;
-}
-
-/* Hide Badge if any */
-#pricing-container .plan-badge {
-    display: none !important;
-}
-
-/* ========================================= */
-/* MS365 Feature Grid (Premium Style) */
-/* ========================================= */
-.ms365-feature-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    margin-bottom: 80px;
-}
-
-.ms365-feature-item {
-    text-align: center;
-    padding: 40px 30px;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    background: white;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
-.ms365-feature-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border-color: #cbd5e1;
-}
-
-.ms365-feature-item i {
-    font-size: 48px;
-    color: #2563eb;
-    /* MS Blue */
-    margin-bottom: 24px;
-    transition: transform 0.3s ease;
-}
-
-.ms365-feature-item:hover i {
-    transform: scale(1.1);
-}
-
-.ms365-feature-item h3 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 12px;
-    color: #1e293b;
-}
-
-.ms365-feature-item p {
-    color: #64748b;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin: 0;
-}
-
-/* MS365 Mobile Responsive */
-@media (max-width: 768px) {
-    .ms365-feature-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    .ms365-feature-item {
-        padding: 30px 20px;
-    }
 }
 
 /* 9. Mobile Responsiveness */
@@ -5199,241 +4924,7 @@ main.sub-content {
     #pricing-grid-cdn .plan-card,
     #pricing-grid-recovery .plan-card,
     #pricing-grid-management .plan-card,
-    #pricing-grid-etc .plan-card {}
-}
-
-/* ========================================= */
-/* MS365 Tabbed Section */
-/* ========================================= */
-.ms365-tab-nav {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 40px;
-}
-
-.ms365-tab-btn {
-    padding: 12px 30px;
-    border-radius: 30px;
-    background: #f1f5f9;
-    color: #64748b;
-    font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.ms365-tab-btn:hover {
-    background: #e2e8f0;
-    color: #1e293b;
-}
-
-.ms365-tab-btn.active {
-    background: #1e293b;
-    color: white;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.ms365-tab-content {
-    display: none;
-    animation: fadeIn 0.4s ease;
-}
-
-.ms365-tab-content.active {
-    display: block;
-}
-
-/* Tab Grid Layout */
-.ms365-tab-grid {
-    display: grid;
-    grid-template-columns: 350px 1fr;
-    gap: 30px;
-}
-
-/* Left Hero Text (Simpler) */
-.ms365-hero-card {
-    /* Previously a card, now just text container */
-    padding: 20px 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    /* Align to top */
-}
-
-/* Remove bg/overlay elements not needed anymore */
-.ms365-hero-bg {
-    display: none;
-}
-
-.ms365-hero-content {
-    position: relative;
-    z-index: 1;
-}
-
-.ms365-hero-title {
-    font-size: 2rem;
-    /* Larger as per screenshot */
-    font-weight: 800;
-    color: #1e293b;
-    margin-bottom: 20px;
-    line-height: 1.2;
-}
-
-.ms365-hero-desc {
-    color: #64748b;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 0;
-    word-break: keep-all;
-}
-
-.ms365-hero-btn {
-    display: none;
-    /* Hide button */
-}
-
-/* Right App Grid */
-.ms365-app-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-
-.ms365-app-card {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 24px;
-    transition: all 0.2s ease;
-}
-
-.ms365-app-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-    border-color: #cbd5e1;
-}
-
-.ms365-app-icon {
-    font-size: 24px;
-    margin-bottom: 16px;
-    display: block;
-}
-
-.ms365-app-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 8px;
-}
-
-.ms365-app-desc {
-    font-size: 0.85rem;
-    color: #64748b;
-    line-height: 1.5;
-    margin-bottom: 0;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-    .ms365-tab-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .ms365-app-grid {
-        grid-template-columns: repeat(2, 1fr);
+    #pricing-grid-etc .plan-card {
+        flex: 0 1 100% !important;
     }
 }
-
-@media (max-width: 640px) {
-    .ms365-app-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .ms365-hero-card {
-        min-height: 300px;
-    }
-
-    /* ========================================= */
-    /* MS365 FAQ Accordion */
-    /* ========================================= */
-    .ms365-faq-container {
-        max-width: 900px;
-        margin: 0 auto 120px auto;
-        border-top: 1px solid #e2e8f0;
-    }
-
-    .ms365-faq-item {
-        border-bottom: 1px solid #e2e8f0;
-    }
-
-    .ms365-faq-question {
-        width: 100%;
-        text-align: left;
-        padding: 24px 0;
-        background: none;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #1e293b;
-        transition: all 0.2s ease;
-    }
-
-    .ms365-faq-question:hover {
-        color: #2563eb;
-        background: #f8fafc;
-        /* Subtle hover bg */
-        padding-left: 10px;
-        /* Slight indent on hover */
-        padding-right: 10px;
-    }
-
-    .ms365-faq-toggle {
-        font-size: 1.25rem;
-        color: #94a3b8;
-        transition: transform 0.3s ease;
-    }
-
-    .ms365-faq-item.active .ms365-faq-toggle {
-        transform: rotate(45deg);
-        /* Convert plus to x appearance or rotate icon */
-        color: #2563eb;
-    }
-
-    .ms365-faq-answer {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.3s ease;
-        opacity: 0;
-        background: #f8fafc;
-    }
-
-    .ms365-faq-item.active .ms365-faq-answer {
-        max-height: 500px;
-        /* Adjust as needed */
-        opacity: 1;
-        padding: 0 20px 24px 20px;
-        /* Add padding when expanded */
-    }
-
-    .ms365-faq-answer p {
-        color: #475569;
-        line-height: 1.7;
-        margin: 0;
-        font-size: 0.95rem;
-    }
-
-    .ms365-faq-answer ul {
-        margin: 12px 0 0 20px;
-        padding: 0;
-        color: #475569;
-    }
-
-    .ms365-faq-answer li {
-        margin-bottom: 8px;
-        line-height: 1.6;
-    }

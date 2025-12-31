@@ -1,0 +1,41 @@
+/* --- Korean Quote Styles (V2) --- */
+
+.quote-table-korea {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 13px;
+    border: 2px solid #333;
+    /* Thick outer border */
+}
+
+.quote-table-korea th {
+    background: #b91c1c;
+    color: white;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #333;
+    font-weight: 600;
+}
+
+.quote-table-korea td {
+    padding: 8px;
+    border: 1px solid #333;
+    vertical-align: middle;
+}
+
+.price-cell {
+    text-align: right;
+    font-family: 'Consolas', 'Courier New', monospace;
+    /* Monospace for alignment */
+    font-weight: 600;
+}
+
+.total-row td {
+    border-top: 2px solid #333;
+}
+
+.quote-footer-notes {
+    border: none;
+    margin-top: 20px;
+}
