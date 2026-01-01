@@ -191,7 +191,7 @@ window.loadCustomerLogos = async function () {
                     z-index: 1;
                 ">
                     ${customer.logo_url ?
-                `<img src="${customer.logo_url}" alt="${customer.name}" style="max-width: 100%; max-height: 52px; object-fit: contain;">` :
+                `<img src="${encodeURI(customer.logo_url)}" alt="${customer.name}" style="max-width: 100%; max-height: 52px; object-fit: contain;">` :
                 `<span style="color: #475569; font-size: 14px; font-weight: 700; text-align: center;">${customer.name}</span>`
             }
                 </div>
