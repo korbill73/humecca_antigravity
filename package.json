@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "update-version": "node update_version.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.87.1",
