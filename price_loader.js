@@ -13,26 +13,22 @@ async function loadProductPrices(containerId, productCode) {
     // 로딩 표시
     container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;"><i class="fas fa-spinner fa-spin"></i> 요금 정보를 불러오는 중입니다...</div>';
 
-    // Supabase 체크 (Polling 방식)
-    let maxRetries = 20; // 2초 대기 (100ms * 20)
-    while (typeof window.sb === 'undefined' && maxRetries > 0) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        maxRetries--;
+    // Supabase 체크 (Centralized Wait)
+    let supabase = null;
+    if (window.waitForSupabase) {
+        supabase = await window.waitForSupabase();
+    } else {
+        supabase = window.sb || window.supabase;
     }
 
-    if (typeof window.sb === 'undefined') {
-        // Fallback: Check global supabase variable from CDN
-        if (typeof supabase !== 'undefined') window.sb = supabase;
-    }
-
-    if (typeof window.sb === 'undefined') {
-        container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: red;">시스템 오류: 데이터베이스 연결에 실패했습니다. (Timeout)</div>';
-        console.error('[PriceLoader] Supabase client (window.sb) not found after waiting.');
+    if (!supabase || !supabase.from) {
+        container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: red;">시스템 오류: 데이터베이스 연결에 실패했습니다. (Init Fail)</div>';
+        console.error('[PriceLoader] Supabase client not found.');
         return;
     }
 
     // Alias for code clarity
-    const supabase = window.sb;
+    // const supabase = window.sb; // Removed to avoid redeclaration, using 'supabase' from above
 
     try {
         // 1. 상품 정보 조회 (Product ID 찾기)

@@ -49,37 +49,13 @@ async function loadProductData(pageKey) {
 
     const container = document.getElementById(config.containerId);
 
-    // 1. DB Client Resolution (Self-Healing & Polling)
-    let maxRetries = 20;
-    while (typeof window.sb === 'undefined' && maxRetries > 0) {
-        await new Promise(r => setTimeout(r, 100));
-        maxRetries--;
-    }
-
-    let db = window.sb;
-
-    // Fallback: Check standard supabase variable
-    if ((!db || !db.from) && typeof supabase !== 'undefined') {
-        db = supabase;
-        window.sb = supabase;
-    }
-
-    // Emergency Fallback if still missing (Direct Init)
-    if (!db || !db.from) {
-        console.warn('[Data Loader] window.sb missing after wait. Attempting fallback init...');
-        const lib = window.supabase || (typeof supabase !== 'undefined' ? supabase : null);
-
-        if (lib && lib.createClient) {
-            try {
-                const _url = 'https://pfowkwodqsirbaqkpfmb.supabase.co';
-                const _key = 'sb_publishable_i8wY_NmKlt9qUZJPKH1f2A_yOwp3qlA';
-                db = lib.createClient(_url, _key);
-                window.sb = db;
-                console.log('[Data Loader] Fallback Init Success');
-            } catch (e) {
-                console.error('[Data Loader] Fallback Init Error', e);
-            }
-        }
+    // 1. Centralized DB Init
+    let db = null;
+    if (window.waitForSupabase) {
+        db = await window.waitForSupabase();
+    } else {
+        // Fallback for extreme cases where config is missing
+        db = window.sb || window.supabase;
     }
 
     // 2. Final Error Check (Show UI Message)
@@ -149,13 +125,13 @@ function renderPlans(pageKey, plans, config) {
     } else if (type === 'colocation') {
         renderColocation(container, plans);
     } else {
-        renderAddon(container, plans);
+        renderAddon(container, plans, pageKey);
     }
 }
 
 // --- Specific Render Functions ---
 
-function renderAddon(container, plans) {
+function renderAddon(container, plans, pageKey) {
     plans.forEach(plan => {
         const features = parseFeatures(plan.features);
         let featureListHtml = '';
@@ -178,23 +154,107 @@ function renderAddon(container, plans) {
 
         const priceDisplay = formatPrice(plan.price, plan.period);
 
-        // Addon Detail String
-        let addonDetails = plan.summary || '';
-        if (!addonDetails && features.length > 0) addonDetails = features.slice(0, 2).join(', ');
+        // --- Custom Logic for Website Production Page ---
+        let extraInfoHtml = '';
+        // Use pageKey as data-type (e.g. solution-ms365, solution-naver)
+        // Fallback to 'addon' if pageKey is undefined (shouldn't happen via renderPlans)
+        const typeVal = pageKey || 'addon';
+        let buttonHtml = `<button class="plan-btn solid js-open-modal" 
+                    data-name="${escapeHtml(plan.plan_name)}" data-type="${typeVal}" data-details="${plan.summary || ''}" data-price="${plan.price}"
+                    style="width:100%; border:none; cursor:pointer; margin-bottom: 20px;">무료체험 신청</button>`;
 
-        const escName = escapeHtml(plan.plan_name);
-        const escDetails = escapeHtml(addonDetails);
+        if (container.id === 'pricing-grid-website') {
+            // 1. Starter / Free
+            if (plan.price === 0 || plan.plan_name.includes('Starter')) {
+                // Use summary for color
+                buttonHtml = `<a href="#" class="plan-btn btn-outline" style="text-decoration:none;" onclick="alert('무료 제작 신청이 접수되었습니다.\\n담당자가 연락드리겠습니다.')">무료 제작 신청</a>`;
+            }
+            // 2. Business / Enterprise
+            else {
+                // Default: Request Production
+                buttonHtml = `<a href="#" class="plan-btn btn-primary" style="text-decoration:none;" onclick="alert('제작 의뢰가 접수되었습니다.\\n담당자가 빠르게 연락드리겠습니다.')">제작 의뢰하기</a>`;
+
+                // If Price is '별도 문의' (string) or name has Enterprise -> Expert Consultation
+                // The issue was 500k was falling into a logic that made it 'Expert Consultation' or similar?
+                // Previously: if (plan.plan_name.includes('Enterprise') || plan.price >= 200000) -> Expert Consultant.
+                // User wants Middle (500k) to be "Request Production".
+                // So we change the threshold.
+
+                // Logic: 
+                // 100k -> Request
+                // 500k -> Request
+                // Enterprise (Separate Quote) -> Expert Consultation (or Request)
+
+                // Let's check plan price type. String means "Separate Quote".
+                if (typeof plan.price === 'string' || plan.plan_name.includes('주문') || plan.plan_name.includes('Enterprise')) {
+                    // Keep as Request Production per User's screenshot (Right card is "제작 의뢰하기" too in their screenshot!)
+                    // Wait, looking at screenshot Image 3:
+                    // Left: 제작 의뢰하기
+                    // Middle: 전문가 상담 (User wants this CHANGED to 제작 의뢰하기)
+                    // Right: 제작 의뢰하기
+
+                    // So ALL buttons should be "제작 의뢰하기" except maybe the first one?
+                    // First one (100k) is also "제작 의뢰하기".
+                    // So let's just make ALL > 0 plans "제작 의뢰하기".
+
+                    // Updated to open Application Modal instead of Alert
+                    // Updated to open Application Modal with Rich Details
+                    // Helper to strip HTML
+                    const stripHtml = (html) => {
+                        if (!html) return '';
+                        let tmp = document.createElement("DIV");
+                        tmp.innerHTML = html;
+                        return (tmp.textContent || tmp.innerText || "").trim();
+                    };
+
+                    let detailList = '';
+                    if (plan.features) {
+                        if (Array.isArray(plan.features)) {
+                            detailList = plan.features.map(f => stripHtml(f)).join('\\n');
+                        } else {
+                            // Replace <p> with \n for readability before stripping
+                            let processed = plan.features.replace(/<\/p>/gi, '\\n').replace(/<br\s*\/?>/gi, '\\n');
+                            detailList = stripHtml(processed);
+                        }
+                    }
+
+                    const fullDetails = `[요약] ${plan.summary || ''}\\n\\n[상세]\\n${detailList}`;
+                    const priceFormatted = (typeof plan.price === 'number') ? '₩' + plan.price.toLocaleString() : plan.price;
+                    const nameWithPrice = `${plan.plan_name} (${priceFormatted})`;
+
+                    buttonHtml = `<a href="#" class="plan-btn btn-primary" style="text-decoration:none;" onclick="openAppModal('${nameWithPrice}', '홈페이지 제작', \`${fullDetails}\`)">제작 의뢰하기</a>`;
+                }
+            }
+
+            // Apply styling to summary based on keywords or plan type
+            // User requested: Gray summary (like Microsoft image)
+            // So we REMOVE the red/color logic for specific keywords.
+            // We just render the summary normally in gray.
+
+            // Just ensure it is inside the summary div. 
+            // We don't need extraInfoHtml manipulation unless we want to move it to top?
+            // User's image shows usage of extraInfoHtml slot (above button, or separate).
+
+            // Let's set color to gray explicitly if we use extraInfoHtml.
+            if (plan.summary && plan.summary.includes('*')) {
+                // FORCE GRAY (#666) no matter what the keyword is
+                let color = '#666666';
+
+                // Keep the layout logic (move to extraInfoHtml position)
+                extraInfoHtml = `<div style="color:${color}; font-size:0.9rem; margin-bottom:15px; font-weight:bold;">${escapeHtml(plan.summary)}</div>`;
+                plan.summary = ''; // Clear original so it doesn't duplicate
+            }
+        }
 
         const cardHtml = `
             <div class="plan-card popular ${(plan.badge || plan.popular) ? 'recommended' : ''}">
                 ${badgeHtml}
                 <div class="plan-title">${plan.plan_name}</div>
                 <div class="plan-price">${priceDisplay}</div>
+                ${extraInfoHtml}
                 <div class="plan-summary" style="font-size:0.9em; margin-bottom:15px; min-height:24px;">${plan.summary || ''}</div>
                 
-                <button class="plan-btn solid js-open-modal" 
-                    data-name="${escName}" data-type="addon" data-details="${escDetails}" data-price="${plan.price}"
-                    style="width:100%; border:none; cursor:pointer; margin-bottom: 20px;">무료체험 신청</button>
+                ${buttonHtml}
 
                 <ul class="plan-features">
                     ${featureListHtml}
@@ -383,7 +443,9 @@ function parseFeatures(features) {
     return [];
 }
 
-function formatPrice(price, period) {
+const formatPrice = (price, period) => {
+    if (typeof price === 'string' && isNaN(price.toString().replace(/,/g, ''))) return price; // Return strings like '별도 문의'
+    if (price === 0) return '0원';
     if (!price || price === '문의') return '<span class="amount">문의</span>';
     // If number
     const num = Number(price.toString().replace(/,/g, ''));

@@ -479,14 +479,26 @@ async function loadApplications() {
     const productFilter = document.getElementById('app-filter-product')?.value || 'all';
 
     // Show Loading
+    // Updated colspan to 7 (Category merged)
     listEl.innerHTML = '<tr><td colspan="7" align="center" style="padding:40px;"><i class="fas fa-spinner fa-spin fa-2x" style="color:#4f46e5;"></i></td></tr>';
 
     // Fetch Data
     let query = window.sb.from('applications').select('*').order('created_at', { ascending: false });
 
     if (productFilter !== 'all') {
-        if (productFilter === 'security') query = query.like('product_type', 'security%');
-        else query = query.eq('product_type', productFilter);
+        if (productFilter === 'security') {
+            // Security: security, waf, ssl, v3, dbsafer, cleanzone
+            query = query.or('product_type.ilike.security%,product_type.ilike.sec%,product_type.ilike.waf%,product_type.ilike.ssl%,product_type.ilike.v3%,product_type.ilike.dbsafer%,product_type.ilike.clean%');
+        } else if (productFilter === 'addon') {
+            // Add-on: addon, license, backup, ha, lb, cdn, recovery, mon (if not security)
+            query = query.or('product_type.ilike.addon%,product_type.ilike.bak%,product_type.ilike.ha%,product_type.ilike.lb%,product_type.ilike.cdn%,product_type.ilike.rec%,product_type.ilike.win%,product_type.ilike.sql%');
+        } else if (productFilter === 'solution') {
+            // Solution: solution, web, naver, ms365
+            query = query.or('product_type.ilike.solution%,product_type.ilike.web%,product_type.ilike.naver%,product_type.ilike.ms365%');
+        } else {
+            // Hosting, VPN, Colocation (Simple match)
+            query = query.eq('product_type', productFilter);
+        }
     }
 
     const { data: allData, error } = await query;
@@ -516,7 +528,11 @@ async function loadApplications() {
         return;
     }
 
-    // Counts
+    // Counts (Visual Only - Does not reflect paginated/filtered data if we aren't fetching all. 
+    // Ideally should verify counts. For now, calculating based on loaded data is fine if not paginated server-side heavily.)
+    // Note: If filter is active, 'allData' is filtered. Counts will show 0 for other statuses if we filter by status server-side.
+    // But here we filtered by Product Type. Status counts should still be useful relative to this product view?
+    // Let's keep it simple.
     const counts = {
         all: allData.length,
         pending: allData.filter(d => d.status === 'pending').length,
@@ -529,17 +545,109 @@ async function loadApplications() {
         if (el) el.innerText = counts[key];
     });
 
-    // Filter
+    // Filter by Status Tab (Client-side)
     const filteredData = currentAppStatus === 'all' ? allData : allData.filter(d => d.status === currentAppStatus);
 
-    listEl.innerHTML = '';
 
-    if (filteredData.length === 0) {
-        listEl.innerHTML = '<tr><td colspan="7" align="center" style="padding:40px; color:#94a3b8;">해당 상태의 내역이 없습니다.</td></tr>';
-        return;
+
+    // Fetch Products (Categories) and Plans for Lookup (User req: Check if name exists in DB)
+    const { data: dbProducts } = await window.sb.from('products').select('id, category, subcategory');
+    const { data: dbPlans } = await window.sb.from('product_plans').select('product_id, plan_name, price, summary');
+
+    // Build Maps
+    const planToCategoryMap = {}; // Name -> Category String
+    const productIdToCategoryMap = {}; // ID -> Category String
+
+    if (dbProducts && dbPlans) {
+        // 1. Map Product ID -> Normalized Category Name
+        dbProducts.forEach(prod => {
+            let catName = '기타';
+            const c = prod.category;
+            const s = prod.subcategory;
+
+            if (c === 'solution') {
+                if (s === 'website' || s === 'web') catName = '기업솔루션 > 홈페이지';
+                else if (s === 'naverworks' || s === 'naver') catName = '기업솔루션 > 네이버웍스';
+                else if (s === 'ms365' || s === 'microsoft') catName = '기업솔루션 > MS365';
+                else catName = '기업솔루션';
+            } else if (c === 'idc') {
+                if (s === 'hosting') catName = '서버호스팅';
+                else if (s === 'colocation') catName = '코로케이션';
+            } else if (c === 'vpn') {
+                catName = 'VPN';
+            } else if (c === 'security') {
+                catName = '보안 서비스';
+            } else if (c === 'addon') {
+                catName = '부가서비스';
+            }
+            productIdToCategoryMap[prod.id] = catName;
+        });
+
+        // 2. Map Plan Name -> Category Name
+        dbPlans.forEach(plan => {
+            if (plan.plan_name && productIdToCategoryMap[plan.product_id]) {
+                const cleanName = plan.plan_name.trim().toLowerCase();
+                planToCategoryMap[cleanName] = productIdToCategoryMap[plan.product_id];
+                // Also map exact string
+                planToCategoryMap[plan.plan_name.trim()] = productIdToCategoryMap[plan.product_id];
+            }
+        });
     }
 
-    filteredData.forEach(item => {
+    // Helper to Determine Category Name from Type/ID/Name
+    const getCategoryName = (type, name) => {
+        const t = type ? String(type).toLowerCase() : '';
+        const n = name ? String(name).toLowerCase() : '';
+        const rawName = name ? String(name).trim() : '';
+
+        // 0. DB Lookup Priority (User Request: "Use DB Name match")
+        // Try strict match first, then partial match if needed?
+        // User said: "registered DB product name... if contained..."
+        // Let's check strict match against known plans first.
+
+        // Remove pricing or details from name like "Basic (50000)" -> "Basic"
+        let nameOnly = rawName.split('(')[0].trim();
+        if (planToCategoryMap[nameOnly]) return planToCategoryMap[nameOnly];
+        if (planToCategoryMap[rawName]) return planToCategoryMap[rawName];
+
+        // Also check if any plan name is CONTAINED in the input name (reverse check)
+        // e.g. Input: "Luxury Homepage (Custom)" -> Contains "Luxury Homepage"
+        // Iterate keys is expensive? Array find?
+        // Since Plan count is small (<100), it is fine.
+        const matchedPlan = Object.keys(planToCategoryMap).find(k => rawName.includes(k) || nameOnly === k);
+        if (matchedPlan) return planToCategoryMap[matchedPlan];
+
+
+        // 1. Corporate Solutions (Priority High - fallback to keywords)
+        // Check specific types first
+        if (t.includes('web') || n.includes('홈페이지') || n.includes('고급형') || n.includes('일반형') || n.includes('쇼핑몰') || n.includes('제작')) return '기업솔루션 > 홈페이지';
+        if (t.includes('naver') || n.includes('naver') || n.includes('works') || n.includes('lite')) return '기업솔루션 > 네이버웍스';
+        if (t.includes('ms365') || n.includes('ms365') || n.includes('office') || n.includes('microsoft') || n.includes('business') || n.includes('enterprise')) return '기업솔루션 > MS365';
+        if (t.includes('sol')) return '기업솔루션';
+
+        // 2. Hosting
+        if (t.includes('hosting') || t.includes('eco') || t.includes('biz') || t.includes('ent')) return '서버호스팅';
+
+        // 3. Network/Colo
+        if (t.includes('vpn')) return 'VPN';
+        if (t.includes('col') || t.includes('rack') || n.includes('상면')) return '코로케이션';
+
+        // 4. Security
+        if (t.includes('sec') || t.includes('waf') || t.includes('ssl') || t.includes('v3') || t.includes('db')) return '보안 서비스';
+
+        // 5. Add-ons (Low Priority - catch all remaining license/backup etc)
+        if (t.includes('add') || t.includes('bak') || t.includes('ha') || t.includes('cdn') || t.includes('lic') || t.includes('mon')) return '부가서비스';
+
+        // Fallback: If still unknown, and we have a price, it's likely a solution or ad-hoc
+        if (!type && !name) return '-';
+
+        return '기타(미분류)';
+    };
+
+    // Race Condition Fix: Clear list immediately before appending
+    listEl.innerHTML = '';
+
+    filteredData.forEach((item, index) => { // Added Index for distinct animation delay if needed
         // Status Badge Logic (Icon Only as requested)
         let badgeHtml = '';
         let rowStyle = '';
@@ -572,75 +680,77 @@ async function loadApplications() {
         const dateMain = `${d.getFullYear().toString().slice(2)}. ${d.getMonth() + 1}. ${d.getDate()}.`;
         const dateSub = d.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-        // Parsing for List Display
+        // Category
+        const categoryName = getCategoryName(item.product_type || item.product_id, item.product_name);
+
+        // Integrated Category Badge Style
+        // If it has ' > ', make the parent part defined style, child part lighter or same.
+        // Let's just keep it simple string for now but styled properly.
+        const categoryBadge = `<span style="display:inline-block; font-size:0.75rem; font-weight:600; color:#60a5fa; background:rgba(30, 41, 59, 0.5); padding:2px 8px; border:1px solid rgba(96, 165, 250, 0.2); border-radius:4px; margin-bottom:4px;">${categoryName}</span>`;
+
+        // Parsing description
         let rawName = item.product_name || '-';
-        let priceMatch = rawName.match(/\((₩[\d,]+)\)/);
-        let priceText = priceMatch ? priceMatch[1] : '';
-        let fullCleanName = rawName.replace(/\((₩[\d,]+)\)/, '').trim();
+        // Improved Regex: Matches (₩12345), (12345), (₩12,345), (12,345)
+        // Groups: 1=CurrencySymbol(optional), 2=Number
+        let priceMatch = rawName.match(/\((₩)?\s*([\d,]+)\)/);
+        let priceText = '';
+        let fullCleanName = rawName;
 
-        // Dynamic Lookup if Price is Missing
-        if (!priceText) {
-            // Try to find matching plan
-            // Extract base name: "Full Rack (Details)" -> "Full Rack"
-            // Or just try fullCleanName which already removed (Price)
-            // But fullCleanName might still have (Details).
-
-            // Heuristic 1: Exact Match
-            let foundPrice = window.adminPriceMap ? window.adminPriceMap[fullCleanName] : null;
-
-            // Heuristic 2: Split by ' (' to remove details
-            if (!foundPrice && fullCleanName.includes(' (')) {
-                const baseName = fullCleanName.split(' (')[0].trim();
-                foundPrice = window.adminPriceMap ? window.adminPriceMap[baseName] : null;
-            }
-
-            // Heuristic 3: Check simple contains for keys (Reverse lookup) - Optional/Risky
-
-            if (foundPrice) {
-                // Format Price
-                if (foundPrice === '문의') priceText = '문의';
-                else {
-                    const n = Number(String(foundPrice).replace(/,/g, ''));
-                    if (!isNaN(n)) priceText = '₩' + n.toLocaleString();
-                    else priceText = foundPrice;
-                }
+        if (priceMatch) {
+            let numberPart = priceMatch[2].replace(/,/g, ''); // Remove existing commas
+            if (!isNaN(numberPart)) {
+                priceText = '₩' + Number(numberPart).toLocaleString();
+                // Remove the matched price part from the name
+                fullCleanName = rawName.replace(priceMatch[0], '').trim();
+            } else {
+                // If not a number (rare), just keep as is or ignore
+                fullCleanName = rawName;
             }
         }
 
-        // In list, if name is super long with `/`, show first part + "..."
-        let displayName = fullCleanName.split('/')[0].trim();
-        if (fullCleanName.includes('/')) displayName += '...';
+        // Remove [details] from list view name
+        if (fullCleanName.includes('([요약]')) {
+            fullCleanName = fullCleanName.split('([요약]')[0].trim();
+        }
 
+        // Fix Manager Name: use item.contact_person (if exists) or item.name (fallback)
+        // Also handle "undefined" literal if it somehow got saved as string (rare but possible) or just avoid printing it.
+        const companyDisplay = item.company_name || '개인고객';
+        const contactDisplay = item.contact_person || item.name || '-';
+
+        // Merged Layout: Date | Status | Product (Cat + Name) | Message | Customer | Contact | Manage
         listEl.innerHTML += `
-            <tr style="${rowStyle}" onclick="openApplicationDetailNew('${item.id}')">
+            <tr onclick="openApplicationDetailNew('${item.id}')" style="${rowStyle}">
                 <td class="date-cell">
                     <div class="date-main">${dateMain}</div>
                     <div class="date-sub">${dateSub}</div>
                 </td>
                 <td style="text-align:center;">${badgeHtml}</td>
-                <td>
-                    <div class="prod-name">${displayName}</div>
-                    <div class="prod-sub">
-                        ${priceText ? `<span class="prod-price">${priceText}</span>` : ''}
-                        <span>${item.product_type}</span>
-                    </div>
+                
+                <td class="prod-name">
+                    ${categoryBadge}
+                    <div style="font-weight:700; font-size:0.95rem; color:#f1f5f9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:330px;" title="${fullCleanName}">${fullCleanName}</div>
+                    ${priceText ? `<div style="font-size:0.8rem; color:#f59e0b; margin-top:2px;">${priceText}</div>` : ''}
                 </td>
+
                 <td>
-                    <div style="font-weight:600; color:#1e293b;">${item.company_name || '-'}</div>
-                    <div style="font-size:0.9em; color:#64748b;">${item.contact_person}</div>
+                    <div class="truncate-text" style="max-width:230px; color:#94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${item.memo || ''}">${item.memo || '-'}</div>
                 </td>
+                
                 <td>
-                    <div style="font-weight:500;">${item.phone}</div>
+                    <div style="font-weight:600; color:#e2e8f0; font-size:0.9rem;">${companyDisplay}</div>
+                    <div style="font-size:0.8rem; color:#64748b;">${contactDisplay}</div>
                 </td>
+                
                 <td>
-                    <div style="max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#64748b; font-size:0.9em;" title="${item.memo || ''}">
-                        ${item.memo || '-'}
-                    </div>
+                    <div style="font-size:0.9rem; color:#cbd5e1;">${item.phone}</div>
+                    <div style="font-size:0.8rem; color:#64748b; font-size:0.75rem;">${item.email}</div>
                 </td>
-                <td onclick="event.stopPropagation()">
-                     <div style="display:flex; gap:5px; justify-content:center;">
-                        <button class="delete-btn" onclick="deleteApplication('${item.id}')" style="padding:6px; width:32px; height:32px; border-radius:6px; display:flex; align-items:center; justify-content:center; background:#fff; border:1px solid #fee2e2; color:#ef4444;"><i class="fas fa-trash"></i></button>
-                     </div>
+                
+                <td style="text-align:center;" onclick="event.stopPropagation();">
+                    <button class="btn-icon delete" onclick="deleteApplication('${item.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </td>
             </tr>
         `;
@@ -709,138 +819,261 @@ document.addEventListener('change', (e) => {
     }
 });
 
-// Open Detail Modal (Premium Design Final V3)
-window.openApplicationDetail = async (id) => {
+// Open Detail Modal (Premium Design Final V4 - Re-organized)
+// Open Detail Modal (Premium Design Final V9 - Visual Logic Fix & Layout Shift)
+window.openApplicationDetailNew = async (id) => {
     const modal = document.getElementById('admin-common-modal');
     const modalBody = document.getElementById('admin-modal-body');
     const modalTitle = document.getElementById('admin-modal-title');
+    const modalContent = document.querySelector('.modal-content');
 
-    modalTitle.innerText = '신청 상세 정보';
-    modalBody.innerHTML = '<div style="display:flex; justify-content:center; padding:50px;"><i class="fas fa-spinner fa-spin fa-3x" style="color:#e2e8f0;"></i></div>';
+    // 1. Modal Container Styling (Dynamic Height)
+    if (modalContent) {
+        modalContent.style.maxWidth = '1100px';
+        modalContent.style.width = '95%';
+        modalContent.style.background = '#0f172a'; // Slate 950
+        modalContent.style.color = '#f1f5f9';
+        modalContent.style.borderRadius = '16px';
+        modalContent.style.border = '1px solid #1e293b';
+        modalContent.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.5)';
+        modalContent.style.padding = '0';
+    }
+
+    modalTitle.innerText = 'Application Details';
+    modalTitle.style.color = '#f8fafc';
+    modalTitle.style.padding = '20px 25px';
+    modalTitle.style.margin = '0';
+    modalTitle.style.borderBottom = '1px solid #1e293b';
+    modalTitle.style.fontSize = '1.25rem';
+
+    modalBody.style.padding = '30px';
+
+    modalBody.innerHTML = '<div style="display:flex; justify-content:center; padding:100px;"><i class="fas fa-spinner fa-spin fa-3x" style="color:#3b82f6;"></i></div>';
     modal.style.display = 'block';
 
     const { data: item, error } = await window.sb.from('applications').select('*').eq('id', id).single();
 
     if (error || !item) {
-        modalBody.innerHTML = '<div style="text-align:center; padding:30px; color:#ef4444;">데이터를 불러올 수 없습니다.</div>';
+        modalBody.innerHTML = '<div style="text-align:center; padding:50px; color:#ef4444;">데이터를 불러올 수 없습니다.</div>';
         return;
     }
 
-    // Parsing Logic
+    // --- Parsing Logic ---
     let rawName = item.product_name || '';
-    let priceMatch = rawName.match(/\((₩[\d,]+)\)/);
-    let priceText = priceMatch ? priceMatch[1] : '';
-    let cleanName = rawName.replace(/\((₩[\d,]+)\)/, '').trim();
 
-    // Dynamic Lookup if Price is Missing (Detail View)
-    if (!priceText && window.adminPriceMap) {
+    // Improved Regex for Modal as well
+    let priceMatch = rawName.match(/\((₩)?\s*([\d,]+)\)/);
+    let priceText = '';
+    let cleanName = rawName;
+
+    // Extract Details First
+    let detailsText = '';
+    const detailStartIdx = rawName.indexOf('([요약');
+    if (detailStartIdx > -1) {
+        cleanName = rawName.substring(0, detailStartIdx).trim();
+        let rawDetails = rawName.substring(detailStartIdx).trim();
+        if (rawDetails.startsWith('(') && rawDetails.endsWith(')')) {
+            rawDetails = rawDetails.substring(1, rawDetails.length - 1);
+        }
+        detailsText = rawDetails;
+    }
+
+    // Then Extract Price from the text (ignoring details part if it was there)
+    // Note: match against rawName might hit price inside details if unique, but usually price is near name.
+    // Let's match against 'cleanName' which currently has price inside it.
+    let priceMatchClean = cleanName.match(/\((₩)?\s*([\d,]+)\)/);
+    if (priceMatchClean) {
+        let numberPart = priceMatchClean[2].replace(/,/g, '');
+        if (!isNaN(numberPart)) {
+            priceText = '₩' + Number(numberPart).toLocaleString();
+            cleanName = cleanName.replace(priceMatchClean[0], '').trim();
+        }
+    }
+
+    if ((!priceText || priceText === '₩') && window.adminPriceMap) {
         let lookupName = cleanName;
         let foundPrice = window.adminPriceMap[lookupName];
-
         if (!foundPrice && lookupName.includes(' (')) {
             lookupName = lookupName.split(' (')[0].trim();
             foundPrice = window.adminPriceMap[lookupName];
         }
-
         if (foundPrice) {
-            if (foundPrice === '문의') priceText = '문의';
-            else {
-                const n = Number(String(foundPrice).replace(/,/g, ''));
-                if (!isNaN(n)) priceText = '₩' + n.toLocaleString();
-                else priceText = foundPrice;
-            }
+            priceText = (foundPrice === '문의') ? '문의' :
+                (!isNaN(Number(String(foundPrice).replace(/,/g, ''))) ? '₩' + Number(String(foundPrice).replace(/,/g, '')).toLocaleString() : foundPrice);
+        }
+    }
+    if (cleanName.includes('(CPU:')) cleanName = cleanName.replace('(CPU:', '/ CPU:');
+
+    // --- HTML Components (V9 Improvements) ---
+
+    // 1. Specs (Dark Card)
+    let specsHtml = '';
+    if (detailsText) {
+        const formattedDetails = detailsText
+            .replace(/\[요약\]/g, '<div style="margin-bottom:8px;"><span style="background:rgba(59, 130, 246, 0.2); color:#60a5fa; font-size:0.7rem; font-weight:700; padding:4px 8px; border-radius:4px;">KEY FEATURES</span></div><div style="margin-bottom:25px; font-weight:400; color:#e2e8f0;">')
+            .replace(/\[상세\]/g, '</div><div style="margin-bottom:8px; margin-top:25px; padding-top:20px; border-top:1px dashed #334155;"><span style="background:rgba(148, 163, 184, 0.2); color:#cbd5e1; font-size:0.7rem; font-weight:700; padding:4px 8px; border-radius:4px;">DETAILS</span></div><div style="color:#94a3b8; font-size:0.9rem; line-height:1.8;">')
+            .replace(/\\n/g, '<br>');
+
+        specsHtml = `<div style="background:#1e293b; border:1px solid #334155; padding:30px; border-radius:12px; font-size: 0.95rem; line-height: 1.7; height:100%; box-sizing:border-box;">
+            ${formattedDetails}</div> <!-- Close final div -->
+        </div>`;
+    } else {
+        let specParts = cleanName.split('/').map(s => s.trim()).filter(s => s);
+        if (specParts.length > 1) {
+            let specsList = specParts.slice(1);
+            specsHtml = `<ul style="margin:10px 0 0 0; padding-left:20px; color:#cbd5e1; line-height:1.6; list-style-type:disc;">` + specsList.map(s => `<li>${s.replace(/\)$/, '')}</li>`).join('') + `</ul>`;
+            cleanName = specParts[0];
+        } else {
+            specsHtml = '<div style="color:#64748b; font-size:0.85rem; margin-top:8px; font-style:italic;">상세 정보 없음</div>';
         }
     }
 
-    if (cleanName.includes('(CPU:')) cleanName = cleanName.replace('(CPU:', '/ CPU:');
-
-    let specParts = cleanName.split('/').map(s => s.trim()).filter(s => s);
-    let productNameDisplay = specParts.length > 0 ? specParts[0] : cleanName;
-    let specsList = specParts.slice(1);
-
-    let specsHtml = '';
-    if (specsList.length > 0) {
-        specsHtml = `<ul style="margin:12px 0 0 0; padding-left:20px; color:#475569; line-height:1.6; list-style-type:disc;">` +
-            specsList.map(s => `<li>${s.replace(/\)$/, '')}</li>`).join('') +
-            `</ul>`;
-    } else {
-        specsHtml = '<div style="color:#94a3b8; font-size:0.9rem; margin-top:8px;">추가 사양 정보 없음</div>';
-    }
-
-    // Status Options
+    // 2. Status Options & Logic
     const statusOptions = [
-        { val: 'pending', label: '접수대기' },
-        { val: 'contacting', label: '상담중' },
-        { val: 'completed', label: '처리완료' },
-        { val: 'cancelled', label: '취소됨' }
+        { val: 'pending', label: '접수대기', color: '#3b82f6', icon: 'fa-inbox' },
+        { val: 'contacting', label: '상담중', color: '#f59e0b', icon: 'fa-comments' },
+        { val: 'completed', label: '처리완료', color: '#10b981', icon: 'fa-check-circle' },
+        { val: 'cancelled', label: '취소됨', color: '#64748b', icon: 'fa-times-circle' }
     ];
 
-    // Status Radio HTML (Using class 'status-radio-input' for delegation)
-    const statusSelectHtml = statusOptions.map(opt =>
-        `<label style="cursor:pointer; display:flex; align-items:center; gap:12px; margin-bottom: 12px; font-size:1rem; color:${item.status === opt.val ? '#4338ca' : '#4b5563'}; font-weight:${item.status === opt.val ? '700' : '500'}; transition:all 0.2s; padding:6px; border-radius:6px; background:${item.status === opt.val ? '#e0e7ff' : 'transparent'};">
-            <input type="radio" class="status-radio-input" name="modal_status_${item.id}" data-id="${item.id}" value="${opt.val}" ${item.status === opt.val ? 'checked' : ''} style="width:20px; height:20px; accent-color:#4338ca;">
-            ${opt.label}
-         </label>`
-    ).join('');
+    // Status Buttons (Visual Logic Injection)
+    // We attach a 'onclick' that calls a global helper to update styles immediately
+    window.refreshStatusVisuals = (selectedVal) => {
+        document.querySelectorAll('.status-btn-label').forEach(lbl => {
+            const val = lbl.dataset.val;
+            const color = lbl.dataset.color;
+            if (val === selectedVal) {
+                // Active Styles
+                lbl.style.background = color;
+                lbl.style.borderColor = color;
+                lbl.style.color = '#ffffff';
+                lbl.style.boxShadow = `0 4px 6px -1px ${color}40`;
+                lbl.style.transform = 'translateY(-2px)';
+                lbl.style.fontWeight = '700';
+            } else {
+                // Inactive Styles
+                lbl.style.background = 'rgba(30, 41, 59, 0.5)';
+                lbl.style.borderColor = '#334155';
+                lbl.style.color = '#64748b';
+                lbl.style.boxShadow = 'none';
+                lbl.style.transform = 'none';
+                lbl.style.fontWeight = '500';
+            }
+        });
+    };
 
-    const headerStyle = "color: #4338ca; font-size: 1.15rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: block;";
+    const statusHtml = `
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-bottom:20px;">
+            ${statusOptions.map(opt => {
+        const isActive = item.status === opt.val;
+        // Initial State Styles
+        const bg = isActive ? opt.color : 'rgba(30, 41, 59, 0.5)';
+        const border = isActive ? opt.color : '#334155';
+        const shadow = isActive ? `0 4px 6px -1px ${opt.color}40` : 'none';
+        const color = isActive ? '#ffffff' : '#64748b';
+        const transform = isActive ? 'translateY(-2px)' : 'none';
+        const weight = isActive ? '700' : '500';
 
-    modalBody.innerHTML = `
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
-            <!-- Left Column: Product Info -->
+        return `<label class="status-btn-label" data-val="${opt.val}" data-color="${opt.color}" style="
+                    cursor:pointer; 
+                    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+                    padding:15px 5px; border-radius:12px; font-size:0.85rem; font-weight:${weight}; 
+                    transition:all 0.2s;
+                    background: ${bg};
+                    border: 1px solid ${border};
+                    color: ${color};
+                    box-shadow: ${shadow};
+                    transform: ${transform};
+                " onmouseover="if(this.dataset.val !== '${item.status}' && !this.querySelector('input').checked) this.style.borderColor='${opt.color}'" 
+                  onmouseout="if(this.dataset.val !== '${item.status}' && !this.querySelector('input').checked) this.style.borderColor='#334155'">
+                    
+                    <input type="radio" name="modal_status_${item.id}" 
+                        onchange="updateApplicationStatus(${item.id}, '${opt.val}'); window.refreshStatusVisuals('${opt.val}');" 
+                        value="${opt.val}" ${isActive ? 'checked' : ''} style="display:none;">
+                    
+                    <i class="fas ${opt.icon}" style="font-size:1.2rem; margin-bottom:2px;"></i>
+                    <span>${opt.label}</span>
+                </label>`;
+    }).join('')}
+        </div>
+    `;
+
+    // 3. Customer Info
+    const customerHtml = `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#1e293b; padding:25px; border-radius:12px; border:1px solid #334155; margin-bottom:20px;">
             <div>
-                <div class="info-group">
-                    <span style="${headerStyle}">상품 정보 (Product Info)</span>
-                    <div class="info-value highlight" style="position:relative; background:#f8fafc; border:1px solid #e2e8f0; padding:24px; border-radius:12px;">
-                        
-                        <!-- Top Row: Badge + Price -->
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">
-                            <span class="badge badge-blue" style="font-size:1rem; padding:6px 12px; text-transform:uppercase; letter-spacing:1px; background:#eff6ff; color:#1d4ed8; border:1px solid #dbeafe;">${item.product_type || 'Product'}</span>
-                            ${priceText ? `<span style="font-size:1.3rem; font-weight:700; color:#dc2626; background:#fff1f2; padding:4px 12px; border-radius:6px;">${priceText}</span>` : ''}
-                        </div>
+                <div style="font-size:0.75rem; color:#64748b; font-weight:700; text-transform:uppercase;">CLIENT</div>
+                <div style="font-size:1.2rem; color:#f8fafc; font-weight:700; margin-top:5px;">${item.company_name || '개인고객'}</div>
+                <div style="font-size:0.95rem; color:#cbd5e1; font-weight:500; margin-top:4px;"><i class="fas fa-user-circle" style="color:#64748b; margin-right:6px;"></i>${item.contact_person || item.name || '-'}</div>
+            </div>
+            <div style="text-align:right; display:flex; flex-direction:column; gap:5px;">
+                <div><a href="tel:${item.phone}" style="color:#cbd5e1; text-decoration:none; font-size:1rem;"><i class="fas fa-phone-alt" style="margin-right:10px; color:#64748b;"></i>${item.phone}</a></div>
+                <div><a href="mailto:${item.email}" style="color:#60a5fa; text-decoration:none; font-size:1rem; font-weight:500;"><i class="fas fa-envelope" style="margin-right:10px; color:#64748b;"></i>${item.email}</a></div>
+            </div>
+        </div>
+    `;
 
-                        <!-- Product Name -->
-                        <div style="font-size:1.5rem; font-weight:800; color:#0f172a; margin-bottom:20px; line-height:1.4;">
-                            ${productNameDisplay}
-                        </div>
-                        
-                        <!-- Specs List -->
-                        <div style="background:#fff; padding:16px; border-radius:8px; border:1px solid #f1f5f9; box-shadow:sm;">
-                            <span style="font-size:0.9rem; color:#64748b; font-weight:700; display:block; margin-bottom:8px;">상세 사양:</span>
-                            ${specsHtml}
-                        </div>
-                    </div>
-                </div>
+    // 4. Inquiry (Moved to Left Side Context) -> Actually, User asked to move it to Left.
+    // If we move it to left, it usually sits below the specs.
+    const inquiryHtml = `
+        <div style="margin-top:20px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                <i class="fas fa-quote-left" style="color:#475569;"></i>
+                <span style="font-size:0.8rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Inquiry Message</span>
+            </div>
+            <div style="background:#1e293b; border-radius:12px; padding:25px; border:1px solid #334155; color:#cbd5e1; font-size:1rem; line-height:1.7; white-space:pre-wrap; word-break: break-all; word-wrap: break-word; min-height:100px;">${item.memo || '<span style="color:#475569; font-style:italic;">(작성된 문의 내용이 없습니다.)</span>'}</div>
+        </div>
+    `;
 
-                <div class="info-group" style="margin-top:25px;">
-                    <span style="${headerStyle}">문의 / 요청사항 (Inquiry)</span>
-                    <div class="info-value" style="min-height:120px; white-space:pre-wrap; background:#fff; border:1px solid #e2e8f0; padding:20px; border-radius:12px; font-size:1rem; line-height:1.6; color:#334155;">${item.memo || '<span style="color:#cbd5e1">내용 없음</span>'}</div>
+    // --- Layout Assembly (V9) ---
+    // Left: Specs + Inquiry
+    // Right: Status + Customer + Actions
+    modalBody.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:25px;">
+            
+            <!-- Top Section: Header -->
+            <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:10px; border-bottom:1px solid #1e293b;">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <span style="background:#3b82f6; color:white; font-size:0.8rem; font-weight:800; padding:6px 12px; border-radius:8px; box-shadow:0 4px 6px -1px rgba(59, 130, 246, 0.3);">PRODUCT</span>
+                    <h2 style="margin:0; font-size:1.6rem; font-weight:800; color:#f8fafc; letter-spacing:-0.5px;">${cleanName}</h2>
                 </div>
+                ${priceText ? `<div style="font-size:1.8rem; font-weight:800; color:#fbbf24; font-family:'Roboto', sans-serif; text-shadow:0 2px 4px rgba(0,0,0,0.3);">${priceText}</div>` : ''}
             </div>
 
-            <!-- Right Column: Status & Customer -->
-            <div style="background:#fff; padding:24px; border-radius:16px; border:1px solid #e2e8f0; box-shadow:0 10px 15px -3px rgba(0,0,0,0.05);">
-                <div class="info-group">
-                    <span style="${headerStyle} color:#4f46e5;">신청 상태 변경</span>
-                    <div style="background:#f8fafc; padding:16px; border-radius:12px; border:1px solid #e2e8f0;">
-                        ${statusSelectHtml}
-                    </div>
-                </div>
+            <!-- Content Grid (2 Columns: 60% Left, 40% Right) -->
+            <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: start;">
                 
-                <hr style="border:0; border-top:1px solid #e2e8f0; margin: 24px 0;">
+                <!-- Left Column: Specs & Inquiry -->
+                <div>
+                     <!-- Specs Box -->
+                     <div style="margin-bottom:0;">
+                        ${specsHtml}
+                     </div>
+                     
+                     <!-- Inquiry Moved Here -->
+                     ${inquiryHtml}
+                </div>
 
-                <div class="info-group">
-                    <span style="${headerStyle} color:#0f172a;">고객 정보</span>
-                    <div style="margin-bottom:8px; font-weight:700; color:#334155; font-size:1.1rem;">${item.company_name || '(회사명 미입력)'}</div>
-                    <div style="margin-bottom:4px; font-weight:600; font-size:1.05rem;">${item.contact_person}</div>
-                    <div style="color:#64748b; font-size:1rem; margin-bottom:2px;">${item.phone}</div>
-                    <div style="color:#64748b; font-size:0.95rem;"><a href="mailto:${item.email}" style="color:#3b82f6; text-decoration:none;">${item.email || '-'}</a></div>
-                </div>
-                
-                <div style="margin-top:40px;">
-                     <button onclick="closeAdminModal()" style="width:100%; padding:14px; border-radius:10px; background:#475569; color:white; font-size:1rem; font-weight:600; cursor:pointer; border:none; transition:all 0.2s; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
-                        <i class="fas fa-times"></i> 닫기
-                     </button>
+                <!-- Right Column: Management Tools -->
+                <div style="display:flex; flex-direction:column;">
+                    
+                    <div style="font-size:0.8rem; color:#64748b; font-weight:700; text-transform:uppercase; margin-bottom:10px; margin-left:5px;">Management</div>
+                    
+                    ${statusHtml}   <!-- Full Status Grid -->
+                    ${customerHtml} <!-- Customer Card -->
+
+                    <!-- Action Buttons -->
+                     <div style="margin-top:20px; display:flex; gap:15px;">
+                        <button onclick="closeAdminModal()" 
+                            style="flex:1; padding:15px; background:#3b82f6; border:none; color:white; border-radius:12px; cursor:pointer; font-weight:700; font-size:1rem; box-shadow:0 4px 6px -1px rgba(59, 130, 246, 0.4); transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                            확인 (Close)
+                        </button>
+                         <button onclick="deleteApplication(${item.id}); closeAdminModal();" 
+                            style="padding:15px 25px; background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); color:#ef4444; border-radius:12px; cursor:pointer; font-weight:600; transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'" onmouseout="this.style.background='rgba(239,68,68,0.1)'">
+                            <i class="fas fa-trash"></i>
+                         </button>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -1496,7 +1729,7 @@ window.resetForm = (type) => {
 
 // Generic Product Form Handler (Upsert)
 window.saveProduct = async (e, type) => {
-    alert(`Save function triggered for: ${type}`);
+    // alert(`Save function triggered for: ${type}`);
     try {
         if (e) e.preventDefault();
         console.log(`Saving Product: ${type}`);
@@ -2155,122 +2388,7 @@ document.getElementById('history-form')?.addEventListener('submit', async (e) =>
     refreshDashboard();
 });
 
-// ==========================================
-// New Application Detail Modal (Premium Design)
-// ==========================================
-window.openApplicationDetailNew = async (id) => {
-    const modal = document.getElementById('admin-common-modal');
-    const modalBody = document.getElementById('admin-modal-body');
-    const modalTitle = document.getElementById('admin-modal-title');
 
-    modalTitle.innerText = '신청 상세 정보';
-    modalBody.innerHTML = '<div style="display:flex; justify-content:center; padding:50px;"><i class="fas fa-spinner fa-spin fa-3x" style="color:#e2e8f0;"></i></div>';
-    modal.style.display = 'block';
-
-    const { data: item, error } = await window.sb.from('applications').select('*').eq('id', id).single();
-
-    if (error || !item) {
-        modalBody.innerHTML = '<div style="text-align:center; padding:30px; color:#ef4444;">데이터를 불러올 수 없습니다.</div>';
-        return;
-    }
-
-    // Parsing Logic
-    let rawName = item.product_name || '';
-    let priceMatch = rawName.match(/\((₩[\d,]+)\)/);
-    let priceText = priceMatch ? priceMatch[1] : '';
-    let cleanName = rawName.replace(/\((₩[\d,]+)\)/, '').trim();
-
-    // Dynamic Lookup if Price is Missing
-    if (!priceText && window.adminPriceMap) {
-        let lookupName = cleanName;
-        let foundPrice = window.adminPriceMap[lookupName];
-        if (!foundPrice && lookupName.includes(' (')) {
-            lookupName = lookupName.split(' (')[0].trim();
-            foundPrice = window.adminPriceMap[lookupName];
-        }
-        if (foundPrice) {
-            if (foundPrice === '문의') priceText = '문의';
-            else {
-                const n = Number(String(foundPrice).replace(/,/g, ''));
-                if (!isNaN(n)) priceText = '₩' + n.toLocaleString();
-                else priceText = foundPrice;
-            }
-        }
-    }
-
-    if (cleanName.includes('(CPU:')) cleanName = cleanName.replace('(CPU:', '/ CPU:');
-
-    // Status Options
-    const statusOptions = [
-        { val: 'pending', label: '접수대기' },
-        { val: 'contacting', label: '상담중' },
-        { val: 'completed', label: '처리완료' },
-        { val: 'cancelled', label: '취소됨' }
-    ];
-
-    const statusHtml = statusOptions.map(opt => `
-        <label style="cursor:pointer; display:flex; align-items:center; gap:12px; margin-bottom: 12px; font-size:1rem; color:${item.status === opt.val ? '#ffffff' : '#94a3b8'}; font-weight:${item.status === opt.val ? '700' : '500'}; transition:all 0.2s; padding:10px; border-radius:8px; background:${item.status === opt.val ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255,255,255,0.02)'}; border:1px solid ${item.status === opt.val ? '#3b82f6' : 'transparent'};">
-            <input type="radio" name="modal_status_${item.id}" onchange="updateAppStatus(${item.id}, '${opt.val}')" value="${opt.val}" ${item.status === opt.val ? 'checked' : ''} style="accent-color:#3b82f6; width:18px; height:18px;">
-            ${opt.label}
-        </label>
-    `).join('');
-
-    const headerStyle = "color: #818cf8; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: block;";
-
-    modalBody.innerHTML = `
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
-            <!-- Left: Info -->
-            <div>
-                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:24px; margin-bottom:20px;">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:15px;">
-                        <span class="badge badge-blue" style="font-size:0.85rem; padding:5px 10px;">${item.product_type}</span>
-                        ${priceText ? `<span style="font-size:1.1rem; font-weight:700; color:#ef4444; background:rgba(239,68,68,0.1); padding:4px 10px; border-radius:6px;">${priceText}</span>` : ''}
-                    </div>
-                    <div style="font-size:1.4rem; font-weight:800; color:#f8fafc; margin-bottom:15px;">${cleanName}</div>
-                    
-                    ${item.product_detail ? `
-                    <div style="background:rgba(15,23,42,0.6); padding:15px; border-radius:8px; color:#cbd5e1; font-size:0.95rem; line-height:1.6; border:1px solid rgba(255,255,255,0.05);">
-                        <strong style="color:#94a3b8; display:block; margin-bottom:6px; font-size:0.85rem;">DETAILS</strong>
-                        ${item.product_detail}
-                    </div>` : ''}
-                </div>
-
-                <div style="margin-bottom:10px;">
-                     <h4 style="color:#94a3b8; font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:8px; margin-bottom:15px;">문의 내용 (MESSAGE)</h4>
-                     <div style="background:rgba(255,255,255,0.05); color:#e2e8f0; border-radius:12px; padding:24px; min-height:150px; line-height:1.7; white-space:pre-wrap; font-size:1rem; border:1px solid rgba(255,255,255,0.05);">${item.message || '(내용 없음)'}</div>
-                </div>
-            </div>
-
-            <!-- Right: Status & Contact -->
-            <div>
-                <div style="background:rgba(30,41,59,0.5); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:24px; margin-bottom:20px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
-                    <h4 style="${headerStyle}">진행 상태</h4>
-                    ${statusHtml}
-                </div>
-
-                <div style="background:rgba(30,41,59,0.5); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:24px;">
-                    <h4 style="${headerStyle}">고객 정보</h4>
-                    <div style="font-size:1.1rem; font-weight:bold; color:#f8fafc; margin-bottom:5px;">${item.company_name || '개인고객'}</div>
-                    <div style="color:#cbd5e1; margin-bottom:20px; font-size:0.95rem;">${item.name}</div>
-                    
-                    <div style="display:flex; align-items:center; gap:12px; color:#cbd5e1; margin-bottom:10px; font-size:0.95rem;">
-                        <span style="background:rgba(255,255,255,0.1); width:28px; height:28px; display:flex; align-items:center; justify-content:center; border-radius:6px;"><i class="fas fa-phone-alt" style="font-size:0.8rem;"></i></span> 
-                        ${item.phone}
-                    </div>
-                    <div style="display:flex; align-items:center; gap:12px; color:#cbd5e1; font-size:0.95rem;">
-                        <span style="background:rgba(255,255,255,0.1); width:28px; height:28px; display:flex; align-items:center; justify-content:center; border-radius:6px;"><i class="fas fa-envelope" style="font-size:0.8rem;"></i></span>
-                        <a href="mailto:${item.email}" style="color:#60a5fa; text-decoration:none;">${item.email}</a>
-                    </div>
-                </div>
-
-                <div style="margin-top:30px;">
-                    <button class="btn btn-secondary" onclick="closeAdminModal()" style="width:100%; padding:14px; border-radius:10px; background:#475569; color:white; font-size:1rem; font-weight:600; cursor:pointer; border:none;">닫기</button>
-                    <button class="delete-btn" onclick="deleteApplication(${item.id}); closeAdminModal();" style="width:100%; margin-top:10px; padding:10px; opacity:0.8;">삭제</button>
-                </div>
-            </div>
-        </div>
-    `;
-};
 
 // ==========================================
 // Admin Logic V9 (Debug)

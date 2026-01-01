@@ -180,21 +180,22 @@
             line-height: 1.6;
         }
 
-        /* Pricing Grid */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(1, 1fr);
-            gap: 32px;
-            align-items: start;
+        /* Pricing Grid - Forced 3 Columns with ID Override */
+        #pricing-grid-colocation {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 32px !important;
+            align-items: stretch !important;
+            padding: 0 !important;
         }
 
-        @media (min-width: 900px) {
-            .pricing-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
+        /* Conflict Resolution: Reset external CSS Flexbox/Width constraints */
+        #pricing-grid-colocation .plan-card {
+            width: auto !important;
+            max-width: none !important;
+            flex: none !important;
+            margin: 0 !important;
 
-        .plan-card {
             background: white;
             border: 1px solid var(--border-light);
             border-radius: 20px;
@@ -247,20 +248,17 @@
         }
 
         /* Mobile Pricing Grid Fix */
-        @media (max-width: 768px) {
-            .pricing-grid {
+        @media (max-width: 900px) {
+            #pricing-grid-colocation {
                 grid-template-columns: 1fr !important;
-                /* Force stack */
             }
 
-            .plan-card {
+            #pricing-grid-colocation .plan-card {
                 padding: 24px 16px;
-                /* Reduce padding from 40px */
             }
 
             .plan-title {
                 font-size: 1.25rem;
-                /* Slightly smaller title */
             }
         }
 

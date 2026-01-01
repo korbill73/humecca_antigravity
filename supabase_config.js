@@ -31,3 +31,34 @@ try {
     console.error('❌ Supabase 초기화 실패:', error);
     console.error('HTML에 CDN 스크립트가 포함되어 있는지 확인해주세요.');
 }
+// Helper: Wait for Supabase to be ready
+window.waitForSupabase = async function (maxRetries = 20, delayMs = 200) {
+    // 1. Check if already initialized
+    if (window.sb && window.sb.from) return window.sb;
+
+    // 2. Poll
+    for (let i = 0; i < maxRetries; i++) {
+        if (window.sb && window.sb.from) {
+            return window.sb;
+        }
+
+        // Auto-fix: Try to find 'supabase' global if 'sb' is missing
+        if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+            // Re-init if needed or just alias
+            if (!window.sb && window.SupabaseConfig) {
+                try {
+                    window.sb = window.supabase.createClient(window.SupabaseConfig.url, window.SupabaseConfig.key);
+                    return window.sb;
+                } catch (e) { console.warn('Auto-init failed', e); }
+            }
+        }
+
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+
+    // 3. Final Attempt or Fail
+    if (window.sb) return window.sb;
+
+    console.error('Fatal: Supabase client could not be initialized.');
+    return null;
+};

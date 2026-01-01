@@ -306,11 +306,19 @@
 
         // ==================== Data Loading: Notices ====================
         async function loadNotices() {
-            if (!supabase) return;
+            let client = null;
+            if (window.waitForSupabase) client = await window.waitForSupabase();
+            else client = window.sb || window.supabase;
+
+            if (!client) {
+                console.error("DB Init Failed");
+                return;
+            }
+
             noticesLoaded = true;
 
             try {
-                const { data, error } = await supabase
+                const { data, error } = await client
                     .from('notices')
                     .select('*')
                     .eq('active', true)
@@ -378,16 +386,25 @@
 
             } catch (error) {
                 console.error('Notice Load Error:', error);
+                const loading = document.getElementById('notice-loading');
+                if (loading) {
+                    loading.innerHTML = '<p style="color:#ef4444;">데이터를 불러오는 중 오류가 발생했습니다.</p>';
+                }
             }
         }
 
         // ==================== Data Loading: FAQs ====================
         async function loadFaqs() {
-            if (!supabase) return;
+            let client = null;
+            if (window.waitForSupabase) client = await window.waitForSupabase();
+            else client = window.sb || window.supabase;
+
+            if (!client) return;
+
             faqsLoaded = true;
 
             try {
-                const { data, error } = await supabase
+                const { data, error } = await client
                     .from('faqs')
                     .select('*')
                     .eq('active', true)
@@ -404,6 +421,10 @@
 
             } catch (error) {
                 console.error('FAQ Load Error:', error);
+                const loading = document.getElementById('faq-loading');
+                if (loading) {
+                    loading.innerHTML = '<p style="color:#ef4444;">데이터를 불러오는 중 오류가 발생했습니다.</p>';
+                }
             }
         }
 
@@ -525,10 +546,21 @@
             };
 
             try {
-                if (!supabase) throw new Error('Supabase client not initialized');
+                var client = window.sb || window.supabase;
+                // Use waitForSupabase only if async handling is added to submit, but submit is synchronous-looking event listener.
+                // We can make the callback async.
+                if (window.waitForSupabase) {
+                    client = await window.waitForSupabase();
+                }
 
+                if (!client) {
+                    alert('시스템 오류: DB 연결 실패');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText; // Use originalText here
+                    return;
+                }
                 // 1. Save to Supabase
-                const { error } = await supabase.from('inquiries').insert([payload]);
+                const { error } = await client.from('inquiries').insert([payload]);
                 if (error) throw error;
 
                 // 2. Optional: Send Email Notification (if EmailJS is ready)

@@ -130,8 +130,15 @@ window.loadCustomerLogos = async function () {
     try {
         console.log("Loading Customer Logos...");
         let customers = [];
-        if (typeof supabase !== 'undefined') {
-            const { data, error } = await supabase
+        let client = null;
+        if (window.waitForSupabase) {
+            client = await window.waitForSupabase();
+        } else {
+            client = window.sb || window.supabase;
+        }
+
+        if (client && client.from) {
+            const { data, error } = await client
                 .from('customers')
                 .select('*')
                 .order('created_at', { ascending: false });
