@@ -190,10 +190,20 @@ window.loadCustomerLogos = async function () {
                     position: relative;
                     z-index: 1;
                 ">
-                    ${customer.logo_url ?
-                `<img src="${encodeURI(customer.logo_url)}" alt="${customer.name}" style="max-width: 100%; max-height: 52px; object-fit: contain;">` :
-                `<span style="color: #475569; font-size: 14px; font-weight: 700; text-align: center;">${customer.name}</span>`
-            }
+                    ${(() => {
+                if (!customer.logo_url) return `<span style="color: #475569; font-size: 14px; font-weight: 700; text-align: center;">${customer.name}</span>`;
+
+                let safeUrl = customer.logo_url;
+                // Mixed Content Fix: Use weserv.nl proxy for HTTP images
+                if (safeUrl.startsWith('http://')) {
+                    const noProto = safeUrl.replace('http://', '');
+                    safeUrl = `https://images.weserv.nl/?url=${encodeURIComponent(noProto)}`;
+                } else {
+                    safeUrl = encodeURI(safeUrl);
+                }
+
+                return `<img src="${safeUrl}" alt="${customer.name}" style="max-width: 100%; max-height: 52px; object-fit: contain;">`;
+            })()}
                 </div>
             </div>
         `).join('');
