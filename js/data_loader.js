@@ -160,7 +160,15 @@ function renderAddon(container, plans) {
         const features = parseFeatures(plan.features);
         let featureListHtml = '';
         features.forEach(f => {
-            if (f.trim()) featureListHtml += `<li><i class="fas fa-check"></i> ${f.trim()}</li>`;
+            const trimF = f.trim();
+            if (trimF) {
+                // Heuristic: If content contains an image tag, don't add the checkmark icon
+                if (trimF.includes('<img')) {
+                    featureListHtml += `<li class="no-icon" style="list-style:none; padding-left:0;">${trimF}</li>`;
+                } else {
+                    featureListHtml += `<li><i class="fas fa-check"></i> ${trimF}</li>`;
+                }
+            }
         });
 
         // Determine Badge
@@ -183,12 +191,14 @@ function renderAddon(container, plans) {
                 <div class="plan-title">${plan.plan_name}</div>
                 <div class="plan-price">${priceDisplay}</div>
                 <div class="plan-summary" style="font-size:0.9em; margin-bottom:15px; min-height:24px;">${plan.summary || ''}</div>
+                
+                <button class="plan-btn solid js-open-modal" 
+                    data-name="${escName}" data-type="addon" data-details="${escDetails}" data-price="${plan.price}"
+                    style="width:100%; border:none; cursor:pointer; margin-bottom: 20px;">무료체험 신청</button>
+
                 <ul class="plan-features">
                     ${featureListHtml}
                 </ul>
-                <button class="plan-btn solid js-open-modal" 
-                    data-name="${escName}" data-type="addon" data-details="${escDetails}" data-price="${plan.price}"
-                    style="width:100%; border:none; cursor:pointer;">신청하기</button>
             </div>
         `;
         container.innerHTML += cardHtml;
@@ -312,7 +322,65 @@ function escapeHtml(str) {
 
 function parseFeatures(features) {
     if (!features) return [];
-    return typeof features === 'string' ? features.split('\n') : (Array.isArray(features) ? features : []);
+
+    // If it's an array, return as is
+    if (Array.isArray(features)) return features;
+
+    // Use String
+    if (typeof features === 'string') {
+        const trimmed = features.trim();
+
+        // Detect HTML (starts with <)
+        if (trimmed.startsWith('<')) {
+            try {
+                const div = document.createElement('div');
+                div.innerHTML = trimmed;
+
+                let items = [];
+
+                // Iterate child nodes to capture mixed content (p, ul, ol) in order
+                div.childNodes.forEach(node => {
+                    const tagName = node.tagName ? node.tagName.toLowerCase() : '';
+
+                    if (tagName === 'p' || tagName === 'div') {
+                        const content = node.innerHTML.trim();
+                        // Skip empty lines or just <br> unless you want spacers
+                        if (content && content !== '<br>' && content !== '&nbsp;') {
+                            items.push(content);
+                        }
+                    } else if (tagName === 'ul' || tagName === 'ol') {
+                        node.querySelectorAll('li').forEach(li => {
+                            const content = li.innerHTML.trim();
+                            if (content && content !== '<br>') {
+                                items.push(content);
+                            }
+                        });
+                    }
+                });
+
+                if (items.length > 0) return items;
+
+                // Fallback if structure is weird (e.g. just text nodes at root)
+                const paragraphs = div.querySelectorAll('p');
+                if (paragraphs.length > 0) {
+                    let pItems = [];
+                    paragraphs.forEach(p => pItems.push(p.innerHTML.trim()));
+                    return pItems;
+                }
+
+                // 3. Fallback: Inner Text split
+                return div.innerText.split('\n').map(x => x.trim()).filter(x => x);
+            } catch (e) {
+                console.warn('Error parsing HTML features:', e);
+                return trimmed.split('\n');
+            }
+        }
+
+        // Legacy: Newline separated
+        return features.split('\n');
+    }
+
+    return [];
 }
 
 function formatPrice(price, period) {

@@ -3,7 +3,9 @@
 let currentTermType = 'privacy';
 
 // Global Quill Instance
+// Global Quill Instance
 let quill;
+let solutionQuill;
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
@@ -35,6 +37,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 ]
             }
         });
+    }
+
+    if (document.getElementById('solution-editor-container')) {
+        solutionQuill = new Quill('#solution-editor-container', {
+            theme: 'snow',
+            placeholder: '제품 특징을 입력하세요...',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'color': [] }],
+                    ['image'], // Added Image Support
+                    ['clean']
+                ]
+            }
+        });
+
+        // Custom styling for toolbar buttons to look good on dark
+        // Quill generates a .ql-toolbar sibling before the container
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .ql-toolbar.ql-snow { border-color: #334155 !important; background: #1e293b; border-radius: 6px 6px 0 0; }
+            .ql-container.ql-snow { border-color: #334155 !important; background: #0f172a; color: #e2e8f0; border-radius: 0 0 6px 6px; }
+            .ql-snow .ql-stroke { stroke: #cbd5e1 !important; }
+            .ql-snow .ql-fill { fill: #cbd5e1 !important; }
+            .ql-snow .ql-picker { color: #cbd5e1 !important; }
+            .ql-snow .ql-picker-options { background-color: #1e293b !important; border-color: #334155 !important; }
+            .ql-editor { font-size: 1rem; line-height: 1.6; }
+        `;
+        document.head.appendChild(style);
     }
 
     // Existing Init Logic
@@ -1351,17 +1383,64 @@ window.editProduct = async (id, prefix) => {
         setVal('v-speed', p.speed);
         setVal('v-sites', p.sites);
         setVal('v-users', p.users);
+    } else if (prefix === 'colocation') {
+        setVal('c-cpu', p.cpu);
+        setVal('c-ram', p.ram);
     } else if (prefix === 'solution') {
-        // Solution Specific
         // Solution Specific
         // (Category dropdown removed as per request)
         setVal('solution-summary', p.summary);
+
+        // Load Quill Content
+        if (solutionQuill) {
+            // Check if content is HTML or plain text list
+            let content = p.features;
+
+            // Safe helper to escape HTML
+            const escapeHtml = (text) => {
+                if (!text) return '';
+                return text
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            };
+
+            // Convert Array to HTML list if array
+            if (Array.isArray(p.features)) {
+                content = '<ul>' + p.features.map(f => `<li>${escapeHtml(f)}</li>`).join('') + '</ul>';
+            } else if (typeof p.features === 'string') {
+                // If it looks like HTML list <ul>, use as is (trusting it's valid if from Quill)
+                // But if it contains <Free ...>, it's NOT valid HTML tags usually.
+                // We check for <ul> or <ol> or <p> tags at the start.
+                const trimmed = p.features.trim();
+                const isHtml = (trimmed.startsWith('<ul') || trimmed.startsWith('<ol') || trimmed.startsWith('<p'));
+
+                if (isHtml) {
+                    content = p.features;
+                } else {
+                    // Treat as plain text lines
+                    content = '<ul>' + p.features.split('\n').map(f => `<li>${escapeHtml(f)}</li>`).join('') + '</ul>';
+                }
+            }
+
+            // Set content
+            solutionQuill.root.innerHTML = content || '';
+        } else {
+            setVal('solution-features', p.features);
+        }
         // And I have solution-category dropdown.
         // Where is category stored? I passed it as commonData.category in SAVE.
         // But getOrCreateProduct uses it to find PARENT product.
         // It does NOT store it on CHILD plan usually. 
         // BUT, if I want to edit, I need to know which one selected.
         // I will rely on standard 'groupware' default for now or try to infer.
+
+        // Set hidden subcategory for tracking (CRITICAL FIX)
+        setVal('solution-subcategory-hidden', p.products?.subcategory || '');
+        // Restore dropdown value if it exists
+        setVal('solution-type-select', p.products?.subcategory || 'solution');
     }
 
     // Set Hidden ID to trigger Update mode
@@ -1405,6 +1484,8 @@ window.resetForm = (type) => {
             document.getElementById('solution-summary').value = '';
             document.getElementById('solution-badge').value = '';
             document.getElementById('solution-features').value = '';
+            if (solutionQuill) solutionQuill.setContents([]);
+            document.getElementById('solution-subcategory-hidden').value = ''; // Clear hidden subcategory
         }
 
         const hiddenInfo = document.getElementById(`${prefix}-id-hidden`);
@@ -1415,117 +1496,142 @@ window.resetForm = (type) => {
 
 // Generic Product Form Handler (Upsert)
 window.saveProduct = async (e, type) => {
-    if (e) e.preventDefault();
-    console.log(`Saving Product: ${type}`);
+    alert(`Save function triggered for: ${type}`);
+    try {
+        if (e) e.preventDefault();
+        console.log(`Saving Product: ${type}`);
+        // alert(`Step 1: Starting Save for ${type}`);
 
-    let p = 'h';
-    if (type === 'vpn') p = 'v';
-    if (type === 'colocation') p = 'c';
-    if (type === 'security') p = 'sec';
-    if (type === 'security') p = 'sec';
-    if (type === 'service') p = 's';
-    if (type === 'solution') p = 'solution';
+        let p = 'h';
+        if (type === 'vpn') p = 'v';
+        if (type === 'colocation') p = 'c';
+        if (type === 'security') p = 'sec';
+        if (type === 'service') p = 's';
+        if (type === 'solution') p = 'solution';
 
-    const getVal = (id) => document.getElementById(id)?.value || '';
-    const getCheck = (id) => document.getElementById(id)?.checked || false;
+        const getVal = (id) => document.getElementById(id)?.value || '';
+        const getCheck = (id) => document.getElementById(id)?.checked || false;
 
-    // Determine Target Category/Subcategory
-    let targetType = type;
-    if (type === 'solution') {
-        const solSelect = document.getElementById('solution-type-select');
-        const solVal = solSelect ? solSelect.value : 'solution';
-        if (solVal === 'solution') targetType = 'solution';
-        else if (solVal === 'naverworks') targetType = 'solution-naver';
-        else if (solVal === 'website') targetType = 'solution-website';
-    } else if (type === 'service') {
-        targetType = document.getElementById('service-type-select').value;
-    } else if (type === 'security') {
-        targetType = document.getElementById('security-type-select').value;
+        // Determine Target Category/Subcategory
+        let targetType = type;
+        if (type === 'solution') {
+            // Priority 1: Use dropdown (Visible choice)
+            const solSelect = document.getElementById('solution-type-select');
+            let solVal = solSelect ? solSelect.value : '';
+
+            // Priority 2: Use hidden subcategory (Fallback if dropdown missing/empty)
+            if (!solVal) {
+                solVal = getVal('solution-subcategory-hidden') || 'solution';
+            }
+
+            // Map subcategory to targetType
+            if (solVal === 'solution') targetType = 'solution';
+            else if (solVal === 'naverworks') targetType = 'solution-naver';
+            else if (solVal === 'website') targetType = 'solution-website';
+        } else if (type === 'service') {
+            targetType = document.getElementById('service-type-select').value;
+        } else if (type === 'security') {
+            targetType = document.getElementById('security-type-select').value;
+        }
+
+        // alert(`Step 2: Prefix=${p}, TargetType=${targetType}`);
+
+        // Get Parent Product ID
+        const prod = await getOrCreateProduct(targetType);
+        if (!prod) {
+            alert('Error: Parent Product Not Found!');
+            return;
+        }
+        // alert(`Step 3: Parent Product ID=${prod.id}`);
+
+        // Prepare Payload
+        const featuresInput = getVal(`${p}-features`);
+
+        // Auto-generate ID if empty (User UI hidden)
+        let planId = getVal(`${p}-id`);
+        if (!planId) {
+            planId = `${p}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+            console.log(`[Auto-Gen] Generated Plan ID: ${planId}`);
+        }
+
+        const commonData = {
+            product_id: prod.id,
+            plan_name: getVal(`${p}-name`),
+            plan_id: planId, // This is the Slug/User-facing ID
+            price: getVal(`${p}-price`),
+            period: getVal(`${p}-period`),
+            summary: getVal(`${p}-summary`),
+            badge: getVal(`${p}-badge`),
+            active: getCheck(`${p}-active`),
+            sort_order: parseInt(getVal(`${p}-order`)) || 1,
+            features: featuresInput
+        };
+
+        // Custom Mapping for Solution
+        if (type === 'solution') {
+            commonData.plan_name = getVal('solution-name');
+            commonData.price = getVal('solution-price').replace(/,/g, ''); // Clean price
+            commonData.period = '월';
+            if (targetType === 'solution-website') commonData.period = '건'; // Special case for website
+
+            commonData.summary = getVal('solution-summary');
+            commonData.badge = getVal('solution-badge');
+
+            // Features: Get from Quill if available
+            if (solutionQuill) {
+                commonData.features = solutionQuill.root.innerHTML;
+            } else {
+                const feetRaw = getVal('solution-features');
+                commonData.features = feetRaw ? feetRaw.split('\n').filter(x => x.trim()).join('\n') : '';
+            }
+
+            const rawSort = getVal('solution-order');
+            // alert(`Step 4 (Solution): Sort Raw=${rawSort}`);
+
+            commonData.sort_order = parseInt(rawSort) || 1;
+            commonData.active = getCheck('solution-active');
+        }
+
+        // Specific Specs
+        if (type === 'hosting') {
+            commonData.cpu = getVal('h-cpu');
+            commonData.ram = getVal('h-ram');
+            commonData.storage = getVal('h-storage');
+            commonData.traffic = getVal('h-traffic');
+        } else if (type === 'colocation') {
+            commonData.cpu = getVal('c-cpu');
+            commonData.ram = getVal('c-ram');
+        } else if (type === 'vpn') {
+            commonData.speed = getVal('v-speed');
+            commonData.sites = getVal('v-sites');
+            commonData.users = getVal('v-users');
+        }
+
+        // Check for Update vs Insert
+        const hiddenId = getVal(`${p}-id-hidden`);
+        // alert(`Step 5: HiddenID=${hiddenId} (Empty=Insert, Value=Update)`);
+
+        if (hiddenId) {
+            // Update
+            const { error } = await window.sb.from('product_plans').update(commonData).eq('id', hiddenId);
+            if (error) { alert('수정 실패 DB Error: ' + error.message); return; }
+            alert('상품 정보가 수정되었습니다.');
+        } else {
+            // Insert
+            const { error } = await window.sb.from('product_plans').insert([commonData]);
+            if (error) { alert('등록 실패 DB Error: ' + error.message); return; }
+            alert('새로운 상품이 등록되었습니다.');
+        }
+
+        // Reset UI
+        // resetForm(type); // Commented out to let user see result
+        setTimeout(() => {
+            renderProducts();
+        }, 300);
+    } catch (criticalErr) {
+        alert("CRITICAL SCRIPT ERROR:\n" + criticalErr.message + "\n" + criticalErr.stack);
+        console.error(criticalErr);
     }
-
-    // Get Parent Product ID
-    const prod = await getOrCreateProduct(targetType);
-    if (!prod) return;
-
-    // Prepare Payload
-    const featuresInput = getVal(`${p}-features`); // For non-solution types strictly, or overridden below
-
-    // Auto-generate ID if empty (User UI hidden)
-    let planId = getVal(`${p}-id`);
-    if (!planId) {
-        // Format: type_timestamp_random (e.g., h_1700000000_abcde)
-        planId = `${p}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
-        console.log(`[Auto-Gen] Generated Plan ID: ${planId}`);
-    }
-
-    const commonData = {
-        product_id: prod.id,
-        plan_name: getVal(`${p}-name`),
-        plan_id: planId, // This is the Slug/User-facing ID
-        price: getVal(`${p}-price`),
-        period: getVal(`${p}-period`),
-        summary: getVal(`${p}-summary`),
-        badge: getVal(`${p}-badge`),
-        active: getCheck(`${p}-active`),
-        sort_order: parseInt(getVal(`${p}-order`)) || 1,
-        features: featuresInput
-    };
-
-    // Custom Mapping for Solution
-    if (type === 'solution') {
-        commonData.plan_name = getVal('solution-name');
-        commonData.price = getVal('solution-price').replace(/,/g, ''); // Clean price
-        commonData.period = '월';
-        if (targetType === 'solution-website') commonData.period = '건'; // Special case for website
-
-        commonData.summary = getVal('solution-summary');
-        commonData.badge = getVal('solution-badge');
-
-        // Features: split by new line
-        const feetRaw = getVal('solution-features');
-        commonData.features = feetRaw ? feetRaw.split('\n').filter(x => x.trim()).join('\n') : '';
-
-        commonData.sort_order = parseInt(getVal('solution-sort')) || 1;
-        commonData.active = getCheck('solution-active');
-    }
-
-    // Specific Specs
-    if (type === 'hosting') {
-        commonData.cpu = getVal('h-cpu');
-        commonData.ram = getVal('h-ram');
-        commonData.storage = getVal('h-storage');
-        commonData.traffic = getVal('h-traffic');
-    } else if (type === 'colocation') {
-        // Map Colocation Space/Power to CPU/RAM columns
-        commonData.cpu = getVal('c-cpu'); // Space
-        commonData.ram = getVal('c-ram'); // Power
-    } else if (type === 'vpn') {
-        commonData.speed = getVal('v-speed');
-        commonData.sites = getVal('v-sites');
-        commonData.users = getVal('v-users');
-    }
-
-    // Check for Update vs Insert
-    const hiddenId = getVal(`${p}-id-hidden`);
-
-    if (hiddenId) {
-        // Update
-        const { error } = await window.sb.from('product_plans').update(commonData).eq('id', hiddenId);
-        if (error) { alert('수정 실패: ' + error.message); return; }
-        alert('상품 정보가 수정되었습니다.');
-    } else {
-        // Insert
-        const { error } = await window.sb.from('product_plans').insert([commonData]);
-        if (error) { alert('등록 실패: ' + error.message); return; }
-        alert('새로운 상품이 등록되었습니다.');
-    }
-
-    // Reset UI
-    resetForm(type);
-    // Wait slightly for DB propagation if needed, then render
-    setTimeout(() => {
-        renderProducts();
-    }, 300);
 };
 
 // Bind existing forms (legacy support)
@@ -2166,9 +2272,8 @@ window.openApplicationDetailNew = async (id) => {
     `;
 };
 
-
 // ==========================================
-// Toggle Product Form (Generic)
+// Admin Logic V9 (Debug)
 // ==========================================
 window.toggleProductForm = (type, isEdit = false) => {
     const container = document.getElementById(`${type}-form-container`);
@@ -2186,193 +2291,4 @@ window.toggleProductForm = (type, isEdit = false) => {
     }
 };
 
-// ==========================================
-// FIXED FORM LOGIC (Appended v7.7)
-// ==========================================
-
-// Helper: Reset Form
-window.resetForm = (type) => {
-    console.log('[Fix] Resetting form for:', type);
-    let p = 'h';
-    if (type === 'vpn') p = 'v';
-    if (type === 'colocation') p = 'c';
-    if (type === 'security') p = 'sec';
-    if (type === 'service') p = 's';
-    if (type === 'solution') p = 'solution';
-
-    const setVal = (id, val) => {
-        const el = document.getElementById(id);
-        if (el) el.value = val;
-    };
-    const setCheck = (id, val) => {
-        const el = document.getElementById(id);
-        if (el) el.checked = val;
-    };
-
-    // Clear Hidden ID (Critical for switching from Edit to Add)
-    setVal(`${p}-id-hidden`, '');
-
-    // Clear Common Fields
-    setVal(`${p}-name`, '');
-    setVal(`${p}-id`, '');
-    setVal(`${p}-price`, '');
-    setVal(`${p}-period`, '');
-    setVal(`${p}-summary`, '');
-    setVal(`${p}-badge`, '');
-    setVal(`${p}-order`, '1');
-    setVal(`${p}-features`, '');
-    setCheck(`${p}-active`, true);
-
-    // Clear Solution Specifics
-    if (type === 'solution') {
-        setVal('solution-name', '');
-        setVal('solution-price', '');
-        setVal('solution-summary', '');
-        setVal('solution-badge', '');
-        setVal('solution-features', '');
-        setVal('solution-sort', '1');
-        setCheck('solution-active', true);
-
-        // Reset Button Text
-        const btn = document.querySelector('#solution-form-container button.btn-primary');
-        if (btn) btn.innerText = "저장완료";
-    }
-
-    // Clear Others (Hosting/VPN/etc)
-    if (type === 'hosting') {
-        setVal('h-cpu', ''); setVal('h-ram', ''); setVal('h-storage', ''); setVal('h-traffic', '');
-    } else if (type === 'vpn') {
-        setVal('v-speed', ''); setVal('v-sites', ''); setVal('v-users', '');
-    } else if (type === 'colocation') {
-        setVal('c-cpu', ''); setVal('c-ram', '');
-    }
-};
-
-// Helper: Toggle Product Form (Add New)
-window.toggleProductForm = (type) => {
-    console.log('[Fix] Toggling form for:', type);
-    let formId = '';
-    if (type === 'solution') formId = 'solution-form-container';
-
-    const formEl = document.getElementById(formId);
-    if (!formEl) {
-        console.error('Form container not found:', formId);
-        return;
-    }
-
-    // Always Open and Reset logic for "Add" button
-    formEl.style.display = 'block';
-    resetForm(type);
-    formEl.scrollIntoView({ behavior: 'smooth' });
-
-    // Ensure button says "Save Complete" (or Save)
-    const btn = formEl.querySelector('button.btn-primary');
-    if (btn) btn.innerText = "저장완료";
-};
-
-// Generic Product Form Handler (Upsert) - Redefined
-window.saveProduct = async (e, type) => {
-    if (e) e.preventDefault();
-    console.log(`[Fix] Saving Product v7.8: ${type}`);
-
-    let p = 'h';
-    if (type === 'vpn') p = 'v';
-    if (type === 'colocation') p = 'c';
-    if (type === 'security') p = 'sec';
-    if (type === 'security') p = 'sec';
-    if (type === 'service') p = 's';
-    if (type === 'solution') p = 'solution';
-
-    const getVal = (id) => document.getElementById(id)?.value || '';
-    const getCheck = (id) => document.getElementById(id)?.checked || false;
-
-    // Determine Target Category/Subcategory
-    let targetType = type;
-    if (type === 'solution') {
-        const solSelect = document.getElementById('solution-type-select');
-        const solVal = solSelect ? solSelect.value : 'solution';
-        if (solVal === 'solution') targetType = 'solution';
-        else if (solVal === 'naverworks') targetType = 'solution-naver';
-        else if (solVal === 'website') targetType = 'solution-website';
-    } else if (type === 'service') {
-        targetType = document.getElementById('service-type-select').value;
-    } else if (type === 'security') {
-        targetType = document.getElementById('security-type-select').value;
-    }
-
-    // Get Parent Product ID
-    const prod = await getOrCreateProduct(targetType);
-    if (!prod) return;
-
-    // Prepare Payload
-    const featuresInput = getVal(`${p}-features`);
-
-    const commonData = {
-        product_id: prod.id,
-        plan_name: getVal(`${p}-name`),
-        plan_id: getVal(`${p}-id`),
-        price: getVal(`${p}-price`),
-        period: getVal(`${p}-period`),
-        summary: getVal(`${p}-summary`),
-        badge: getVal(`${p}-badge`),
-        active: getCheck(`${p}-active`),
-        sort_order: parseInt(getVal(`${p}-order`)) || 1,
-        features: featuresInput
-    };
-
-    // Custom Mapping for Solution
-    if (type === 'solution') {
-        commonData.plan_name = getVal('solution-name');
-        commonData.price = getVal('solution-price').replace(/,/g, '');
-        commonData.period = '월';
-        if (targetType === 'solution-website') commonData.period = '건';
-
-        commonData.summary = getVal('solution-summary');
-        commonData.badge = getVal('solution-badge');
-
-        const feetRaw = getVal('solution-features');
-        commonData.features = feetRaw ? feetRaw.split('\n').filter(x => x.trim()).join('\n') : '';
-
-        commonData.sort_order = parseInt(getVal('solution-sort')) || 1;
-        commonData.active = getCheck('solution-active');
-    }
-
-    // Specific Specs
-    if (type === 'hosting') {
-        commonData.cpu = getVal('h-cpu'); commonData.ram = getVal('h-ram');
-        commonData.storage = getVal('h-storage'); commonData.traffic = getVal('h-traffic');
-    } else if (type === 'colocation') {
-        commonData.cpu = getVal('c-cpu'); commonData.ram = getVal('c-ram');
-    } else if (type === 'vpn') {
-        commonData.speed = getVal('v-speed'); commonData.sites = getVal('v-sites'); commonData.users = getVal('v-users');
-    }
-
-    // Check for Update vs Insert
-    const hiddenId = getVal(`${p}-id-hidden`);
-
-    if (hiddenId) {
-        // Update
-        const { error } = await window.sb.from('product_plans').update(commonData).eq('id', hiddenId);
-        if (error) { alert('수정 실패: ' + error.message); return; }
-        alert('상품 정보가 수정되었습니다.');
-    } else {
-        // Insert
-        const { error } = await window.sb.from('product_plans').insert([commonData]);
-        if (error) { alert('등록 실패: ' + error.message); return; }
-        alert('새로운 상품이 등록되었습니다.');
-    }
-
-    // Reset UI & Hide Form
-    resetForm(type);
-    if (type === 'solution') {
-        const formEl = document.getElementById('solution-form-container');
-        if (formEl) formEl.style.display = 'none';
-        console.log('[Fix] Form hidden');
-    }
-
-    // Refresh List
-    setTimeout(() => {
-        renderProducts();
-    }, 300);
-};
 

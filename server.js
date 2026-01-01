@@ -40,7 +40,10 @@ const LOG_FILE = path.join(BACKUP_DIR, 'traffic_logs.json');
 
 // Ensure log file exists
 if (!fs.existsSync(LOG_FILE)) {
-    try { fs.writeJsonSync(LOG_FILE, []); } catch (e) { console.error('Init Log Error:', e); }
+    try {
+        fs.ensureDirSync(BACKUP_DIR);
+        fs.writeJsonSync(LOG_FILE, []);
+    } catch (e) { console.error('Init Log Error:', e); }
 }
 
 // Helper: Get Client IP

@@ -4,106 +4,395 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HUMECCA - NAVER WORKS</title>
+    <title>네이버웍스 - HUMECCA</title>
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <!-- Main Styles -->
     <link rel="stylesheet" href="styles.css?v=3.20">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
-        rel="stylesheet">
+    <!-- Page Specific Styles -->
+    <link rel="stylesheet" href="css/sub_naver.css?v=1.0">
 </head>
 
-<body class="theme-green">
+<body class="nw-body theme-green">
     <!-- Header -->
-    <!-- ========== HEADER PLACEHOLDER (Loaded via loader.js) ========== -->
     <div id="header-placeholder"></div>
 
-
-    <!-- Hero -->
+    <!-- Hero: Restored Original -->
     <section class="sw-hero"
-        style="background-image: linear-gradient(rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.8)), url('images/hero_mail.jpg');">
-        <div class="container">
-            <!-- Breadcrumb (Standardized) -->
+        style="background-image: linear-gradient(rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.8)), url('images/hero_mail.jpg'); padding: 120px 0 100px;">
+        <div class="container" style="text-align:center;">
             <div style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 20px;">
                 기업솔루션 <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 8px;"></i> NAVER WORKS
             </div>
-
-            <!-- Icon Box (Standardized) -->
             <div
                 style="width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; border: 1px solid rgba(255,255,255,0.2);">
-                <i class="fas fa-comments" style="font-size: 30px; color: #03C75A;"></i> <!-- Naver Works Green Icon -->
+                <i class="fas fa-comments" style="font-size: 30px; color: #03C75A;"></i>
             </div>
-
-            <h1>NAVER WORKS</h1>
-            <p style="max-width: 800px; color: rgba(255,255,255,0.8); line-height: 1.6;">네이버의 기술력으로 완성된 올인원 비즈니스 협업 플랫폼
+            <h1 style="color:white; font-size:48px; font-weight:800; margin-bottom:20px;">NAVER WORKS</h1>
+            <p
+                style="max-width: 800px; margin: 0 auto; color: rgba(255,255,255,0.8); line-height: 1.6; font-size:18px;">
+                네이버의 기술력으로 완성된 올인원 비즈니스 협업 플랫폼<br>
+                메일, 메신저, 화상회의, 드라이브까지 하나의 앱에서 해결하세요.
             </p>
         </div>
     </section>
 
-    <div class="container" style="padding: 80px 15px;">
-        <div class="section-header">
-            <h2>업무가 쉬워지는 협업 도구</h2>
-            <p>메일, 메신저, 화상회의, 드라이브까지 하나의 앱에서 해결하세요.<br>친숙한 사용성으로 별도의 교육 없이 바로 사용할 수 있습니다.</p>
-        </div>
-
-        <div class="feature-grid">
-            <div class="feature-item">
-                <i class="fas fa-comments feature-icon" style="color:#03C75A;"></i>
-                <h3>메시지 (Message)</h3>
-                <p>LINE과 유사한 친숙한 UI<br>메시지 읽음 확인 및 회수 기능</p>
+    <!-- Value Proposition 1: LINE Connectivity -->
+    <section class="nw-section bg-gray">
+        <div class="nw-feature-row">
+            <div class="nw-feature-visual">
+                <div class="nw-visual-box">
+                    <div class="nw-visual-partner">
+                        <div class="circle">
+                            <i class="fas fa-cube" style="color:#03C75A;"></i>
+                            <span style="font-size:12px; color:#555; font-weight:600;">Works</span>
+                        </div>
+                        <div class="connect-line"></div>
+                        <div class="circle">
+                            <i class="fab fa-line" style="color:#00B900;"></i>
+                            <span style="font-size:12px; color:#555; font-weight:600;">LINE</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="feature-item">
-                <i class="fas fa-envelope feature-icon" style="color:#03C75A;"></i>
-                <h3>네이버 메일 (Mail)</h3>
-                <p>강력한 스팸 차단 및 보안<br>파파고 실시간 번역 지원</p>
-            </div>
-            <div class="feature-item">
-                <i class="fas fa-calendar-alt feature-icon" style="color:#03C75A;"></i>
-                <h3>캘린더 (Calendar)</h3>
-                <p>팀원 일정 공유 및 빈 시간 찾기<br>회의실 예약 연동</p>
-            </div>
-            <div class="feature-item">
-                <i class="fas fa-cloud feature-icon" style="color:#03C75A;"></i>
-                <h3>드라이브 (Drive)</h3>
-                <p>랜섬웨어 걱정 없는 안전한 보관<br>사내/외 파일 공유 링크 생성</p>
-            </div>
-            <div class="feature-item">
-                <i class="fas fa-video feature-icon" style="color:#03C75A;"></i>
-                <h3>화상회의 (Video)</h3>
-                <p>별도 설치 없는 고화질 화상회의<br>최대 200명 동시 참여</p>
-            </div>
-            <div class="feature-item">
-                <i class="fas fa-robot feature-icon" style="color:#03C75A;"></i>
-                <h3>AI 비서 (WORKS AI)</h3>
-                <p>메일 요약 및 답장 추천<br>중요 메시지 자동 알림 (CLOVA)</p>
-            </div>
-        </div>
-
-        <div class="section-header" style="margin-top:80px;">
-            <h2>서비스 요금 안내</h2>
-            <p>기업의 규모와 필요에 맞는 최적의 플랜을 선택하세요.</p>
-        </div>
-
-        <div id="pricing-grid-naver" class="pricing-grid compact-pricing">
-            <div style="text-align:center; padding:50px; width:100%; grid-column:1/-1;">
-                <i class="fas fa-spinner fa-spin fa-2x" style="color:#ddd;"></i>
+            <div class="nw-feature-text">
+                <span class="nw-feature-label">업무용 협업 도구</span>
+                <h2 class="nw-feature-title">네이버가 일하는 방식 그대로<br>네이버웍스</h2>
+                <p class="nw-feature-desc">
+                    네이버가 만든 서비스 네이버웍스는 네이버/LINE과 유사한 화면으로 누구나 쉽게 사용할 수 있는 업무용 협업 도구입니다.
+                    타사의 네이버웍스 사용자는 물론 LINE 사용자와도 대화를 나눌 수 있어 고객 또는 거래처와의 소통 채널을 일원화 할 수 있습니다.
+                </p>
+                <div class="nw-feature-icons" style="display:flex; gap:15px; margin-top:20px;">
+                    <!-- Icons replaced with FontAwesome -->
+                    <div style="text-align:center;"><i class="fas fa-comment-dots"
+                            style="font-size:32px; color:#03C75A;"></i>
+                        <div style="font-size:11px; margin-top:5px; color:#666;">메시지</div>
+                    </div>
+                    <div style="text-align:center;"><i class="fas fa-envelope"
+                            style="font-size:32px; color:#03C75A;"></i>
+                        <div style="font-size:11px; margin-top:5px; color:#666;">메일</div>
+                    </div>
+                    <div style="text-align:center;"><i class="far fa-calendar-alt"
+                            style="font-size:32px; color:#03C75A;"></i>
+                        <div style="font-size:11px; margin-top:5px; color:#666;">캘린더</div>
+                    </div>
+                </div>
             </div>
         </div>
+    </section>
 
-        <div
-            style="margin-top:20px; text-align:center; color:#666; font-size:14px; background:#f9fafb; padding:15px; border-radius:8px;">
-            <i class="fas fa-info-circle"></i> 휴메카는 네이버클라우드 공식 파트너로서, 네이버웍스 도입 컨설팅 및 기술 지원을 제공합니다.
+    <!-- Value Proposition 2: Productivity -->
+    <section class="nw-section">
+        <div class="nw-feature-row reverse">
+            <div class="nw-feature-visual">
+                <div class="nw-visual-box">
+                    <div class="nw-visual-grid">
+                        <div class="grid-item">
+                            <i class="fas fa-columns"></i>
+                            <div style="font-weight:bold; font-size:13px;">게시판</div>
+                        </div>
+                        <div class="grid-item">
+                            <i class="fas fa-address-book"></i>
+                            <div style="font-weight:bold; font-size:13px;">주소록</div>
+                        </div>
+                        <div class="grid-item">
+                            <i class="fas fa-check-square"></i>
+                            <div style="font-weight:bold; font-size:13px;">할 일</div>
+                        </div>
+                        <div class="grid-item">
+                            <i class="fas fa-poll"></i>
+                            <div style="font-weight:bold; font-size:13px;">설문</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="nw-feature-text">
+                <span class="nw-feature-label">업무 생산성 강화</span>
+                <h2 class="nw-feature-title">본질에 집중할 수 있도록<br>모든 기능을 담은 올인원 앱</h2>
+                <p class="nw-feature-desc">
+                    업무의 생산성을 강화할 수 있는 캘린더, 주소록, 할 일, 설문과 같은 기능을 제공하여 의사 결정과 문제 해결 과정을 간소화하고 더욱 중요한 것에 집중할 수 있게 합니다.
+                    PC와 모바일 앱 간 빠른 연계로 언제 어디서든 업무를 처리할 수 있도록 지원합니다.
+                </p>
+            </div>
         </div>
-    </div>
+    </section>
 
+    <!-- Value Proposition 3: Security -->
+    <section class="nw-section bg-gray">
+        <div class="nw-feature-row">
+            <div class="nw-feature-visual">
+                <div class="nw-visual-box nw-visual-security">
+                    <i class="fas fa-shield-alt shield-icon"></i>
+                    <i class="fas fa-lock lock-icon"></i>
+                </div>
+            </div>
+            <div class="nw-feature-text">
+                <span class="nw-feature-label">고객 데이터 보안</span>
+                <h2 class="nw-feature-title">운영의 편의성과 안정성을<br>갖춘 관리 기능</h2>
+                <p class="nw-feature-desc">
+                    관리자 권한 부여, 서비스 이용 범위 설정 뿐만 아니라 모니터링 및 감사 기능을 통해 발생 가능한 보안 문제를 사전에 대응할 수 있습니다.
+                    데이터 보안 단계를 설정하여 로그인 정보 유실이나 디바이스 분실과 같은 인적 실수까지 신속하게 대응할 수 있습니다.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Grid -->
+    <section class="nw-benefits">
+        <div class="nw-section-header">
+            <h2 class="nw-section-title">네이버웍스만의 특장점을 알려드려요</h2>
+            <p class="nw-section-subtitle">검증된 기술력과 친숙한 사용성을 경험해보세요.</p>
+        </div>
+        <div class="nw-grid">
+            <div class="nw-card">
+                <div class="nw-card-icon"><i class="fas fa-smile"></i></div>
+                <h3 class="nw-card-title">친숙한 사용성</h3>
+                <p class="nw-card-text">네이버 메일, 캘린더와 유사한 UI로 별도 교육 없이 바로 사용 가능합니다.</p>
+            </div>
+            <div class="nw-card">
+                <div class="nw-card-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3 class="nw-card-title">강력한 보안</h3>
+                <p class="nw-card-text">ISO/IEC 등 국제 인증을 획득한 네이버클라우드의 보안 기술을 적용합니다.</p>
+            </div>
+            <div class="nw-card">
+                <div class="nw-card-icon"><i class="fas fa-mobile-alt"></i></div>
+                <h3 class="nw-card-title">모바일 최적화</h3>
+                <p class="nw-card-text">PC와 모바일 완벽 동기화로 언제 어디서나 끊김 없는 업무가 가능합니다.</p>
+            </div>
+            <div class="nw-card">
+                <div class="nw-card-icon"><i class="fas fa-brain"></i></div>
+                <h3 class="nw-card-title">AI 인텔리전스</h3>
+                <p class="nw-card-text">파파고 번역, 클로바 OCR 등 네이버의 최신 AI 기술이 업무를 도와줍니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile App Screenshots (CSS Mockups) -->
+    <section class="nw-mobile-app">
+        <div class="nw-section-header" style="text-align: center;">
+            <h2 class="nw-section-title">이 모든 기능을 하나의 앱에서</h2>
+        </div>
+        <div class="nw-app-scroll">
+            <!-- Message App UI -->
+            <div class="nw-phone-mockup">
+                <div style="background:#f4f6f8; height:100%; display:flex; flex-direction:column;">
+                    <div
+                        style="background:white; padding:15px; border-bottom:1px solid #eee; font-weight:bold; text-align:center;">
+                        Message</div>
+                    <div style="padding:15px; flex:1;">
+                        <div style="display:flex; margin-bottom:15px;">
+                            <div
+                                style="width:36px; height:36px; background:#ddd; border-radius:12px; margin-right:10px;">
+                            </div>
+                            <div
+                                style="background:white; padding:10px; border-radius:0 12px 12px 12px; font-size:12px; max-width:180px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+                                회의 자료 보냈습니다. 확인 부탁드려요!</div>
+                        </div>
+                        <div style="display:flex; justify-content:flex-end; margin-bottom:15px;">
+                            <div
+                                style="background:#03C75A; color:white; padding:10px; border-radius:12px 0 12px 12px; font-size:12px; max-width:180px;">
+                                네, 확인했습니다.</div>
+                        </div>
+                        <div style="display:flex; margin-bottom:15px;">
+                            <div
+                                style="width:36px; height:36px; background:#ddd; border-radius:12px; margin-right:10px;">
+                            </div>
+                            <div
+                                style="background:white; padding:10px; border-radius:0 12px 12px 12px; font-size:12px; max-width:180px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+                                다음 주 일정 조율 가능할까요?</div>
+                        </div>
+                    </div>
+                    <div
+                        style="background:white; padding:10px; border-top:1px solid #eee; display:flex; justify-content:space-around; color:#999;">
+                        <i class="fas fa-comment" style="color:#03C75A;"></i>
+                        <i class="fas fa-envelope"></i>
+                        <i class="fas fa-calendar-alt"></i>
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar App UI -->
+            <div class="nw-phone-mockup" style="margin-top: 40px">
+                <div style="background:white; height:100%; display:flex; flex-direction:column;">
+                    <div
+                        style="padding:15px; border-bottom:1px solid #eee; font-weight:bold; text-align:center; display:flex; justify-content:space-between;">
+                        <i class="fas fa-bars"></i>
+                        <span>Calendar</span>
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div style="padding:10px;">
+                        <div style="font-size:24px; font-weight:bold; margin-bottom:20px;">12월</div>
+                        <!-- Mock Calendar Grid -->
+                        <div
+                            style="display:grid; grid-template-columns:repeat(7, 1fr); gap:5px; text-align:center; font-size:12px; margin-bottom:20px;">
+                            <span
+                                style="color:red">일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span
+                                style="color:blue">토</span>
+                            <span style="color:#ccc">29</span><span
+                                style="color:#ccc">30</span><span>1</span><span>2</span><span>3</span><span>4</span><span
+                                style="color:blue">5</span>
+                            <span style="color:red">6</span><span>7</span><span
+                                style="background:#03C75A; color:white; border-radius:50%; width:20px; height:20px; display:inline-block; line-height:20px;">8</span><span>9</span><span>10</span><span>11</span><span
+                                style="color:blue">12</span>
+                        </div>
+                        <div style="border-left:3px solid #03C75A; padding-left:10px; margin-bottom:10px;">
+                            <div style="font-size:12px; color:#666;">10:00 - 11:30</div>
+                            <div style="font-weight:bold; font-size:13px;">주간 기획 회의</div>
+                        </div>
+                        <div style="border-left:3px solid #ffb300; padding-left:10px;">
+                            <div style="font-size:12px; color:#666;">14:00 - 15:00</div>
+                            <div style="font-weight:bold; font-size:13px;">클라이언트 미팅</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mail App UI -->
+            <div class="nw-phone-mockup">
+                <div style="background:white; height:100%; display:flex; flex-direction:column;">
+                    <div
+                        style="padding:15px; background:#03C75A; color:white; font-weight:bold; display:flex; justify-content:space-between; align-items:center;">
+                        <i class="fas fa-bars"></i>
+                        <span>받은메일함</span>
+                        <i class="fas fa-pen"></i>
+                    </div>
+                    <div style="flex:1;">
+                        <div style="padding:15px; border-bottom:1px solid #f0f0f0;">
+                            <div style="font-size:13px; font-weight:bold; margin-bottom:5px;">기획팀 (김네이버)</div>
+                            <div style="font-size:12px; color:#333; margin-bottom:5px;">[긴급] 4분기 실적 보고서 초안 ...</div>
+                            <div style="font-size:11px; color:#999;">오후 3:42 <i class="fas fa-paperclip"></i></div>
+                        </div>
+                        <div style="padding:15px; border-bottom:1px solid #f0f0f0; background:#f9f9f9;">
+                            <div style="font-size:13px; font-weight:bold; margin-bottom:5px; color:#666;">인사팀</div>
+                            <div style="font-size:12px; color:#666; margin-bottom:5px;">연말 정산 안내 가이드</div>
+                            <div style="font-size:11px; color:#999;">오전 10:15</div>
+                        </div>
+                        <div style="padding:15px; border-bottom:1px solid #f0f0f0;">
+                            <div style="font-size:13px; font-weight:bold; margin-bottom:5px;">NAVER Cloud</div>
+                            <div style="font-size:12px; color:#333; margin-bottom:5px;">서비스 정기 점검 안내</div>
+                            <div style="font-size:11px; color:#999;">어제</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Merged Feature Detail Image -->
+        <div class="nw-container" style="text-align: center; margin-top: 80px;">
+            <img src="images/naver_works_features.png" alt="Naver Works Detail Features"
+                style="max-width: 100%; height: auto; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05);">
+        </div>
+    </section>
+
+    <!-- Pricing Section (Dynamic from Admin) -->
+    <section class="nw-pricing" id="price">
+        <div style="text-align: center; margin-bottom: 60px;">
+            <span class="nw-feature-label">요금 안내</span>
+            <h2 class="nw-section-title">비즈니스에 최적화된<br>플랜을 선택하세요</h2>
+        </div>
+        <div class="nw-pricing-grid" id="pricing-grid-naver">
+            <!-- Dynamic Content Loaded by data_loader.js -->
+            <div style="text-align:center; padding:40px; color:#666; grid-column:1/-1;">
+                <i class="fas fa-spinner fa-spin"></i> 요금제 정보를 불러오는 중...
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="nw-faq">
+        <div class="nw-section-header" style="text-align: center;">
+            <h2 class="nw-section-title">자주 묻는 질문</h2>
+        </div>
+        <div class="nw-faq-container">
+            <div class="nw-accordion-item">
+                <button class="nw-accordion-header">
+                    <span>네이버웍스와 네이버웍스 코어의 차이가 무엇인가요?</span>
+                    <i class="fas fa-chevron-down nw-accordion-icon"></i>
+                </button>
+                <div class="nw-accordion-content">
+                    네이버웍스 코어는 메일 기능이 제외된 상품으로, 기존 사내 메일 시스템을 유지하면서 협업 도구만 도입하고 싶으실 때 적합합니다. 네이버웍스(Standard 등)는 메일을 포함한
+                    올인원 패키지입니다.
+                </div>
+            </div>
+            <div class="nw-accordion-item">
+                <button class="nw-accordion-header">
+                    <span>메일 서비스를 쓰려면 어떤 상품을 써야 하나요?</span>
+                    <i class="fas fa-chevron-down nw-accordion-icon"></i>
+                </button>
+                <div class="nw-accordion-content">
+                    메일 서비스를 이용하시려면 'Standard' 이상의 플랜을 선택하셔야 합니다. Free와 Lite 플랜은 메시지와 기타 기능을 제공하지만 메일 서비스는 포함되어 있지 않습니다.
+                </div>
+            </div>
+            <div class="nw-accordion-item">
+                <button class="nw-accordion-header">
+                    <span>메일 서비스를 쓰려면 도메인 주소가 필요한가요?</span>
+                    <i class="fas fa-chevron-down nw-accordion-icon"></i>
+                </button>
+                <div class="nw-accordion-content">
+                    네, 기업 메일을 사용하기 위해서는 도메인이 필요합니다. 도메인이 없으신 경우 휴메카 또는 도메인 등록 업체를 통해 구매 후 연결하실 수 있습니다.
+                </div>
+            </div>
+            <div class="nw-accordion-item">
+                <button class="nw-accordion-header">
+                    <span>무료 체험판을 제공하나요?</span>
+                    <i class="fas fa-chevron-down nw-accordion-icon"></i>
+                </button>
+                <div class="nw-accordion-content">
+                    네이버웍스의 유료 플랜 기능은 30일간 무료로 체험해보실 수 있습니다. 체험 기간 동안 생성된 데이터는 유료 전환 시 그대로 유지됩니다.
+                </div>
+            </div>
+            <div class="nw-accordion-item">
+                <button class="nw-accordion-header">
+                    <span>네이버웍스 요금 할인 프로그램이 있나요?</span>
+                    <i class="fas fa-chevron-down nw-accordion-icon"></i>
+                </button>
+                <div class="nw-accordion-content">
+                    연간 결제 시 월간 결제 대비 약 10~20% 할인된 가격으로 이용하실 수 있습니다. 또한 교육, 비영리 기관은 별도의 할인 정책이 적용될 수 있으니 문의 바랍니다.
+                </div>
+            </div>
+            <div class="nw-accordion-item">
+                <button class="nw-accordion-header">
+                    <span>네이버웍스 파트너를 통해 도입 지원을 받고 싶습니다.</span>
+                    <i class="fas fa-chevron-down nw-accordion-icon"></i>
+                </button>
+                <div class="nw-accordion-content">
+                    네, 공식 파트너사인 휴메카를 통해 도입하시면 초기 세팅부터 데이터 이관, 사용자 교육까지 전문 엔지니어의 지원을 받으실 수 있습니다.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="nw-cta">
+        <h2>네이버웍스를 지금 시작해보세요.</h2>
+        <p>전 세계 35만 기업이 선택한 협업 도구, 휴메카와 함께라면 도입이 더 쉬워집니다.</p>
+        <a href="#" class="nw-cta-btn">도입 상담 신청하기</a>
+    </section>
+
+    <!-- Footer -->
     <div id="footer-placeholder"></div>
-    <!-- App Modal Placeholder -->
     <div id="app-modal-placeholder"></div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase_config.js"></script>
     <script src="components/loader.js?v=3.21"></script>
     <script src="js/application_modal.js"></script>
-    <script src="js/data_loader.js?v=7.7"></script>
+    <script src="js/data_loader.js?v=8.0"></script>
     <script>
+        // Custom Accordion Script
+        const accordions = document.querySelectorAll('.nw-accordion-header');
+        accordions.forEach(acc => {
+            acc.addEventListener('click', () => {
+                acc.classList.toggle('active');
+                const icon = acc.querySelector('.nw-accordion-icon');
+                // Icon rotation is handled by CSS
+            });
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             loadProductData('solution-naver');
         });
