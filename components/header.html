@@ -78,6 +78,7 @@
                                 cursor: pointer;
                                 transition: all 0.2s;
                                 border-left: 3px solid transparent;
+                                font-size: 15px;
                             }
 
                             .mega-sidebar-item:hover {
@@ -158,60 +159,46 @@
 
                                 <!-- 1. KT Cloud Content (Existing) -->
                                 <div id="tab-kt" class="mega-tab-content active">
+                                    <!-- 1. KT Cloud Content (Updated: Feature Focus) -->
                                     <div
                                         style="margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px;">
                                         <h4
                                             style="font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 5px;">
-                                            KT Cloud Service</h4>
-                                        <p style="font-size: 13px; color: #64748b;">국내 최고의 클라우드 인프라 서비스</p>
+                                            KT Cloud Platform
+                                        </h4>
+                                        <p style="font-size: 13px; color: #64748b;">국내 유일의 IDC 기반 클라우드 서비스</p>
                                     </div>
 
-                                    <div class="mega-grid-compact">
-                                        <a href="sub_cloud.html#server" class="dropdown-item">
-                                            <div class="dropdown-icon"><i class="fas fa-server"></i></div>
-                                            <div class="dropdown-text"><span class="dropdown-title">Server</span></div>
-                                        </a>
-                                        <a href="sub_cloud.html#db" class="dropdown-item">
-                                            <div class="dropdown-icon"><i class="fas fa-database"></i></div>
-                                            <div class="dropdown-text"><span class="dropdown-title">데이터베이스</span></div>
-                                        </a>
-                                        <a href="sub_cloud.html#storage" class="dropdown-item">
-                                            <div class="dropdown-icon"><i class="fas fa-hdd"></i></div>
-                                            <div class="dropdown-text"><span class="dropdown-title">스토리지/CDN</span>
-                                            </div>
-                                        </a>
-                                        <a href="sub_cloud.html#network" class="dropdown-item">
-                                            <div class="dropdown-icon"><i class="fas fa-network-wired"></i></div>
-                                            <div class="dropdown-text"><span class="dropdown-title">네트워크</span></div>
-                                        </a>
-                                        <a href="sub_cloud.html#management" class="dropdown-item">
-                                            <div class="dropdown-icon"><i class="fas fa-tasks"></i></div>
-                                            <div class="dropdown-text"><span class="dropdown-title">매니지먼트</span></div>
-                                        </a>
-                                        <a href="sub_cloud.html#vdi" class="dropdown-item">
-                                            <div class="dropdown-icon"><i class="fas fa-desktop"></i></div>
-                                            <div class="dropdown-text"><span class="dropdown-title">VDI</span></div>
-                                        </a>
-                                        <a href="sub_cloud.html#private" class="dropdown-item">
-                                            <div class="dropdown-icon"><i class="fas fa-lock"></i></div>
-                                            <div class="dropdown-text"><span class="dropdown-title">Private Cloud</span>
-                                            </div>
-                                        </a>
-
-                                        <!-- Service Limits -->
-                                        <a href="sub_cloud.html#limits" class="dropdown-item">
-                                            <div class="dropdown-icon"><i class="fas fa-info-circle"></i></div>
-                                            <div class="dropdown-text"><span class="dropdown-title">서비스별 제한사항</span>
-                                            </div>
-                                        </a>
+                                    <div
+                                        style="background: #f8fafc; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
+                                        <h3
+                                            style="color: #222; font-weight:900; font-size: 24px; letter-spacing:-0.5px; margin-bottom:10px; margin-top:0;">
+                                            <span style="color:#000;">KT</span> <span
+                                                style="color:#E94D36;">Cloud</span>
+                                        </h3>
+                                        <p style="color: #475569; font-size: 14px; line-height: 1.6;">
+                                            공공/금융/기업 맞춤형 클라우드.<br>
+                                            국내 최대 규모의 IDC 인프라를 경험하세요.
+                                        </p>
                                     </div>
 
-                                    <div class="mega-cta"
-                                        style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
-                                        <a href="https://login.humecca.co.kr" target="_blank"
-                                            class="btn-service-shortcut" style="color: #FFFFFF !important;">
-                                            <i class="fas fa-cloud" style="color: #FFFFFF !important;"></i> 서비스 콘솔 바로가기
-                                            <i class="fas fa-external-link-alt"></i>
+                                    <div style="display: grid; gap: 10px;">
+                                        <a href="sub_cloud.html" class="dropdown-item">
+                                            <div class="dropdown-icon"><i class="fas fa-book-open"></i></div>
+                                            <div class="dropdown-text">
+                                                <span class="dropdown-title">KT 클라우드 소개</span>
+                                                <span class="dropdown-desc">주요 상품 및 서비스 안내</span>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0)" onclick="openAppModal('KT Cloud 컨설팅', 'cloud_kt')"
+                                            class="dropdown-item"
+                                            style="background-color: #f0fdf4; border: 1px solid #86efac;">
+                                            <div class="dropdown-icon"><i class="fas fa-headset"
+                                                    style="color: #16a34a;"></i></div>
+                                            <div class="dropdown-text">
+                                                <span class="dropdown-title" style="color: #15803d;">컨설팅 신청</span>
+                                                <span class="dropdown-desc" style="color: #166534;">맞춤형 아키텍처 제안</span>
+                                            </div>
                                         </a>
                                     </div>
                                 </div>

@@ -25,14 +25,17 @@
     <div id="header-placeholder"></div>
 
     <!-- Hero: Corporate Solution Standard (Security Style) -->
+    <!-- Hero: Corporate Solution Standard (Premium Effect) -->
     <section class="sw-hero"
-        style="background-image: linear-gradient(rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.9)), url('images/hero_mail.jpg'); text-align:center;">
-        <div class="container">
+        style="background-color: #0f172a; position: relative; overflow: hidden; padding: 120px 0 100px;">
+        <canvas id="space-canvas"
+            style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
+        <div class="container" style="position: relative; z-index: 10;">
             <div class="hero-breadcrumb">
                 기업솔루션 <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 8px;"></i> 홈페이지 제작
             </div>
 
-            <h1 class="hero-title-security">홈페이지 제작</h1>
+            <h1 class="hero-title-security" style="text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);">홈페이지 제작</h1>
 
             <p
                 style="max-width: 800px; margin: 0 auto; color: rgba(255,255,255,0.8); line-height: 1.6; font-size:18px;">
@@ -41,6 +44,111 @@
             </p>
         </div>
     </section>
+
+    <!-- Animation Script (Blue Theme) -->
+    <script>
+        {
+            document.addEventListener('DOMContentLoaded', () => {
+                const canvas = document.getElementById('space-canvas');
+                if (!canvas) return;
+
+                const ctx = canvas.getContext('2d');
+                let width, height;
+
+                // --- Config (Blue Theme) ---
+                const STAR_COUNT = 100;
+                const COMET_SPEED = 0.5;
+                const PRIMARY_COLOR = '255, 255, 255'; // Stars
+                const COMET_COLOR = '59, 130, 246';    // Blue Comets
+
+                const stars = [];
+                const comets = [];
+
+                function initbox() {
+                    width = canvas.width = canvas.parentElement.offsetWidth;
+                    height = canvas.height = canvas.parentElement.offsetHeight;
+                }
+
+                class Star {
+                    constructor() {
+                        this.reset();
+                    }
+                    reset() {
+                        this.x = Math.random() * width;
+                        this.y = Math.random() * height;
+                        this.size = Math.random() * 1.5;
+                        this.alpha = Math.random();
+                        this.blink = Math.random() * 0.02 + 0.005;
+                    }
+                    update() {
+                        this.alpha += this.blink;
+                        if (this.alpha <= 0 || this.alpha >= 1) this.blink *= -1;
+                    }
+                    draw() {
+                        ctx.fillStyle = `rgba(${PRIMARY_COLOR}, ${this.alpha})`;
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                class Comet {
+                    constructor() {
+                        this.reset();
+                    }
+                    reset() {
+                        this.x = Math.random() * width;
+                        this.y = Math.random() * height;
+                        this.length = Math.random() * 80 + 20;
+                        this.angle = Math.PI / 4; // 45 degree
+                        this.speed = Math.random() * COMET_SPEED + 0.5;
+                        this.opacity = 0;
+                    }
+                    update() {
+                        this.x += this.speed;
+                        this.y += this.speed; // Diagonal down-right
+                        this.opacity += 0.02;
+
+                        if (this.x > width + 100 || this.y > height + 100) {
+                            this.reset();
+                            this.x = Math.random() * width - width; // Start from left/top again
+                            this.y = Math.random() * height - height;
+                            this.opacity = 0;
+                        }
+                    }
+                    draw() {
+                        const gradient = ctx.createLinearGradient(this.x, this.y, this.x - this.length, this.y - this.length);
+                        gradient.addColorStop(0, `rgba(${COMET_COLOR}, ${this.opacity})`);
+                        gradient.addColorStop(1, `rgba(${COMET_COLOR}, 0)`);
+
+                        ctx.strokeStyle = gradient;
+                        ctx.lineWidth = 2;
+                        ctx.lineCap = 'round';
+                        ctx.beginPath();
+                        ctx.moveTo(this.x, this.y);
+                        ctx.lineTo(this.x - this.length, this.y - this.length);
+                        ctx.stroke();
+                    }
+                }
+
+                // Init
+                initbox();
+                for (let i = 0; i < STAR_COUNT; i++) stars.push(new Star());
+                for (let i = 0; i < 3; i++) comets.push(new Comet()); // 3 comets
+
+                function animate() {
+                    ctx.clearRect(0, 0, width, height);
+                    stars.forEach(s => { s.update(); s.draw(); });
+                    comets.forEach(c => { c.update(); c.draw(); });
+                    requestAnimationFrame(animate);
+                }
+
+                window.addEventListener('resize', initbox);
+                initbox();
+                animate();
+            });
+        }
+    </script>
 
     <!-- Main Content (Light Background) -->
     <div style="background-color: #fff; padding: 40px 0;">
