@@ -3,198 +3,286 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="view-transition" content="same-origin">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HUMECCA - 서버 호스팅</title>
+    <title>홈페이지 제작 - HUMECCA</title>
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="./styles.css">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="styles.css?v=3.20">
+    <!-- Page Specific Styles -->
+    <link rel="stylesheet" href="css/sub_website.css?v=1.16">
+    <!-- Animation CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        /* Embedded simple JS for accordion if needed, but better in logical file or inline onclick for simplicity */
+    </style>
 </head>
 
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-container container">
-            <a href="index.html" class="logo">
-                <img src="./logo.png" alt="HUMECCA" id="logo-img">
-            </a>
+<body class="website-wrapper">
 
-            <nav class="nav">
-                <ul class="nav-list">
-                    <li class="nav-item has-dropdown">
-                        <a href="index.html#idc" class="nav-link">IDC <i class="fas fa-chevron-down arrow-icon"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="idc_hosting.html" class="dropdown-item">서버 호스팅</a>
-                            <a href="idc_colocation.html" class="dropdown-item">코로케이션</a>
-                            <a href="idc_network.html" class="dropdown-item">IDC 네트워크</a>
-                        </div>
-                    </li>
-                    <li class="nav-item has-dropdown">
-                        <a href="index.html#cloud" class="nav-link">클라우드 <i
-                                class="fas fa-chevron-down arrow-icon"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="cloud_kt.html" class="dropdown-item">KT 클라우드</a>
-                            <a href="cloud_storage.html" class="dropdown-item">클라우드 스토리지</a>
-                            <a href="cloud_os.html" class="dropdown-item">다양한 OS 지원</a>
-                        </div>
-                    </li>
-                    <li class="nav-item has-dropdown">
-                        <a href="index.html#vpn" class="nav-link">VPN 전용선 <i
-                                class="fas fa-chevron-down arrow-icon"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="vpn_service.html" class="dropdown-item">VPN 서비스</a>
-                            <a href="vpn_line.html" class="dropdown-item">전용선</a>
-                            <a href="vpn_monitoring.html" class="dropdown-item">네트워크 모니터링</a>
-                        </div>
-                    </li>
-                    <li class="nav-item has-dropdown">
-                        <a href="index.html#security" class="nav-link">보안 <i
-                                class="fas fa-chevron-down arrow-icon"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="sec_monitoring.html" class="dropdown-item">보안 모니터링</a>
-                            <a href="sec_ddos.html" class="dropdown-item">DDoS 방어</a>
-                            <a href="sec_ssl.html" class="dropdown-item">SSL/방화벽</a>
-                        </div>
-                    </li>
-                    <li class="nav-item has-dropdown">
-                        <a href="index.html#additional" class="nav-link">부가서비스 <i
-                                class="fas fa-chevron-down arrow-icon"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="add_server.html" class="dropdown-item">서버 관리 대행</a>
-                            <a href="add_backup.html" class="dropdown-item">백업 & 복구</a>
-                            <a href="add_ha.html" class="dropdown-item">HA 호스팅</a>
-                        </div>
-                    </li>
-                    <li class="nav-item has-dropdown">
-                        <a href="index.html#solutions" class="nav-link">기업솔루션 <i
-                                class="fas fa-chevron-down arrow-icon"></i></a>
-                        <div class="dropdown-menu">
-                            <a href="sol_home.html" class="dropdown-item">맞춤형 홈페이지</a>
-                            <a href="sol_groupware.html" class="dropdown-item">네이버웍스</a>
-                            <a href="sol_ebiz.html" class="dropdown-item">e-Business 솔루션</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a href="index.html#about" class="nav-link">회사소개</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="index.html#support" class="nav-link">고객센터</a>
-                    </li>
-                </ul>
-            </nav>
+    <!-- Header Loader -->
+    <div id="header-placeholder"></div>
 
-            <div class="header-utils">
-                <a href="#" class="util-link"><i class="fas fa-calculator"></i> 요금계산</a>
-                <a href="#" class="util-link">회원가입</a>
-                <a href="#" class="btn-login">로그인</a>
-                <button class="mobile-menu-btn" id="mobile-menu-btn">
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Subpage Hero -->
-    <section class="sw-hero" style="background: #1a1f3c;">
+    <!-- Hero: Corporate Solution Standard (Security Style) -->
+    <section class="sw-hero"
+        style="background-image: linear-gradient(rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.9)), url('images/hero_mail.jpg'); text-align:center;">
         <div class="container">
-            <h1>맞춤형 홈페이지</h1>
-            <p>Customized Homepage Service</p>
+            <div class="hero-breadcrumb">
+                기업솔루션 <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 8px;"></i> 홈페이지 제작
+            </div>
+
+            <h1 class="hero-title-security">홈페이지 제작</h1>
+
+            <p
+                style="max-width: 800px; margin: 0 auto; color: rgba(255,255,255,0.8); line-height: 1.6; font-size:18px;">
+                비즈니스 성공을 위한 첫걸음, 전문적인 웹사이트 제작<br>
+                기획부터 디자인, 개발, 유지보수까지 원스톱으로 제공합니다.
+            </p>
         </div>
     </section>
 
-    <!-- Content -->
-    <section class="page-content" style="padding: 80px 0;">
-        <div class="container">
-            <div class="content-header" style="text-align: center; margin-bottom: 50px;">
-                <h2 style="font-size: 2.5rem; margin-bottom: 20px;">등록된 상품</h2>
-                <p style="color: #666; font-size: 1.1rem;">Supabase에서 불러온 실시간 데이터입니다</p>
+    <!-- Main Content (Light Background) -->
+    <div style="background-color: #fff; padding: 40px 0;">
+
+        <!-- [NEW] Service Areas Grid -->
+        <section class="website-section">
+            <div class="content-header">
+                <div
+                    style="display:inline-block; background:#eff6ff; color:#3b82f6; padding:5px 15px; border-radius:20px; font-size:14px; font-weight:700; margin-bottom:15px;">
+                    OUR SERVICE</div>
+                <h2>전문적인 제작 서비스</h2>
+                <p>최신 웹 트렌드와 기술을 반영하여 최상의 결과물을 제공합니다.</p>
             </div>
 
-            <!-- 상품 표시 영역 -->
-            <div id="productsContainer"></div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>HUMECCA</h3>
-                    <p>믿을 수 있는 IDC 파트너</p>
-                    <p class="footer-copyright">© 2024 HUMECCA. All rights reserved.</p>
+            <div class="service-detail-grid">
+                <!-- 1 -->
+                <div class="service-detail-card">
+                    <div class="service-detail-icon"><i class="fas fa-desktop"></i></div>
+                    <div class="service-detail-content">
+                        <h3>반응형 웹 디자인</h3>
+                        <p>PC, 태블릿, 모바일 등 모든 디바이스에서 최적화된 화면을 제공하는 반응형 웹사이트를 구축합니다.</p>
+                    </div>
                 </div>
-                <div class="footer-section">
-                    <h4>서비스</h4>
-                    <ul>
-                        <li><a href="idc_hosting.html">서버 호스팅</a></li>
-                        <li><a href="idc_colocation.html">코로케이션</a></li>
-                    </ul>
+                <!-- 2 -->
+                <div class="service-detail-card">
+                    <div class="service-detail-icon"><i class="fas fa-search-plus"></i></div>
+                    <div class="service-detail-content">
+                        <h3>SEO 최적화</h3>
+                        <p>검색엔진 최적화(SEO)를 기본 적용하여, 네이버/구글 등에서 고객님의 웹사이트가 잘 검색되도록 설계합니다.</p>
+                    </div>
                 </div>
-                <div class="footer-section">
-                    <h4>솔루션</h4>
-                    <ul>
-                        <li><a href="sol_home.html">홈페이지 제작</a></li>
-                        <li><a href="sol_groupware.html">그룹웨어</a></li>
-                    </ul>
+                <!-- 3 -->
+                <div class="service-detail-card">
+                    <div class="service-detail-icon"><i class="fas fa-cogs"></i></div>
+                    <div class="service-detail-content">
+                        <h3>편리한 관리자 모드</h3>
+                        <p>누구나 쉽게 팝업, 공지사항, 게시물을 관리할 수 있는 직관적인 관리자 기능을 무료로 제공합니다.</p>
+                    </div>
                 </div>
-                <div class="footer-section">
-                    <h4>회사</h4>
-                    <ul>
-                        <li><a href="index.html#about">회사소개</a></li>
-                        <li><a href="index.html#support">문의하기</a></li>
-                    </ul>
+                <!-- 4 -->
+                <div class="service-detail-card">
+                    <div class="service-detail-icon"><i class="fas fa-sliders-h"></i></div>
+                    <div class="service-detail-content">
+                        <h3>웹 표준 & 접근성 준수</h3>
+                        <p>W3C 웹 표준을 준수하며, 다양한 브라우저 호환성(크로스 브라우징)을 보장하여 안정성을 높입니다.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </section>
 
-    <script src="./script.js"></script>
+        <!-- Divider -->
+        <div style="height: 1px; background: #f3f4f6; max-width: 1200px; margin: 30px auto;"></div>
 
+        <!-- [EXISTING] Process Section -->
+        <section class="website-section">
+            <div class="content-header">
+                <div
+                    style="display:inline-block; background:#eff6ff; color:#3b82f6; padding:5px 15px; border-radius:20px; font-size:14px; font-weight:700; margin-bottom:15px;">
+                    PROCESS</div>
+                <h2>체계적인 제작 프로세스</h2>
+                <p>복잡한 과정 없이, 전문가가 알아서 진행해 드립니다.</p>
+            </div>
 
-    <script>
-        // Improved Menu Interaction
-        document.addEventListener('DOMContentLoaded', () => {
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                const menu = item.querySelector('.dropdown-menu');
-                if (!menu) return;
+            <div class="process-grid">
+                <div class="process-card">
+                    <div class="process-icon"><i class="fas fa-comments"></i></div>
+                    <h3 class="process-title">1. 상담 및 기획</h3>
+                    <p class="process-desc">요구사항 분석 및<br>사이트 구조 기획</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-icon"><i class="fas fa-pencil-ruler"></i></div>
+                    <h3 class="process-title">2. 디자인</h3>
+                    <p class="process-desc">트렌디한 UI/UX<br>맞춤형 디자인 시안</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-icon"><i class="fas fa-code"></i></div>
+                    <h3 class="process-title">3. 퍼블리싱/개발</h3>
+                    <p class="process-desc">웹 표준/접근성 준수<br>반응형 웹 구현</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-icon"><i class="fas fa-rocket"></i></div>
+                    <h3 class="process-title">4. 오픈/유지보수</h3>
+                    <p class="process-desc">검수 후 런칭<br>지속적인 관리</p>
+                </div>
+            </div>
+        </section>
 
-                // When link inside menu is clicked, hide menu immediately
-                const links = menu.querySelectorAll('a.dropdown-item');
-                links.forEach(link => {
-                    link.addEventListener('click', () => {
-                        menu.style.display = 'none'; // Force hide to prevent ghosting
-                    });
-                });
+        <!-- [NEW] Technologies Section -->
+        <section class="website-section"
+            style="background-color: #f8fafc; border-radius: 20px; padding: 40px 60px; margin-top: 30px;">
+            <div class="content-header" style="margin-bottom: 30px;">
+                <h2>사용 기술 및 환경</h2>
+                <p>최신 기술 스택을 활용하여 빠르고 안정적인 웹사이트를 제작합니다.</p>
+            </div>
 
-                // CRITICAL FIX: When mouse leaves the parent li, reset the inline style 
-                // This ensures that next time the user hovers, CSS :hover works again.
-                item.addEventListener('mouseleave', () => {
-                    menu.style.display = '';
-                    menu.style.opacity = '';
-                    menu.style.visibility = '';
-                });
+            <div class="tech-stack-row">
+                <div class="tech-item">
+                    <i class="fab fa-html5 tech-icon"></i>
+                    <div class="tech-name">HTML5</div>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-css3-alt tech-icon"></i>
+                    <div class="tech-name">CSS3</div>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-js tech-icon"></i>
+                    <div class="tech-name">JavaScript</div>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-react tech-icon"></i>
+                    <div class="tech-name">React</div>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-node tech-icon"></i>
+                    <div class="tech-name">Node.js</div>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-database tech-icon"></i>
+                    <div class="tech-name">Supabase</div>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-aws tech-icon"></i>
+                    <div class="tech-name">AWS</div>
+                </div>
+            </div>
+        </section>
 
-                // Safety: Ensure it's clean (visible) when mouse enters
-                item.addEventListener('mouseenter', () => {
-                    menu.style.display = '';
-                });
-            });
-        });
-    </script>
+        <!-- Divider with Reduced Spacing -->
+        <div style="height: 1px; background: #f3f4f6; max-width: 1200px; margin: 30px auto;"></div>
 
-    <!-- Supabase Integration -->
+        <!-- [EXISTING] Pricing Section -->
+        <section id="pricing" class="website-section">
+            <div class="content-header">
+                <h2>제작 패키지 안내</h2>
+                <p>고객님의 예산과 목적에 맞는 최적의 플랜을 선택하세요.</p>
+            </div>
+
+            <div id="pricing-grid-website" class="pricing-grid-custom">
+                <div style="grid-column: 1/-1; text-align:center; color:#94a3b8; padding:50px;">
+                    <i class="fas fa-spinner fa-spin"></i> 요금제 정보를 불러오는 중입니다...
+                </div>
+            </div>
+        </section>
+
+        <!-- [NEW] FAQ Section -->
+        <section class="website-section"
+            style="background-color: #f9fafb; padding: 40px; border-radius: 20px; margin-top: 30px;">
+            <div class="content-header" style="margin-bottom: 30px;">
+                <h2>자주 묻는 질문 (FAQ)</h2>
+                <p>홈페이지 제작과 관련하여 궁금한 점을 확인해 보세요.</p>
+            </div>
+
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        제작 기간은 얼마나 걸리나요?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            일반적인 기업형 홈페이지(Starter/Business)의 경우 자료가 준비된 시점부터 <strong>약 2~4주</strong> 정도 소요됩니다.
+                            단, 주문 제작형(Enterprise)이나 특별한 기능 개발이 필요한 경우 기간이 추가될 수 있습니다.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        제작 후 유지보수는 어떻게 되나요?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            제작 완료 후 <strong>3개월간 무상 하자 보수</strong>를 제공합니다.
+                            텍스트/이미지 수정 등 간단한 유지보수는 관리자 모드를 통해 직접 가능하며,
+                            전문적인 관리가 필요하신 경우 별도의 유지보수 계약을 통해 지원해 드립니다.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        모바일에서도 잘 보이나요?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            네, 물론입니다. 휴메카에서 제작하는 모든 홈페이지는 <strong>반응형 웹(Responsive Web)</strong> 기술이 적용되어,
+                            PC뿐만 아니라 스마트폰, 태블릿 등 모든 기기에서 최적화된 화면으로 보여집니다.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        도메인과 호스팅은 별도인가요?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            도메인(주소)과 호스팅(서버)은 별도로 구매하셔야 합니다.
+                            <strong>가장 합리적인 가격으로 휴메카에서 제공이 가능합니다.</strong>
+                            번거로운 절차 없이 원스톱으로 관리해 드립니다.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Footer Loader -->
+    <div id="footer-placeholder"></div>
+    <div id="app-modal-placeholder"></div>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="./supabase_config.js"></script>
-    <script src="./products.js"></script>
+    <script src="supabase_config.js"></script>
+    <script src="components/loader.js?v=3.21"></script>
+    <script src="js/application_modal.js"></script>
+    <script src="js/data_loader.js?v=8.0"></script>
     <script>
-        // 페이지 로드 시 'solution' 카테고리의 상품 불러오기
         document.addEventListener('DOMContentLoaded', () => {
-            loadProducts('solution', 'productsContainer');
+            loadProductData('solution-website');
         });
+
+        // Simple FAQ Toggle Script
+        function toggleFaq(button) {
+            const answer = button.nextElementSibling;
+            const isOpen = answer.style.maxHeight;
+
+            // Close all
+            document.querySelectorAll('.faq-answer').forEach(el => el.style.maxHeight = null);
+            document.querySelectorAll('.faq-question').forEach(el => el.classList.remove('active'));
+
+            if (!isOpen) {
+                button.classList.add('active');
+                answer.style.maxHeight = answer.scrollHeight + "px";
+                button.classList.add('active');
+            }
+        }
     </script>
-
-
-    <script src="js/subpage-canvas.js"></script>
 </body>
 
 </html>
