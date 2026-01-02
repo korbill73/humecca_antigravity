@@ -212,27 +212,35 @@ window.loadCustomerLogos = async function () {
 
                 if (!displayLogo) return `<span style="color: #475569; font-size: 14px; font-weight: 700; text-align: center;">${customer.name}</span>`;
 
-                return `<img src="${encodeURI(displayLogo)}" alt="${customer.name}" style="max-width: 100%; max-height: 52px; object-fit: contain;">`;
+                return `<img src="${encodeURI(displayLogo)}" alt="${customer.name}" style="max-width: 100%; max-height: 52px; object-fit: contain; filter: none !important; opacity: 1 !important; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);">`;
             })()}
                 </div>
             </div>
         `).join('');
 
-        // Add hover effects
+        // Add hover effects (Premium Designer Style)
         setTimeout(() => {
             const logoCards = document.querySelectorAll('.logo-card');
             logoCards.forEach(card => {
+                card.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+
                 card.onmouseenter = function () {
                     const shineOverlay = this.querySelector('.shine-overlay');
                     if (shineOverlay) shineOverlay.style.transform = 'translateX(100%)';
-                    this.style.background = 'rgba(255,245,245,1)';
-                    this.style.boxShadow = '0 12px 40px rgba(239,68,68,0.15)';
-                    this.style.borderColor = 'rgba(239,68,68,0.3)';
+
+                    // Designer Effect: Lift + Deep Shadow + Subtle Red Hint
+                    this.style.background = 'rgba(255,255,255,1)';
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                    this.style.boxShadow = '0 20px 40px rgba(239, 68, 68, 0.12), 0 5px 10px rgba(0,0,0,0.05)';
+                    this.style.borderColor = 'rgba(239, 68, 68, 0.4)';
                 };
                 card.onmouseleave = function () {
                     const shineOverlay = this.querySelector('.shine-overlay');
                     if (shineOverlay) shineOverlay.style.transform = 'translateX(-100%)';
+
+                    // Reset
                     this.style.background = 'rgba(255,255,255,0.95)';
+                    this.style.transform = 'translateY(0) scale(1)';
                     this.style.boxShadow = '0 4px 20px rgba(0,0,0,0.04)';
                     this.style.borderColor = 'rgba(226,232,240,0.8)';
                 };
