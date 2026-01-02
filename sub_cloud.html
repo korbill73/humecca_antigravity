@@ -16,14 +16,184 @@
     <div id="header-placeholder"></div>
 
     <main id="main-content">
-        <section class="cloud-hero">
-            <div class="container">
-                <div class="cloud-badgetext">KT Cloud Partner</div>
-                <h1>클라우드 서비스</h1>
-                <p>비즈니스 혁신을 위한 최적의 클라우드 플랫폼</p>
-                <a href="https://login.humecca.co.kr" class="hero-shortcut" target="_blank"><i
-                        class="fas fa-sign-in-alt"></i> 서비스 바로가기</a>
+        <section class="cloud-hero"
+            style="min-height: 500px; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; background-color: #0f172a;">
+
+            <!-- Cloud Comet Canvas -->
+            <canvas id="cloud-canvas-main"
+                style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
+
+            <div class="container" style="position: relative; z-index: 10;">
+                <div class="cloud-badgetext"
+                    style="display: inline-block; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 50px; font-size: 14px; font-weight: 600; color: #94a3b8; margin-bottom: 20px; backdrop-filter: blur(5px);">
+                    클라우드 > Cloud Service
+                </div>
+                <h1
+                    style="font-family: 'Outfit', sans-serif; font-size: 4rem; font-weight: 800; color: white; margin-bottom: 20px; letter-spacing: -1px; text-shadow: 0 4px 30px rgba(0,0,0,0.5);">
+                    Cloud Service
+                </h1>
+                <p style="font-size: 1.25rem; color: #cbd5e1; max-width: 600px; margin: 0 auto 40px; line-height: 1.6;">
+                    비즈니스 혁신을 위한 최적의 클라우드 플랫폼.<br>
+                    안정성, 확장성, 보안을 모두 갖춘 KT Cloud를 경험하세요.
+                </p>
+                <!-- Hero Action Buttons -->
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <a href="https://login.humecca.co.kr" target="_blank"
+                        style="background: #E94D36; color: white; padding: 15px 35px; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s; border: 2px solid #E94D36;">
+                        <i class="fas fa-sign-in-alt"></i> 서비스 바로가기
+                    </a>
+                    <a href="#intro"
+                        style="background: transparent; color: white; padding: 15px 35px; border-radius: 50px; text-decoration: none; font-weight: 700; transition: all 0.3s; border: 2px solid rgba(255,255,255,0.3);">
+                        자세히 보기
+                    </a>
+                </div>
             </div>
+
+            <script>
+                (function () {
+                    const canvas = document.getElementById('cloud-canvas-main');
+                    if (!canvas) return; // Safety check
+                    const hero = canvas.parentElement;
+                    const ctx = canvas.getContext('2d');
+                    let width, height;
+
+                    const activeColor = '#3B82F6'; // Blue
+                    const secondaryColor = '#60A5FA'; // Light Blue
+
+                    const stars = [];
+                    const particles = [];
+                    const sparks = [];
+
+                    const comet = { x: 0, y: 0, targetX: 0, targetY: 0, angle: 0, autoMode: true };
+
+                    class Star {
+                        constructor() { this.reset(); this.y = Math.random() * height; }
+                        reset() {
+                            this.x = Math.random() * width;
+                            this.y = -10;
+                            this.size = Math.random() * 2 + 0.5;
+                            this.speed = Math.random() * 0.5 + 0.1;
+                            this.alpha = Math.random();
+                            this.twinkleDir = Math.random() > 0.5 ? 0.02 : -0.02;
+                        }
+                        update() {
+                            this.y += this.speed;
+                            this.alpha += this.twinkleDir;
+                            if (this.alpha > 1 || this.alpha < 0.2) this.twinkleDir *= -1;
+                            if (this.y > height) this.reset();
+                        }
+                        draw() {
+                            ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                        }
+                    }
+
+                    class TrailParticle {
+                        constructor(x, y, angle) {
+                            this.x = x; this.y = y; this.life = 1.0; this.decay = Math.random() * 0.005 + 0.005;
+                            const spread = (Math.random() - 0.5) * 0.4;
+                            const speed = Math.random() * 0.2;
+                            this.vx = Math.cos(angle + Math.PI + spread) * speed;
+                            this.vy = Math.sin(angle + Math.PI + spread) * speed;
+                            this.size = Math.random() * 4 + 1;
+                            this.color = Math.random() > 0.6 ? activeColor : '#ffffff';
+                        }
+                        update() { this.x += this.vx; this.y += this.vy; this.life -= this.decay; if (this.size > 0.5) this.size *= 0.98; }
+                        draw() {
+                            ctx.fillStyle = this.color; ctx.globalAlpha = this.life * 0.8;
+                            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                            ctx.globalAlpha = 1.0;
+                        }
+                    }
+
+                    class Spark {
+                        constructor(x, y, angle) {
+                            this.x = x; this.y = y; this.life = 1.0; this.decay = Math.random() * 0.04 + 0.02;
+                            const ejectAngle = angle + Math.PI + (Math.random() - 0.5) * 2.8;
+                            const speed = Math.random() * 4 + 2;
+                            this.vx = Math.cos(ejectAngle) * speed; this.vy = Math.sin(ejectAngle) * speed;
+                            this.size = Math.random() * 3 + 1;
+                            this.color = Math.random() > 0.5 ? secondaryColor : '#BFDBFE';
+                        }
+                        update() { this.x += this.vx; this.y += this.vy; this.life -= this.decay; this.size *= 0.95; }
+                        draw() {
+                            ctx.fillStyle = this.color; ctx.globalAlpha = this.life;
+                            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                            ctx.globalAlpha = 1.0;
+                        }
+                    }
+
+                    function resize() {
+                        if (!canvas) return;
+                        const rect = hero.getBoundingClientRect();
+                        width = canvas.width = rect.width;
+                        height = canvas.height = rect.height;
+                        stars.length = 0;
+                        for (let i = 0; i < 100; i++) stars.push(new Star());
+                    }
+                    window.addEventListener('resize', resize);
+                    resize();
+
+                    hero.addEventListener('mousemove', (e) => {
+                        const rect = hero.getBoundingClientRect();
+                        comet.targetX = e.clientX - rect.left;
+                        comet.targetY = e.clientY - rect.top;
+                        comet.autoMode = false;
+                    });
+                    hero.addEventListener('mouseleave', () => { comet.autoMode = true; });
+
+                    function animate() {
+                        if (!ctx) return;
+                        ctx.clearRect(0, 0, width, height);
+                        stars.forEach(s => { s.update(); s.draw(); });
+
+                        if (comet.autoMode) {
+                            const t = Date.now() / 1000;
+                            const speed = width * 0.3;
+                            comet.targetX = (t * speed) % (width + 300) - 150;
+                            comet.targetY = (height * 0.5) + Math.sin(t * 1.5) * (height * 0.15);
+                            if (comet.targetX < -140 && comet.x > width) { comet.x = comet.targetX; comet.y = comet.targetY; }
+                        }
+
+                        const dx = comet.targetX - comet.x;
+                        const dy = comet.targetY - comet.y;
+                        if (Math.abs(dx) > width * 0.9) { comet.x = comet.targetX; comet.y = comet.targetY; }
+                        else {
+                            comet.x += dx * (comet.autoMode ? 0.05 : 0.1);
+                            comet.y += dy * (comet.autoMode ? 0.05 : 0.1);
+                        }
+                        comet.angle = Math.atan2(dy, dx);
+                        const vTotal = Math.sqrt(dx * dx + dy * dy);
+
+                        for (let i = 0; i < 5; i++) {
+                            const p = Math.random();
+                            particles.push(new TrailParticle(comet.x - Math.cos(comet.angle) * vTotal * p * 0.5, comet.y - Math.sin(comet.angle) * vTotal * p * 0.5, comet.angle));
+                        }
+                        const sparkCount = 2 + Math.floor(vTotal * 0.1);
+                        for (let i = 0; i < sparkCount; i++) sparks.push(new Spark(comet.x, comet.y, comet.angle));
+
+                        particles.forEach((p, i) => { p.update(); p.draw(); if (p.life <= 0) particles.splice(i, 1); });
+                        sparks.forEach((s, i) => { s.update(); s.draw(); if (s.life <= 0) sparks.splice(i, 1); });
+
+                        ctx.save();
+                        ctx.translate(comet.x, comet.y);
+                        ctx.rotate(comet.angle);
+
+                        // Blue Halo
+                        const grad = ctx.createRadialGradient(0, 0, 2, 0, 0, 35);
+                        grad.addColorStop(0, 'rgba(255,255,255,1)');
+                        grad.addColorStop(0.2, 'rgba(96, 165, 250, 0.8)');
+                        grad.addColorStop(0.6, 'rgba(37, 99, 235, 0.4)');
+                        grad.addColorStop(1, 'rgba(0,0,0,0)');
+                        ctx.fillStyle = grad;
+                        ctx.beginPath(); ctx.arc(0, 0, 35, 0, Math.PI * 2); ctx.fill();
+
+                        ctx.restore();
+                        requestAnimationFrame(animate);
+                    }
+                    animate();
+                })();
+            </script>
         </section>
 
         <div class="cloud-layout">
@@ -998,6 +1168,9 @@
 
     <!-- Footer Placeholder -->
     <div id="footer-placeholder"></div>
+
+    <!-- App Modal Placeholder -->
+    <div id="app-modal-placeholder"></div>
 
     <!-- Initialization Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

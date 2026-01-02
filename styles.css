@@ -4642,7 +4642,15 @@ main.sub-content {
 #pricing-grid-security.compact-pricing,
 #pricing-grid-solution.compact-pricing,
 #pricing-grid-ms365.compact-pricing,
-#pricing-grid-naver.compact-pricing {
+#pricing-grid-naver.compact-pricing,
+#pricing-waf.compact-pricing,
+#pricing-waf-pro.compact-pricing,
+#pricing-cleanzone.compact-pricing,
+#pricing-private-ca.compact-pricing,
+#pricing-ssl.compact-pricing,
+#pricing-v3.compact-pricing,
+#pricing-dbsafer.compact-pricing,
+#pricing-container.compact-pricing {
     gap: 40px !important;
     padding: 0 10px !important;
 }
@@ -4662,7 +4670,21 @@ main.sub-content {
 #pricing-grid-security .plan-card,
 #pricing-grid-solution .plan-card,
 #pricing-grid-ms365 .plan-card,
-#pricing-grid-naver .plan-card {
+#pricing-grid-naver .plan-card,
+#pricing-waf .plan-card,
+#pricing-waf-pro .plan-card,
+#pricing-cleanzone .plan-card,
+#pricing-private-ca .plan-card,
+#pricing-ssl .plan-card,
+#pricing-v3 .plan-card,
+#pricing-dbsafer .plan-card,
+#pricing-container .plan-card {
+    display: flex;
+    /* Ensure flex for column layout */
+    flex-direction: column;
+    /* Stack content vertically */
+    height: 100%;
+    /* Fill the grid cell height */
     flex: 0 1 calc(50% - 20px) !important;
     /* Strictly 2 columns with 40px gap logic (gap is space between) */
     /* Note: If gap is 40px, 2 columns need calc(50% - 20px) */
@@ -4673,6 +4695,73 @@ main.sub-content {
     background: white !important;
     transition: all 0.2s ease-in-out !important;
     margin-bottom: 0 !important;
+}
+
+/* Alignment Fix: Push button to bottom */
+#pricing-grid-software .plan-card .plan-btn,
+#pricing-grid-backup .plan-card .plan-btn,
+#pricing-grid-ha .plan-card .plan-btn,
+#pricing-grid-monitoring .plan-card .plan-btn,
+#pricing-grid-lb .plan-card .plan-btn,
+#pricing-grid-cdn .plan-card .plan-btn,
+#pricing-grid-recovery .plan-card .plan-btn,
+#pricing-grid-management .plan-card .plan-btn,
+#pricing-grid-etc .plan-card .plan-btn,
+#pricing-grid-colocation .plan-card .plan-btn,
+#pricing-grid-security .plan-card .plan-btn,
+#pricing-grid-solution .plan-card .plan-btn,
+#pricing-grid-ms365 .plan-card .plan-btn,
+#pricing-grid-naver .plan-card .plan-btn,
+#pricing-waf .plan-card .plan-btn,
+#pricing-waf-pro .plan-card .plan-btn,
+#pricing-cleanzone .plan-card .plan-btn,
+#pricing-private-ca .plan-card .plan-btn,
+#pricing-ssl .plan-card .plan-btn,
+#pricing-v3 .plan-card .plan-btn,
+#pricing-dbsafer .plan-card .plan-btn,
+#pricing-container .plan-card .plan-btn {
+    margin-top: auto !important;
+}
+
+/* Hover Visibility Fix for Server Hosting Specs */
+#pricing-container .plan-card:hover .spec-label,
+#pricing-container .plan-card:hover .spec-value {
+    color: #334155 !important;
+    /* Force dark text on hover */
+}
+
+/* Hover Visibility Fix for Server Hosting Title/Price */
+#pricing-waf .plan-card:hover .plan-title,
+#pricing-waf-pro .plan-card:hover .plan-title,
+#pricing-cleanzone .plan-card:hover .plan-title,
+#pricing-private-ca .plan-card:hover .plan-title,
+#pricing-ssl .plan-card:hover .plan-title,
+#pricing-v3 .plan-card:hover .plan-title,
+#pricing-dbsafer .plan-card:hover .plan-title,
+#pricing-container .plan-card:hover .plan-title {
+    color: #1e293b !important;
+}
+
+#pricing-waf .plan-card:hover .plan-price .amount,
+#pricing-waf-pro .plan-card:hover .plan-price .amount,
+#pricing-cleanzone .plan-card:hover .plan-price .amount,
+#pricing-private-ca .plan-card:hover .plan-price .amount,
+#pricing-ssl .plan-card:hover .plan-price .amount,
+#pricing-v3 .plan-card:hover .plan-price .amount,
+#pricing-dbsafer .plan-card:hover .plan-price .amount,
+#pricing-container .plan-card:hover .plan-price .amount {
+    color: #E94D36 !important;
+}
+
+#pricing-waf .plan-card:hover .plan-price .period,
+#pricing-waf-pro .plan-card:hover .plan-price .period,
+#pricing-cleanzone .plan-card:hover .plan-price .period,
+#pricing-private-ca .plan-card:hover .plan-price .period,
+#pricing-ssl .plan-card:hover .plan-price .period,
+#pricing-v3 .plan-card:hover .plan-price .period,
+#pricing-dbsafer .plan-card:hover .plan-price .period,
+#pricing-container .plan-card:hover .plan-price .period {
+    color: #64748b !important;
 }
 
 /* 3. Hover State */
@@ -4690,7 +4779,15 @@ main.sub-content {
 #pricing-grid-security .plan-card:hover,
 #pricing-grid-solution .plan-card:hover,
 #pricing-grid-ms365 .plan-card:hover,
-#pricing-grid-naver .plan-card:hover {
+#pricing-grid-naver .plan-card:hover,
+#pricing-waf .plan-card:hover,
+#pricing-waf-pro .plan-card:hover,
+#pricing-cleanzone .plan-card:hover,
+#pricing-private-ca .plan-card:hover,
+#pricing-ssl .plan-card:hover,
+#pricing-v3 .plan-card:hover,
+#pricing-dbsafer .plan-card:hover,
+#pricing-container .plan-card:hover {
     transform: translateY(-4px) !important;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
     border-color: #cbd5e1 !important;
@@ -4712,7 +4809,15 @@ main.sub-content {
 #pricing-grid-security .plan-title,
 #pricing-grid-solution .plan-title,
 #pricing-grid-ms365 .plan-title,
-#pricing-grid-naver .plan-title {
+#pricing-grid-naver .plan-title,
+#pricing-waf .plan-title,
+#pricing-waf-pro .plan-title,
+#pricing-cleanzone .plan-title,
+#pricing-private-ca .plan-title,
+#pricing-ssl .plan-title,
+#pricing-v3 .plan-title,
+#pricing-dbsafer .plan-title,
+#pricing-container .plan-title {
     font-size: 1.25rem !important;
     font-weight: 700 !important;
     color: #1e293b !important;
@@ -4736,7 +4841,15 @@ main.sub-content {
 #pricing-grid-security .plan-price,
 #pricing-grid-solution .plan-price,
 #pricing-grid-ms365 .plan-price,
-#pricing-grid-naver .plan-price {
+#pricing-grid-naver .plan-price,
+#pricing-waf .plan-price,
+#pricing-waf-pro .plan-price,
+#pricing-cleanzone .plan-price,
+#pricing-private-ca .plan-price,
+#pricing-ssl .plan-price,
+#pricing-v3 .plan-price,
+#pricing-dbsafer .plan-price,
+#pricing-container .plan-price {
     margin-bottom: 20px !important;
 }
 
@@ -4755,7 +4868,15 @@ main.sub-content {
 #pricing-grid-security .amount,
 #pricing-grid-solution .amount,
 #pricing-grid-ms365 .amount,
-#pricing-grid-naver .amount {
+#pricing-grid-naver .amount,
+#pricing-waf .amount,
+#pricing-waf-pro .amount,
+#pricing-cleanzone .amount,
+#pricing-private-ca .amount,
+#pricing-ssl .amount,
+#pricing-v3 .amount,
+#pricing-dbsafer .amount,
+#pricing-container .amount {
     font-size: 1.75rem !important;
     color: #E94D36 !important;
     letter-spacing: -0.02em !important;
@@ -4776,7 +4897,15 @@ main.sub-content {
 #pricing-grid-security .period,
 #pricing-grid-solution .period,
 #pricing-grid-ms365 .period,
-#pricing-grid-naver .period {
+#pricing-grid-naver .period,
+#pricing-waf .period,
+#pricing-waf-pro .period,
+#pricing-cleanzone .period,
+#pricing-private-ca .period,
+#pricing-ssl .period,
+#pricing-v3 .period,
+#pricing-dbsafer .period,
+#pricing-container .period {
     font-size: 0.95rem !important;
     color: #64748b !important;
 }
@@ -4796,7 +4925,15 @@ main.sub-content {
 #pricing-grid-security .plan-features,
 #pricing-grid-solution .plan-features,
 #pricing-grid-ms365 .plan-features,
-#pricing-grid-naver .plan-features {
+#pricing-grid-naver .plan-features,
+#pricing-waf .plan-features,
+#pricing-waf-pro .plan-features,
+#pricing-cleanzone .plan-features,
+#pricing-private-ca .plan-features,
+#pricing-ssl .plan-features,
+#pricing-v3 .plan-features,
+#pricing-dbsafer .plan-features,
+#pricing-container .plan-features {
     margin-bottom: 24px !important;
 }
 
@@ -5437,3 +5574,364 @@ main.sub-content {
         margin-bottom: 8px;
         line-height: 1.6;
     }
+}
+
+/* ========================================================================== */
+/* FORCE FIX: Security Page Hover Effects (Standardized to Hosting Style) */
+/* ========================================================================== */
+
+/* 1. Define Security Grid Selectors - DISABLE HOVER EFFECTS */
+#pricing-waf .plan-card:hover,
+#pricing-waf-pro .plan-card:hover,
+#pricing-cleanzone .plan-card:hover,
+#pricing-private-ca .plan-card:hover,
+#pricing-ssl .plan-card:hover,
+#pricing-v3 .plan-card:hover,
+#pricing-dbsafer .plan-card:hover {
+    background-color: #ffffff !important;
+    transform: none !important;
+    /* No movement */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+    /* Keep default shadow */
+    border: 1px solid #e2e8f0 !important;
+    /* Keep default border */
+    z-index: 1;
+    /* Reset Z-index */
+}
+
+/* 2. Force Text Colors (Static Black/Dark) */
+#pricing-waf .plan-card:hover .plan-title,
+#pricing-waf-pro .plan-card:hover .plan-title,
+#pricing-cleanzone .plan-card:hover .plan-title,
+#pricing-private-ca .plan-card:hover .plan-title,
+#pricing-ssl .plan-card:hover .plan-title,
+#pricing-v3 .plan-card:hover .plan-title,
+#pricing-dbsafer .plan-card:hover .plan-title {
+    color: #1e293b !important;
+    /* Default Dark Title */
+}
+
+#pricing-waf .plan-card:hover .plan-price,
+#pricing-waf-pro .plan-card:hover .plan-price,
+#pricing-cleanzone .plan-card:hover .plan-price,
+#pricing-private-ca .plan-card:hover .plan-price,
+#pricing-ssl .plan-card:hover .plan-price,
+#pricing-v3 .plan-card:hover .plan-price,
+#pricing-dbsafer .plan-card:hover .plan-price {
+    color: #1e293b !important;
+    /* Default Dark Price (or keep Red if desired? User said 'Just don't give effect'. Static price is usually black or dark) */
+    /* Actually, in standard view, price is usually dark? Let's check. Hosting price is dark. */
+}
+
+#pricing-waf .plan-card:hover .plan-price .amount,
+#pricing-waf-pro .plan-card:hover .plan-price .amount,
+#pricing-cleanzone .plan-card:hover .plan-price .amount,
+#pricing-private-ca .plan-card:hover .plan-price .amount,
+#pricing-ssl .plan-card:hover .plan-price .amount,
+#pricing-v3 .plan-card:hover .plan-price .amount,
+#pricing-dbsafer .plan-card:hover .plan-price .amount {
+    color: #E94D36 !important;
+    /* Keep Price Red for visibility always? Or default? Default is usually dark/red mix. Let's force Red for consistency. */
+}
+
+#pricing-waf .plan-card:hover .plan-price .period,
+#pricing-waf-pro .plan-card:hover .plan-price .period,
+#pricing-cleanzone .plan-card:hover .plan-price .period,
+#pricing-private-ca .plan-card:hover .plan-price .period,
+#pricing-ssl .plan-card:hover .plan-price .period,
+#pricing-v3 .plan-card:hover .plan-price .period,
+#pricing-dbsafer .plan-card:hover .plan-price .period {
+    color: #64748b !important;
+    /* Default Gray Period */
+}
+
+#pricing-waf .plan-card:hover .spec-label,
+#pricing-waf-pro .plan-card:hover .spec-label,
+#pricing-cleanzone .plan-card:hover .spec-label,
+#pricing-private-ca .plan-card:hover .spec-label,
+#pricing-ssl .plan-card:hover .spec-label,
+#pricing-v3 .plan-card:hover .spec-label,
+#pricing-dbsafer .plan-card:hover .spec-label,
+#pricing-waf .plan-card:hover .spec-value,
+#pricing-waf-pro .plan-card:hover .spec-value,
+#pricing-cleanzone .plan-card:hover .spec-value,
+#pricing-private-ca .plan-card:hover .spec-value,
+#pricing-ssl .plan-card:hover .spec-value,
+#pricing-v3 .plan-card:hover .spec-value,
+#pricing-dbsafer .plan-card:hover .spec-value {
+    color: #334155 !important;
+    /* Default Dark Specs */
+}
+
+/* Summary Color Fix */
+#pricing-waf .plan-card:hover .plan-summary,
+#pricing-waf-pro .plan-card:hover .plan-summary,
+#pricing-cleanzone .plan-card:hover .plan-summary,
+#pricing-private-ca .plan-card:hover .plan-summary,
+#pricing-ssl .plan-card:hover .plan-summary,
+#pricing-v3 .plan-card:hover .plan-summary,
+#pricing-dbsafer .plan-card:hover .plan-summary {
+    color: #64748b !important;
+    /* Default Gray Summary */
+}
+
+/* 3. Specs List / Features Styling */
+#pricing-waf .specs-list,
+#pricing-waf-pro .specs-list,
+#pricing-cleanzone .specs-list,
+#pricing-private-ca .specs-list,
+#pricing-ssl .specs-list,
+#pricing-v3 .specs-list,
+#pricing-dbsafer .specs-list {
+    background-color: #f8fafc;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+#pricing-waf .plan-card:hover .specs-list,
+#pricing-waf-pro .plan-card:hover .specs-list,
+#pricing-cleanzone .plan-card:hover .specs-list,
+#pricing-private-ca .plan-card:hover .specs-list,
+#pricing-ssl .plan-card:hover .specs-list,
+#pricing-v3 .plan-card:hover .specs-list,
+#pricing-dbsafer .plan-card:hover .specs-list {
+    background-color: #f8fafc !important;
+    /* Keep default */
+    border-color: #e2e8f0 !important;
+    /* Keep default */
+}
+
+#pricing-waf .plan-card:hover .plan-features li,
+#pricing-waf-pro .plan-card:hover .plan-features li,
+#pricing-cleanzone .plan-card:hover .plan-features li,
+#pricing-private-ca .plan-card:hover .plan-features li,
+#pricing-ssl .plan-card:hover .plan-features li,
+#pricing-v3 .plan-card:hover .plan-features li,
+#pricing-dbsafer .plan-card:hover .plan-features li {
+    color: #475569 !important;
+    /* Default Dark Feature Text */
+}
+
+#pricing-waf .plan-card:hover .plan-features li i,
+#pricing-waf-pro .plan-card:hover .plan-features li i,
+#pricing-cleanzone .plan-card:hover .plan-features li i,
+#pricing-private-ca .plan-card:hover .plan-features li i,
+#pricing-ssl .plan-card:hover .plan-features li i,
+#pricing-v3 .plan-card:hover .plan-features li i,
+#pricing-dbsafer .plan-card:hover .plan-features li i {
+    color: #E94D36 !important;
+    /* Red Checkmark */
+}
+
+/* Prevent Button Inversion (Keep Red Button) */
+#pricing-waf .plan-card:hover .plan-btn,
+#pricing-waf-pro .plan-card:hover .plan-btn,
+#pricing-cleanzone .plan-card:hover .plan-btn,
+#pricing-private-ca .plan-card:hover .plan-btn,
+#pricing-ssl .plan-card:hover .plan-btn,
+#pricing-v3 .plan-card:hover .plan-btn,
+#pricing-dbsafer .plan-card:hover .plan-btn {
+    background-color: #E94D36 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+/* ========================================================================== */
+/* NEW STANDARD: Pricing Header (Approved Design) */
+/* ========================================================================== */
+.pricing-std-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.pricing-std-sub {
+    color: #E94D36;
+    /* Red/Orange Theme */
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.pricing-std-title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #1e293b;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.pricing-std-desc {
+    color: #64748b;
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+/* ========================================================================== */
+/* Security Features Section (Premium Design) */
+/* ========================================================================== */
+.security-feature-section {
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+.security-feature-header {
+    color: #1e293b;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 30px;
+    position: relative;
+    padding-left: 20px;
+}
+
+.security-feature-header::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    bottom: 6px;
+    width: 5px;
+    background: #E94D36;
+    /* Security Red Theme */
+    border-radius: 4px;
+}
+
+.security-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+}
+
+.security-feature-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.security-feature-card:hover {
+    background: #ffffff;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: #cbd5e1;
+    transform: translateY(-5px);
+}
+
+.security-feature-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 12px;
+}
+
+.security-feature-title i {
+    color: #E94D36;
+    font-size: 1.1em;
+}
+
+.security-feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.security-feature-list li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 14px;
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.security-feature-list li::before {
+    content: '\f00c';
+    /* Font Awesome Check */
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    color: #E94D36;
+    font-size: 12px;
+    top: 4px;
+}
+
+@media (max-width: 768px) {
+    .security-feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .security-feature-card {
+        padding: 24px;
+    }
+}
+
+/* ========================================================================== */
+/* Pricing Detail Table (Clean Zone, etc.) */
+/* ========================================================================== */
+.pricing-detail-table-container {
+    overflow-x: auto;
+    margin-bottom: 40px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    /* Subtle shadow */
+}
+
+.pricing-vat-label {
+    text-align: right;
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.pricing-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    color: #334155;
+    background: #fff;
+    min-width: 600px;
+    /* Ensure readability on mobile scroll */
+}
+
+.pricing-detail-table th {
+    background-color: #f8fafc;
+    color: #1e293b;
+    font-weight: 700;
+    padding: 16px;
+    border-bottom: 2px solid #e2e8f0;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.pricing-detail-table td {
+    padding: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.5;
+}
+
+.pricing-detail-table tr:last-child td {
+    border-bottom: none;
+}
+
+.pricing-detail-table tr:hover td {
+    background-color: #fcfcfc;
+}
+
+.pricing-detail-table strong {
+    color: #0f172a;
+    font-weight: 600;
+}

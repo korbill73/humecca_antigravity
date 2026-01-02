@@ -41,8 +41,19 @@ function switchSecurityTab(tabId, el) {
             target.classList.add('active');
         }, 10);
 
-        // Explicitly scroll to top so User sees the Hero section
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Robust Scroll: Scroll to the cloud layout container with offset
+        // User request: Show from "Below Top Title" (Content Area)
+        const layout = document.querySelector('.cloud-layout');
+        if (layout) {
+            const headerOffset = 120; // 120px for Header + Breathing room
+            const elementPosition = layout.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+            });
+        }
 
         // Update URL hash without jumping
         const currentHash = window.location.hash.replace('#', '');

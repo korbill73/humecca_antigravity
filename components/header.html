@@ -19,94 +19,304 @@
         <!-- Main Navigation -->
         <nav class="nav">
             <ul class="nav-list">
-                <!-- 1. Cloud (Mega Menu) -->
+                <!-- 1. Cloud (Mega Menu with Side Tabs) -->
                 <li class="nav-item">
                     <a href="sub_cloud.html#intro" class="nav-link">
                         클라우드 <i class="fas fa-chevron-down"></i>
                     </a>
-                    <div class="dropdown-menu mega-menu" style="min-width: 360px;">
-                        <a href="sub_cloud.html#intro" class="dropdown-item">
-                            <div class="dropdown-icon"><i class="fas fa-cloud"></i></div>
-                            <div class="dropdown-text">
-                                <span class="dropdown-title">클라우드 소개</span>
-                                <span class="dropdown-desc">KT Cloud 기반 유연한 인프라</span>
+                    <!-- Fix Gap: Add invisible bridge and check positioning -->
+                    <div class="dropdown-menu mega-menu"
+                        style="min-width: 800px; padding: 0; overflow: hidden; display: none; margin-top: 0;">
+
+                        <style>
+                            /* Gap Fix for Dropdown using Pseudo-element Bridge */
+                            .nav-item {
+                                position: relative;
+                            }
+
+                            /* Create an invisible bridge below the nav item */
+                            .nav-item::after {
+                                content: '';
+                                position: absolute;
+                                left: 0;
+                                right: 0;
+                                bottom: -20px;
+                                height: 20px;
+                                background: transparent;
+                                z-index: 10;
+                            }
+
+                            .nav-item:hover .mega-menu,
+                            .nav-item:hover .dropdown-menu {
+                                display: block !important;
+                                top: 100%;
+                                margin-top: 0;
+                            }
+
+                            /* Scoped Styles for Tabbed Mega Menu */
+                            .mega-tabs-container {
+                                display: flex;
+                                min-height: 450px;
+                                /* Increased height for better layout */
+                            }
+
+                            .mega-sidebar {
+                                width: 240px;
+                                background-color: #f8fafc;
+                                border-right: 1px solid #e2e8f0;
+                                padding: 20px 0;
+                            }
+
+                            .mega-sidebar-item {
+                                display: flex;
+                                align-items: center;
+                                padding: 18px 25px;
+                                /* Larger touch target */
+                                font-weight: 700;
+                                color: #64748b;
+                                text-decoration: none;
+                                cursor: pointer;
+                                transition: all 0.2s;
+                                border-left: 3px solid transparent;
+                            }
+
+                            .mega-sidebar-item:hover {
+                                background-color: #f1f5f9;
+                                color: #334155;
+                            }
+
+                            .mega-sidebar-item.active {
+                                background-color: white;
+                                color: #E94D36;
+                                /* Theme Red */
+                                border-left-color: #E94D36;
+                                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+                            }
+
+                            .mega-sidebar-icon {
+                                width: 24px;
+                                margin-right: 10px;
+                                text-align: center;
+                            }
+
+                            .mega-content-area {
+                                flex: 1;
+                                padding: 30px;
+                                background-color: white;
+                            }
+
+                            .mega-tab-content {
+                                display: none;
+                                animation: fadeIn 0.3s ease;
+                            }
+
+                            .mega-tab-content.active {
+                                display: block;
+                            }
+
+                            @keyframes fadeIn {
+                                from {
+                                    opacity: 0;
+                                    transform: translateY(5px);
+                                }
+
+                                to {
+                                    opacity: 1;
+                                    transform: translateY(0);
+                                }
+                            }
+
+                            .mega-grid-compact {
+                                display: grid;
+                                grid-template-columns: repeat(2, 1fr);
+                                gap: 15px;
+                            }
+                        </style>
+
+                        <div class="mega-tabs-container">
+                            <!-- Sidebar -->
+                            <div class="mega-sidebar">
+                                <div class="mega-sidebar-item active" onmouseover="openCloudTab(event, 'tab-kt')"
+                                    onclick="location.href='sub_cloud.html#intro'">
+                                    <div class="mega-sidebar-icon"><i class="fas fa-cloud"></i></div>
+                                    KT Cloud
+                                </div>
+                                <div class="mega-sidebar-item" onmouseover="openCloudTab(event, 'tab-aws')"
+                                    onclick="location.href='sub_cloud_aws.html'">
+                                    <div class="mega-sidebar-icon"><i class="fab fa-aws"></i></div>
+                                    AWS Cloud
+                                </div>
+                                <div class="mega-sidebar-item" onmouseover="openCloudTab(event, 'tab-naver')"
+                                    onclick="location.href='sub_cloud_naver.html'">
+                                    <div class="mega-sidebar-icon"><i class="fas fa-network-wired"></i></div>
+                                    Naver Cloud
+                                </div>
                             </div>
-                        </a>
-                        <p class="mega-section-title">KT Cloud 서비스</p>
-                        <div class="mega-grid">
-                            <a href="sub_cloud.html#server" class="dropdown-item">
-                                <div class="dropdown-icon"><i class="fas fa-server"></i></div>
-                                <div class="dropdown-text"><span class="dropdown-title">Server</span></div>
-                            </a>
-                            <a href="sub_cloud.html#db" class="dropdown-item">
-                                <div class="dropdown-icon"><i class="fas fa-database"></i></div>
-                                <div class="dropdown-text"><span class="dropdown-title">데이터베이스</span></div>
-                            </a>
-                            <a href="sub_cloud.html#storage" class="dropdown-item">
-                                <div class="dropdown-icon"><i class="fas fa-hdd"></i></div>
-                                <div class="dropdown-text"><span class="dropdown-title">스토리지/CDN</span></div>
-                            </a>
-                            <a href="sub_cloud.html#network" class="dropdown-item">
-                                <div class="dropdown-icon"><i class="fas fa-network-wired"></i></div>
-                                <div class="dropdown-text"><span class="dropdown-title">네트워크</span></div>
-                            </a>
-                            <a href="sub_cloud.html#management" class="dropdown-item">
-                                <div class="dropdown-icon"><i class="fas fa-tasks"></i></div>
-                                <div class="dropdown-text"><span class="dropdown-title">매니지먼트</span></div>
-                            </a>
-                            <a href="sub_cloud.html#vdi" class="dropdown-item">
-                                <div class="dropdown-icon"><i class="fas fa-desktop"></i></div>
-                                <div class="dropdown-text"><span class="dropdown-title">VDI</span></div>
-                            </a>
-                            <a href="sub_cloud.html#private" class="dropdown-item">
-                                <div class="dropdown-icon"><i class="fas fa-lock"></i></div>
-                                <div class="dropdown-text"><span class="dropdown-title">Private Cloud</span></div>
-                            </a>
+
+                            <!-- Content Area -->
+                            <div class="mega-content-area">
+
+                                <!-- 1. KT Cloud Content (Existing) -->
+                                <div id="tab-kt" class="mega-tab-content active">
+                                    <div
+                                        style="margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px;">
+                                        <h4
+                                            style="font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 5px;">
+                                            KT Cloud Service</h4>
+                                        <p style="font-size: 13px; color: #64748b;">국내 최고의 클라우드 인프라 서비스</p>
+                                    </div>
+
+                                    <div class="mega-grid-compact">
+                                        <a href="sub_cloud.html#server" class="dropdown-item">
+                                            <div class="dropdown-icon"><i class="fas fa-server"></i></div>
+                                            <div class="dropdown-text"><span class="dropdown-title">Server</span></div>
+                                        </a>
+                                        <a href="sub_cloud.html#db" class="dropdown-item">
+                                            <div class="dropdown-icon"><i class="fas fa-database"></i></div>
+                                            <div class="dropdown-text"><span class="dropdown-title">데이터베이스</span></div>
+                                        </a>
+                                        <a href="sub_cloud.html#storage" class="dropdown-item">
+                                            <div class="dropdown-icon"><i class="fas fa-hdd"></i></div>
+                                            <div class="dropdown-text"><span class="dropdown-title">스토리지/CDN</span>
+                                            </div>
+                                        </a>
+                                        <a href="sub_cloud.html#network" class="dropdown-item">
+                                            <div class="dropdown-icon"><i class="fas fa-network-wired"></i></div>
+                                            <div class="dropdown-text"><span class="dropdown-title">네트워크</span></div>
+                                        </a>
+                                        <a href="sub_cloud.html#management" class="dropdown-item">
+                                            <div class="dropdown-icon"><i class="fas fa-tasks"></i></div>
+                                            <div class="dropdown-text"><span class="dropdown-title">매니지먼트</span></div>
+                                        </a>
+                                        <a href="sub_cloud.html#vdi" class="dropdown-item">
+                                            <div class="dropdown-icon"><i class="fas fa-desktop"></i></div>
+                                            <div class="dropdown-text"><span class="dropdown-title">VDI</span></div>
+                                        </a>
+                                        <a href="sub_cloud.html#private" class="dropdown-item">
+                                            <div class="dropdown-icon"><i class="fas fa-lock"></i></div>
+                                            <div class="dropdown-text"><span class="dropdown-title">Private Cloud</span>
+                                            </div>
+                                        </a>
+
+                                        <!-- Service Limits -->
+                                        <a href="sub_cloud.html#limits" class="dropdown-item">
+                                            <div class="dropdown-icon"><i class="fas fa-info-circle"></i></div>
+                                            <div class="dropdown-text"><span class="dropdown-title">서비스별 제한사항</span>
+                                            </div>
+                                        </a>
+                                    </div>
+
+                                    <div class="mega-cta"
+                                        style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+                                        <a href="https://login.humecca.co.kr" target="_blank"
+                                            class="btn-service-shortcut" style="color: #FFFFFF !important;">
+                                            <i class="fas fa-cloud" style="color: #FFFFFF !important;"></i> 서비스 콘솔 바로가기
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- 2. AWS Cloud Content (Placeholder) -->
+                                <div id="tab-aws" class="mega-tab-content">
+                                    <div
+                                        style="margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px;">
+                                        <h4
+                                            style="font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 5px;">
+                                            AWS Cloud Managed</h4>
+                                        <p style="font-size: 13px; color: #64748b;">글로벌 1위 클라우드, AWS 매니지드 서비스</p>
+                                    </div>
+
+                                    <div
+                                        style="background: #f8fafc; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg"
+                                            alt="AWS" style="height: 40px; margin-bottom: 15px;">
+                                        <p style="color: #475569; font-size: 14px; line-height: 1.6;">
+                                            복잡한 AWS 환경, 전문가에게 맡기세요.<br>
+                                            설계부터 구축, 운영까지 One-Stop 지원.
+                                        </p>
+                                    </div>
+
+                                    <div style="display: grid; gap: 10px;">
+                                        <a href="sub_cloud_aws.html" class="dropdown-item">
+                                            <div class="dropdown-icon"><i class="fas fa-book-open"></i></div>
+                                            <div class="dropdown-text">
+                                                <span class="dropdown-title">AWS 서비스 소개</span>
+                                                <span class="dropdown-desc">매니지드 서비스 특징 및 혜택</span>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0)" onclick="openAppModal('AWS 컨설팅', 'cloud_aws')"
+                                            class="dropdown-item"
+                                            style="background-color: #fff7ed; border: 1px solid #fdba74;">
+                                            <div class="dropdown-icon" style="color: #ea580c;"><i
+                                                    class="fas fa-headset"></i></div>
+                                            <div class="dropdown-text">
+                                                <span class="dropdown-title" style="color: #ea580c;">AWS 컨설팅 신청</span>
+                                                <span class="dropdown-desc">전문 엔지니어 무료 상담</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- 3. Naver Cloud Content (Placeholder) -->
+                                <div id="tab-naver" class="mega-tab-content">
+                                    <div
+                                        style="margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px;">
+                                        <h4
+                                            style="font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 5px;">
+                                            Naver Cloud Platform</h4>
+                                        <p style="font-size: 13px; color: #64748b;">검증된 안정성, 네이버 클라우드 플랫폼</p>
+                                    </div>
+
+                                    <div
+                                        style="background: #f8fafc; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
+                                        <div
+                                            style="font-size: 24px; font-weight: 900; color: #03C75A; margin-bottom: 10px;">
+                                            NAVER CLOUD</div>
+                                        <p style="color: #475569; font-size: 14px; line-height: 1.6;">
+                                            공공기관/금융권 선호도 1위.<br>
+                                            한국 비즈니스 환경에 최적화된 클라우드.
+                                        </p>
+                                    </div>
+
+                                    <div style="display: grid; gap: 10px;">
+                                        <a href="sub_cloud_naver.html" class="dropdown-item">
+                                            <div class="dropdown-icon"><i class="fas fa-book-open"></i></div>
+                                            <div class="dropdown-text">
+                                                <span class="dropdown-title">네이버 클라우드 소개</span>
+                                                <span class="dropdown-desc">주요 상품 및 서비스 안내</span>
+                                            </div>
+                                        </a>
+                                        <a href="javascript:void(0)"
+                                            onclick="openAppModal('네이버 클라우드 컨설팅', 'cloud_naver')" class="dropdown-item"
+                                            style="background-color: #f0fdf4; border: 1px solid #86efac;">
+                                            <div class="dropdown-icon" style="color: #16a34a;"><i
+                                                    class="fas fa-headset"></i></div>
+                                            <div class="dropdown-text">
+                                                <span class="dropdown-title" style="color: #16a34a;">컨설팅 신청</span>
+                                                <span class="dropdown-desc">맞춤형 아키텍처 제안</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
 
-                        <div style="margin-top: 12px; border-top: 1px solid #eee; padding-top: 12px;">
-                            <a href="sub_cloud.html#limits" class="dropdown-item">
-                                <div class="dropdown-icon"><i class="fas fa-info-circle"></i></div>
-                                <div class="dropdown-text"><span class="dropdown-title">서비스별 제한사항</span></div>
-                            </a>
-                        </div>
+                        <script>
+                            function openCloudTab(evt, tabName) {
+                                // 1. Hide all tab content
+                                const contents = document.querySelectorAll('.mega-tab-content');
+                                contents.forEach(c => c.classList.remove('active'));
 
-                        <div class="mega-cta" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
-                            <style>
-                                .btn-service-shortcut {
-                                    display: flex !important;
-                                    align-items: center !important;
-                                    justify-content: center !important;
-                                    gap: 8px !important;
-                                    width: 100% !important;
-                                    padding: 14px 20px !important;
-                                    background-color: #EF4444 !important;
-                                    color: #FFFFFF !important;
-                                    border-radius: 8px !important;
-                                    font-weight: 700 !important;
-                                    font-size: 15px !important;
-                                    text-decoration: none !important;
-                                    transition: all 0.2s ease !important;
-                                    border: 2px solid #EF4444 !important;
-                                }
+                                // 2. Remove active class from all sidebar items
+                                const items = document.querySelectorAll('.mega-sidebar-item');
+                                items.forEach(i => i.classList.remove('active'));
 
-                                .btn-service-shortcut:hover {
-                                    background-color: #DC2626 !important;
-                                    color: #FFFFFF !important;
-                                    transform: translateY(-2px);
-                                    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-                                }
-
-                                .btn-service-shortcut i {
-                                    color: #FFFFFF !important;
-                                }
-                            </style>
-                            <a href="https://login.humecca.co.kr" target="_blank" class="btn-service-shortcut"
-                                style="color: #FFFFFF !important;">
-                                <i class="fas fa-cloud" style="color: #FFFFFF !important;"></i> 서비스 콘솔 바로가기 <i
-                                    class="fas fa-external-link-alt" style="color: #FFFFFF !important;"></i>
-                            </a>
-                        </div>
+                                // 3. Show current tab and activate sidebar item
+                                document.getElementById(tabName).classList.add('active');
+                                evt.currentTarget.classList.add('active');
+                            }
+                        </script>
                     </div>
                 </li>
 
@@ -164,22 +374,22 @@
                             style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">System & Data
                             Security</p>
                         <div class="mega-grid">
-                            <a href="sub_security.html#private-ca" class="dropdown-item">
+                            <!-- <a href="sub_security.html#private-ca" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fas fa-certificate"></i></div>
                                 <div class="dropdown-text"><span class="dropdown-title">Private CA</span></div>
-                            </a>
+                            </a> -->
                             <a href="sub_security.html#cert-manager" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fas fa-lock"></i></div>
-                                <div class="dropdown-text"><span class="dropdown-title">Certificate Manager</span></div>
+                                <div class="dropdown-text"><span class="dropdown-title">SSL 인증서</span></div>
                             </a>
-                            <a href="sub_security.html#v3-server" class="dropdown-item">
+                            <!-- <a href="sub_security.html#v3-server" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fas fa-laptop-medical"></i></div>
                                 <div class="dropdown-text"><span class="dropdown-title">V3 Net Server</span></div>
-                            </a>
-                            <a href="sub_security.html#dbsafer" class="dropdown-item">
+                            </a> -->
+                            <!-- <a href="sub_security.html#dbsafer" class="dropdown-item">
                                 <div class="dropdown-icon"><i class="fas fa-database"></i></div>
                                 <div class="dropdown-text"><span class="dropdown-title">DBSAFER</span></div>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
                 </li>

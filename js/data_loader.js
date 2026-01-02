@@ -15,13 +15,13 @@ const PRODUCT_CATEGORIES = {
     'colocation': { category: 'idc', subcategory: 'colocation', renderType: 'colocation', containerId: 'pricing-grid-colocation' },
 
     // Security
-    'security-waf': { category: 'security', subcategory: 'sec-waf', containerId: 'pricing-waf' },
-    'security-waf-pro': { category: 'security', subcategory: 'sec-waf-pro', containerId: 'pricing-waf-pro' },
-    'security-cleanzone': { category: 'security', subcategory: 'sec-cleanzone', containerId: 'pricing-cleanzone' },
-    'security-private-ca': { category: 'security', subcategory: 'sec-private-ca', containerId: 'pricing-private-ca' },
-    'security-ssl': { category: 'security', subcategory: 'sec-ssl', containerId: 'pricing-ssl' },
-    'security-v3': { category: 'security', subcategory: 'sec-v3', containerId: 'pricing-v3' },
-    'security-dbsafer': { category: 'security', subcategory: 'sec-dbsafer', containerId: 'pricing-dbsafer' },
+    'security-waf': { category: 'security', subcategory: 'sec-waf', containerId: 'pricing-waf', renderType: 'security' },
+    'security-waf-pro': { category: 'security', subcategory: 'sec-waf-pro', containerId: 'pricing-waf-pro', renderType: 'security' },
+    'security-cleanzone': { category: 'security', subcategory: 'sec-cleanzone', containerId: 'pricing-cleanzone', renderType: 'security' },
+    'security-private-ca': { category: 'security', subcategory: 'sec-private-ca', containerId: 'pricing-private-ca', renderType: 'security' },
+    'security-ssl': { category: 'security', subcategory: 'sec-ssl', containerId: 'pricing-ssl', renderType: 'security' },
+    'security-v3': { category: 'security', subcategory: 'sec-v3', containerId: 'pricing-v3', renderType: 'security' },
+    'security-dbsafer': { category: 'security', subcategory: 'sec-dbsafer', containerId: 'pricing-dbsafer', renderType: 'security' },
 
     // Add-on Services
     'addon-software': { category: 'addon', subcategory: 'addon-license', containerId: 'pricing-grid-software' },
@@ -124,9 +124,87 @@ function renderPlans(pageKey, plans, config) {
         renderVpn(container, plans);
     } else if (type === 'colocation') {
         renderColocation(container, plans);
+    } else if (type === 'security') {
+        renderSecurity(container, plans);
     } else {
         renderAddon(container, plans, pageKey);
     }
+}
+
+// Security Specialized Renderer (Matches Hosting Style)
+function renderSecurity(container, plans) {
+    plans.forEach(p => {
+        // Map Security Specs directly to Hosting-style spec list
+        // Prioritize relevant fields
+        const specs = {};
+        if (p.traffic || p.bandwidth) specs['트래픽/대역폭'] = p.traffic || p.bandwidth;
+        if (p.speed) specs['속도'] = p.speed;
+        if (p.cpu) specs['CPU'] = p.cpu;
+        if (p.ram) specs['RAM'] = p.ram;
+        if (p.storage) specs['Storage'] = p.storage;
+
+        // Fallback: If specs are empty (e.g. WAF Standard), try to extract from features
+        const features = parseFeatures(p.features);
+
+        // Helper to extract numeric values from strings
+        const extractSpec = (list, key, regex) => {
+            if (!specs[key]) { // Only if not already set
+                const found = list.find(f => regex.test(f));
+                if (found) {
+                    // Extract just the relevant part if possible, or use the whole line
+                    // For '350 Mbps 권장 트래픽', we want '350 Mbps'
+                    const match = found.match(regex);
+                    if (match && match[1]) specs[key] = match[1];
+                    else specs[key] = found;
+                }
+            }
+        };
+
+        extractSpec(features, '권장 트래픽', /(\d+\s*Mbps)/i);
+
+        // --- HARD FIX FOR STANDARD PLAN (Empty DB Data Issue) ---
+        // ONLY applies to Basic WAF (ID: 13), NOT WAF Pro (ID: 14) which has valid data
+        if (p.plan_name === 'Standard' && p.product_id === 13) {
+            if (!specs['권장 트래픽']) specs['권장 트래픽'] = '350 Mbps';
+            // User requested to remove 'Defense' (OWASP) as it was duplicate/unwanted
+        }
+        // -----------------------------------------------------
+
+        // Generate Specs HTML (uses same classes as Hosting)
+        // Ensure the box is rendered even if empty? No, Hosting renders it only if non-empty.
+        // But to fix "Empty Look", we WANT it to render if we found something or force it?
+        // With extraction, it should find something.
+        const specHtml = Object.entries(specs).map(([k, v]) => `
+            <div class="spec-item">
+                <span class="spec-label">${k}</span>
+                <span class="spec-value">${v}</span>
+            </div>
+        `).join('');
+
+        const featureHtml = features.map(f => `<li><i class="fas fa-check"></i> ${f}</li>`).join('');
+
+        const displayPrice = formatPrice(p.price, p.period || '월');
+        const escName = escapeHtml(p.plan_name);
+
+        // Build the card exactly like Hosting
+        const html = `
+            <div class="plan-card popular">
+                ${p.badge ? `<span class="plan-badge">${p.badge}</span>` : ''}
+                <div class="plan-title">${p.plan_name}</div>
+                <div class="plan-summary">${p.summary || ''}</div>
+                <div class="plan-price">${displayPrice}</div>
+                
+                ${specHtml ? `<div class="specs-list">${specHtml}</div>` : ''}
+
+                <ul class="plan-features">${featureHtml}</ul>
+
+                <button class="plan-btn solid js-open-modal" 
+                    data-name="${escName}" data-type="security" data-details="${p.summary || ''}" data-price="${p.price}"
+                    style="width:100%; border:none; cursor:pointer; margin-top: auto;">신청하기</button>
+            </div>
+        `;
+        container.innerHTML += html;
+    });
 }
 
 // --- Specific Render Functions ---
@@ -147,6 +225,15 @@ function renderAddon(container, plans, pageKey) {
             }
         });
 
+        // Fallback/Supplemental: Add DB columns (traffic, speed, etc.) if features didn't cover them
+        // This ensures plans with only 'traffic' column data (like WAF Standard) show up.
+        if (plan.traffic) featureListHtml += `<li><i class="fas fa-check"></i> ${plan.traffic}</li>`;
+        if (plan.bandwidth) featureListHtml += `<li><i class="fas fa-check"></i> ${plan.bandwidth}</li>`;
+        if (plan.speed) featureListHtml += `<li><i class="fas fa-check"></i> ${plan.speed}</li>`;
+        if (plan.cpu) featureListHtml += `<li><i class="fas fa-check"></i> CPU ${plan.cpu}</li>`;
+        if (plan.ram) featureListHtml += `<li><i class="fas fa-check"></i> RAM ${plan.ram}</li>`;
+        if (plan.storage) featureListHtml += `<li><i class="fas fa-check"></i> ${plan.storage}</li>`;
+
         // Determine Badge
         let badgeHtml = '';
         if (plan.badge) badgeHtml = `<div class="plan-badge">${plan.badge}</div>`;
@@ -159,9 +246,14 @@ function renderAddon(container, plans, pageKey) {
         // Use pageKey as data-type (e.g. solution-ms365, solution-naver)
         // Fallback to 'addon' if pageKey is undefined (shouldn't happen via renderPlans)
         const typeVal = pageKey || 'addon';
+        let btnText = '무료체험 신청';
+        if (pageKey && pageKey.startsWith('security-')) {
+            btnText = '신청하기';
+        }
+
         let buttonHtml = `<button class="plan-btn solid js-open-modal" 
                     data-name="${escapeHtml(plan.plan_name)}" data-type="${typeVal}" data-details="${plan.summary || ''}" data-price="${plan.price}"
-                    style="width:100%; border:none; cursor:pointer; margin-bottom: 20px;">무료체험 신청</button>`;
+                    style="width:100%; border:none; cursor:pointer; margin-bottom: 20px;">${btnText}</button>`;
 
         if (container.id === 'pricing-grid-website') {
             // 1. Starter / Free
@@ -254,11 +346,11 @@ function renderAddon(container, plans, pageKey) {
                 ${extraInfoHtml}
                 <div class="plan-summary" style="font-size:0.9em; margin-bottom:15px; min-height:24px;">${plan.summary || ''}</div>
                 
-                ${buttonHtml}
-
                 <ul class="plan-features">
                     ${featureListHtml}
                 </ul>
+                
+                ${buttonHtml}
             </div>
         `;
         container.innerHTML += cardHtml;
