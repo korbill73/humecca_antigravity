@@ -193,12 +193,12 @@ window.loadCustomerLogos = async function () {
                     ${(() => {
                 // FIX: Serve HTTP-only images from local storage to prevent Mixed Content errors
                 const LOCAL_LOGOS = {
-                    "제이니스": "images/customers/____.gif",
-                    "메타디씨": "images/customers/____.gif",
-                    "한국선교역사기념관": "images/customers/_________.png",
-                    "서울평화상문화재단": "images/customers/_________.png",
-                    "PFIN": "images/customers/PFIN.gif",
-                    "메타씨티": "images/customers/____.png"
+                    "제이니스": "images/customers/janis.gif",
+                    "메타디씨": "images/customers/janis.gif",
+                    "한국선교역사기념관": "images/customers/mission.png",
+                    "서울평화상문화재단": "images/customers/mission.png",
+                    "PFIN": "images/customers/pfin.gif",
+                    "메타씨티": "images/customers/metacity.png"
                 };
 
                 if (LOCAL_LOGOS[customer.name]) {
