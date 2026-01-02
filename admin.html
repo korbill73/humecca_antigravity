@@ -1325,51 +1325,90 @@
 
         <!-- ======================= 다른 탭들 (기존 유지) ======================= -->
         <!-- 고객사 로고 탭 -->
+        <!-- 고객사 로고 탭 (Redesigned) -->
         <div id="tab-customer" class="tab-content">
-            <h2 class="page-title">고객사 로고</h2>
-            <p class="page-subtitle">메인 페이지에 노출될 고객사 로고를 관리합니다.</p>
+            <h2 class="page-title">고객사 로고 관리</h2>
+            <p class="page-subtitle">메인 페이지에 노출될 고객사 로고를 등록하고 관리합니다.</p>
             <div id="alert-container"></div>
-            <!-- 고객사 추가 폼 -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title" id="cust-form-title">고객사 추가</h3>
+
+            <!-- 등록/수정 폼 (Split Layout) -->
+            <div class="card" style="margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.1);">
+                <div class="card-header"
+                    style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; margin-bottom: 20px;">
+                    <h3 class="card-title" id="cust-form-title"><i class="fas fa-plus-circle"></i> 고객사 추가</h3>
                     <button type="button" class="btn btn-secondary btn-sm" onclick="resetCustomerForm()"
                         style="margin-left: auto;">
                         <i class="fas fa-undo"></i> 초기화
                     </button>
                 </div>
+
                 <form id="customer-form">
                     <input type="hidden" id="cust-id-hidden"> <!-- DB ID -->
 
-                    <div style="display: grid; grid-template-columns: 1fr 2fr auto auto; gap: 16px; align-items: end;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label class="form-label">고객사명 *</label>
-                            <div class="input-wrapper">
-                                <input type="text" id="customer-name" class="form-input" placeholder="고객사명 입력" required>
-                                <small style="display:block; margin-top:4px; color:#64748b; font-size:13px;">예:
-                                    삼성전자</small>
+                    <div style="display: grid; grid-template-columns: 1fr 300px; gap: 30px;">
+                        <!-- Left: Input Fields -->
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                            <div class="form-group">
+                                <label class="form-label">고객사명 <span style="color:#ef4444">*</span></label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="customer-name" class="form-input" placeholder="예: 삼성전자"
+                                        required
+                                        style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 6px;">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">로고 등록 (스크린샷 붙여넣기)</label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="customer-logo" class="form-input"
+                                        placeholder="여기를 클릭하고 Ctrl+V로 이미지를 붙여넣으세요" oninput="updateLogoPreview()"
+                                        style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 6px;">
+                                    <small style="display:block; margin-top:8px; color:#94a3b8; font-size:13px;">
+                                        <i class="fas fa-info-circle"></i> 캡처 도구 등으로 복사한 이미지를 바로 붙여넣을 수 있습니다. (또는 이미지 주소
+                                        입력)
+                                    </small>
+                                </div>
+                            </div>
+                            <div style="margin-top: auto;">
+                                <button type="submit" class="btn btn-primary" id="cust-submit-btn"
+                                    style="width: 100%; padding: 12px; font-size: 1.1rem; justify-content: center;">
+                                    <i class="fas fa-save"></i> 저장하기
+                                </button>
                             </div>
                         </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label class="form-label">로고 URL (선택)</label>
-                            <div class="input-wrapper">
-                                <input type="text" id="customer-logo" class="form-input" placeholder="로고 URL 입력">
-                                <small style="display:block; margin-top:4px; color:#64748b; font-size:13px;">* http://
-                                    생략 가능 (예: google.com/logo.png)</small>
+
+                        <!-- Right: Live Preview -->
+                        <div
+                            style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                            <label style="margin-bottom: 15px; color: #cbd5e1; font-weight: 600;">Logo Preview</label>
+
+                            <!-- Preview Box (White bg for visibility) -->
+                            <div id="logo-preview-box"
+                                style="width: 200px; height: 120px; background: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+                                <span id="preview-placeholder" style="color: #cbd5e1; font-size: 14px;">No Image</span>
+                                <img id="logo-preview-img" src=""
+                                    style="display: none; max-width: 90%; max-height: 90%; object-fit: contain;">
                             </div>
+
+                            <p style="margin-top: 15px; font-size: 12px; color: #64748b;">
+                                실제 화면에서도 이와 같이<br>흰색 박스 위에 표시됩니다.
+                            </p>
                         </div>
-                        <button type="submit" class="btn btn-primary" id="cust-submit-btn">
-                            <i class="fas fa-plus"></i> 저장
-                        </button>
                     </div>
                 </form>
             </div>
+
             <!-- 고객사 목록 -->
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">등록된 고객사 (<span id="customer-count">0</span>개)</h3>
+                    <h3 class="card-title">등록된 고객사 (<span id="customer-count">0</span>)</h3>
+                    <button class="btn btn-secondary" onclick="renderCustomers()">
+                        <i class="fas fa-sync"></i> 새로고침
+                    </button>
                 </div>
-                <div id="customer-list" class="customer-grid"></div>
+                <div id="customer-list" class="customer-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding-top: 20px;">
+                    <!-- JS Generated Content -->
+                </div>
             </div>
         </div>
 

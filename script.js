@@ -194,21 +194,25 @@ window.loadCustomerLogos = async function () {
                 // FIX: Serve HTTP-only images from local storage to prevent Mixed Content errors
                 const LOCAL_LOGOS = {
                     "제이니스": "images/customers/janis.gif",
-                    "메타디씨": "images/customers/janis.gif",
+                    "메타디씨": "images/customers/metadc.gif",
                     "한국선교역사기념관": "images/customers/mission.png",
                     "서울평화상문화재단": "images/customers/mission.png",
                     "PFIN": "images/customers/pfin.gif",
                     "메타씨티": "images/customers/metacity.png"
                 };
 
-                if (LOCAL_LOGOS[customer.name]) {
-                    return `<img src="${LOCAL_LOGOS[customer.name]}" alt="${customer.name}" style="max-width: 100%; max-height: 52px; object-fit: contain;">`;
+                let displayLogo = customer.logo_url;
+
+                // Logic: Prioritize User Provided Content (Base64 or HTTPS)
+                const isUserProvided = displayLogo && (displayLogo.startsWith('data:') || displayLogo.startsWith('https://') || displayLogo.startsWith('images/'));
+
+                if (!isUserProvided && LOCAL_LOGOS[customer.name]) {
+                    displayLogo = LOCAL_LOGOS[customer.name];
                 }
 
-                if (!customer.logo_url) return `<span style="color: #475569; font-size: 14px; font-weight: 700; text-align: center;">${customer.name}</span>`;
+                if (!displayLogo) return `<span style="color: #475569; font-size: 14px; font-weight: 700; text-align: center;">${customer.name}</span>`;
 
-                // Default handling for HTTPS images
-                return `<img src="${encodeURI(customer.logo_url)}" alt="${customer.name}" style="max-width: 100%; max-height: 52px; object-fit: contain;">`;
+                return `<img src="${encodeURI(displayLogo)}" alt="${customer.name}" style="max-width: 100%; max-height: 52px; object-fit: contain;">`;
             })()}
                 </div>
             </div>

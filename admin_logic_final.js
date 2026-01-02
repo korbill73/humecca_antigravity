@@ -2039,36 +2039,139 @@ async function renderAnalytics() {
 // ===========================
 // 4. Other (Customers, FAQ, Inquiries, Terms, History)
 // ===========================
+// ===========================
+// 4. Other (Customers, FAQ, Inquiries, Terms, History)
+// ===========================
 async function renderCustomers() {
     const el = document.getElementById('customer-list');
+    const countEl = document.getElementById('customer-count');
     if (!el) return;
-    const { data } = await window.sb.from('customers').select('*').order('sort_order', { ascending: true }); // Default sort by sort_order
+
+    const { data } = await window.sb.from('customers').select('*').order('sort_order', { ascending: true });
+
     el.innerHTML = '';
 
-    // Sort logic fallback if needed, but DB order is best. 
-    // If no sort_order column, it might error, but assuming it exists or ignore.
-    // Ideally user probably wants to sort by ID descending or similar if no order.
-    // Let's assume ID desc for now if sort_order is null
+    // Sort logic fallback (ID desc if no sort_order)
+    const sortedData = data ? data.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0) || b.id - a.id) : [];
 
-    data?.forEach(c => {
-        el.innerHTML += `<div class="customer-card">
-            <div style="font-weight:bold; font-size:1.1rem; color:var(--text-primary); margin-bottom:15px;">${c.name}</div>
-            ${c.logo_url ? `<img src="${c.logo_url}" style="height:50px; object-fit:contain; margin-bottom:15px;">` : '<div style="height:50px; display:flex; align-items:center; justify-content:center; color:var(--text-secondary); margin-bottom:15px;">No Logo</div>'}
+    if (countEl) countEl.innerText = sortedData.length;
+
+    const LOCAL_LOGOS = {
+        "제이니스": "images/customers/janis.gif",
+        "메타디씨": "images/customers/metadc.gif",
+        "한국선교역사기념관": "images/customers/mission.png",
+        "서울평화상문화재단": "images/customers/mission.png",
+        "PFIN": "images/customers/pfin.gif",
+        "메타씨티": "images/customers/metacity.png"
+    };
+
+    if (sortedData.length === 0) {
+        el.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px; color:rgba(255,255,255,0.3); font-size:1.1rem;">등록된 고객사가 없습니다.</div>';
+        return;
+    }
+
+    sortedData.forEach(c => {
+        // Resolve Logo URL
+        let displayLogo = c.logo_url;
+
+        // Logic: Respect User Input (Base64 or HTTPS) over Legacy Local Fix
+        // Only apply LOCAL_LOGOS override if the DB value is likely broken (HTTP) or empty
+        const isUserProvided = displayLogo && (displayLogo.startsWith('data:') || displayLogo.startsWith('https://') || displayLogo.startsWith('images/'));
+
+        if (!isUserProvided && LOCAL_LOGOS[c.name]) {
+            displayLogo = LOCAL_LOGOS[c.name];
+        }
+
+        // Design: Advanced Card with Glassmorphism
+        el.innerHTML += `<div class="customer-card" style="background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s;">
+            <div style="font-weight:700; font-size:1.1rem; color:var(--text-primary); margin-bottom:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center;">${c.name}</div>
             
-            <div style="display:flex; gap:5px; width:100%; margin-top:auto; justify-content: flex-end;">
-             <button class="btn btn-secondary" onclick="editCustomer(${c.id})" style="padding:4px 8px; font-size:12px; flex:1;">수정</button>
-             <button class="delete-btn" onclick="deleteCustomer(${c.id})" style="padding:4px 8px; font-size:12px; height:auto; border-radius:4px; flex:1;"><i class="fas fa-trash"></i> 삭제</button>
-        </div>
-    </div>`;
+            <div style="height:100px; display:flex; align-items:center; justify-content:center; background-color:#ffffff; border-radius:8px; margin-bottom:15px; padding:15px; border:1px solid #e2e8f0; position:relative; overflow:hidden;">
+                ${displayLogo ? `<img src="${displayLogo}" style="max-height:100%; max-width:100%; object-fit:contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ''}
+                <div style="display:${displayLogo ? 'none' : 'flex'}; flex-direction:column; align-items:center; color:#cbd5e1;">
+                    <i class="fas fa-image" style="font-size:24px; margin-bottom:5px;"></i>
+                    <span style="font-size:12px;">No Logo</span>
+                </div>
+            </div>
+            
+            <div style="display:flex; gap:10px; margin-top:auto;">
+             <button class="btn btn-secondary" onclick="editCustomer(${c.id})" style="flex:1; padding:0 10px; font-size:13px; justify-content:center; display:flex; align-items:center; height:40px; gap:6px; white-space:nowrap;"><i class="fas fa-pen"></i> 수정</button>
+             <button class="delete-btn" onclick="deleteCustomer(${c.id})" style="flex:1; padding:0 10px; font-size:13px; border-radius:4px; justify-content:center; display:flex; align-items:center; height:40px; gap:6px; white-space:nowrap;"><i class="fas fa-trash"></i> 삭제</button>
+            </div>
+        </div>`;
     });
 }
 
-// Toggle Notice Form
+// Live Logo Preview Logic
+window.updateLogoPreview = () => {
+    const url = document.getElementById('customer-logo').value.trim();
+    const img = document.getElementById('logo-preview-img');
+    const placeholder = document.getElementById('preview-placeholder');
+
+    if (url) {
+        img.src = url;
+        img.style.display = 'block';
+        placeholder.style.display = 'none';
+
+        // Error handling for preview
+        img.onerror = () => {
+            img.style.display = 'none';
+            placeholder.style.display = 'inline';
+            placeholder.innerText = "Invalid Image";
+            placeholder.style.color = "#ef4444";
+        };
+        img.onload = () => {
+            placeholder.style.color = "#cbd5e1"; // Reset error color
+        }
+    } else {
+        img.style.display = 'none';
+        img.src = '';
+        placeholder.style.display = 'inline';
+        placeholder.innerText = "No Image";
+        placeholder.style.color = "#cbd5e1";
+    }
+};
+
+// Paste Image Support
+document.getElementById('customer-form')?.addEventListener('paste', (e) => {
+    const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+    let blob = null;
+
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf("image") === 0) {
+            blob = items[i].getAsFile();
+            break;
+        }
+    }
+
+    if (blob) {
+        // Image found in clipboard
+        e.preventDefault();
+
+        // Size validation (Max 1MB recommended for Base64 in simple text fields)
+        if (blob.size > 2 * 1024 * 1024) {
+            alert('이미지 용량이 너무 큽니다. (2MB 이하 권장)');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const base64 = event.target.result;
+
+            // Set value
+            document.getElementById('customer-logo').value = base64;
+
+            // Visual feedback
+            updateLogoPreview();
+        };
+        reader.readAsDataURL(blob);
+    }
+});
+
 window.toggleNoticeForm = () => {
     const el = document.getElementById('notice-form-container');
     if (el.style.display === 'none') {
         el.style.display = 'block';
-        // Reset form when opening fresh? Maybe optional.
     } else {
         el.style.display = 'none';
     }
@@ -2089,17 +2192,23 @@ window.editCustomer = async (id) => {
     document.getElementById('customer-logo').value = data.logo_url || '';
     document.getElementById('cust-id-hidden').value = data.id;
 
-    document.getElementById('cust-form-title').innerText = "고객사 정보 수정";
-    document.getElementById('cust-submit-btn').innerText = "수정 저장";
+    document.getElementById('cust-form-title').innerHTML = '<i class="fas fa-pen-square"></i> 고객사 정보 수정';
+    document.getElementById('cust-submit-btn').innerHTML = '<i class="fas fa-check"></i> 수정 저장';
 
-    document.getElementById('customer-form').scrollIntoView({ behavior: 'smooth' });
+    // Trigger Preview
+    updateLogoPreview();
+
+    document.getElementById('customer-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
 };
 
 window.resetCustomerForm = () => {
     document.getElementById('customer-form').reset();
     document.getElementById('cust-id-hidden').value = '';
-    document.getElementById('cust-form-title').innerText = "고객사 추가";
-    document.getElementById('cust-submit-btn').innerText = "추가";
+    document.getElementById('cust-form-title').innerHTML = '<i class="fas fa-plus-circle"></i> 고객사 추가';
+    document.getElementById('cust-submit-btn').innerHTML = '<i class="fas fa-plus"></i> 저장';
+
+    // Reset Preview
+    updateLogoPreview();
 };
 
 document.getElementById('customer-form')?.addEventListener('submit', async (e) => {
@@ -2110,7 +2219,8 @@ document.getElementById('customer-form')?.addEventListener('submit', async (e) =
     let logo_url = document.getElementById('customer-logo').value.trim();
 
     // URL Logic: If not empty and doesn't start with http/https, prepend https://
-    if (logo_url && !/^https?:\/\//i.test(logo_url)) {
+    // Only if it looks like a domain (has dot), otherwise leave it (could be relative path)
+    if (logo_url && logo_url.includes('.') && !/^https?:\/\//i.test(logo_url) && !logo_url.startsWith('/')) {
         logo_url = 'https://' + logo_url;
     }
 
@@ -2121,7 +2231,6 @@ document.getElementById('customer-form')?.addEventListener('submit', async (e) =
         alert('고객사 정보가 수정되었습니다.');
     } else {
         // Insert
-        // Get max sort_order to append? Or just insert.
         const { error } = await window.sb.from('customers').insert([{ name, logo_url }]);
         if (error) { alert('추가 실패:' + error.message); return; }
         alert('추가되었습니다.');
@@ -2129,6 +2238,7 @@ document.getElementById('customer-form')?.addEventListener('submit', async (e) =
 
     resetCustomerForm();
     renderCustomers();
+    updateLogoPreview(); // Ensure cleared
 });
 
 // FAQ Filter Logic
