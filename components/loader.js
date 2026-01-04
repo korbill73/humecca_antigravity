@@ -577,6 +577,13 @@ function getInlineHeader() {
                                 <span class="dropdown-desc">IT 인프라 파트너</span>
                             </div>
                         </a>
+                        <a href="sub_company_intro.html#ci" class="dropdown-item">
+                            <div class="dropdown-icon"><i class="fas fa-shapes"></i></div>
+                            <div class="dropdown-text">
+                                <span class="dropdown-title">CI 소개</span>
+                                <span class="dropdown-desc">휴메카의 아이덴티티</span>
+                            </div>
+                        </a>
                         <a href="sub_company_intro.html#history" class="dropdown-item">
                             <div class="dropdown-icon"><i class="fas fa-history"></i></div>
                             <div class="dropdown-text">
