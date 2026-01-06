@@ -222,7 +222,7 @@
         </section>
 
         <!-- Location -->
-        <div class="container">
+        <div class="container" style="padding-bottom: 120px;">
             <div style="text-align: center; margin-bottom: 60px;">
                 <span
                     style="color: #dc2626; font-weight: 600; font-size: 14px; display: block; margin-bottom: 10px;">Location</span>
@@ -423,17 +423,7 @@
             // Update Content
             const loc = locations[id];
 
-            // Map
-            const mapFrame = document.getElementById('map-frame');
-            mapFrame.style.opacity = '0';
-            setTimeout(() => {
-                mapFrame.src = loc.mapUrl;
-                mapFrame.onload = () => { mapFrame.style.opacity = '1'; };
-                // Fallback fade in just in case onload fires too fast
-                setTimeout(() => mapFrame.style.opacity = '1', 500);
-            }, 200);
-
-            // Info - Balanced 2-Column Grid Layout
+            // Update Info Content First
             const contentHTML = `
                 <div style="animation: slideUpFade 0.5s ease-out;">
                     <div style="margin-bottom: 25px;">
@@ -489,9 +479,209 @@
                 </div>
             `;
             document.getElementById('loc-content').innerHTML = contentHTML;
+
+            // 2. Map Replacement Logic (Restoring Iframe)
+            const mapContainer = document.getElementById('map-container');
+
+            // Clean container but keep fallback background
+            mapContainer.innerHTML = '';
+            mapContainer.style.background = '#f3f4f6'; // Fallback color
+
+            // Generate Iframe URL
+            // Using 't=m' for map view, 'z=16' for zoom, 'output=embed'
+            // Added 'hl=ko' to force Korean UI
+            // Using encodeURIComponent for key query part only
+            let queryParam = '';
+            if (id === 'hq') queryParam = 'KT영동지사';
+            else if (id === 'kinx') queryParam = '서울특별시 강남구 언주로 30길 13';
+            else if (id === 'sk') queryParam = '서울특별시 서초구 법원로 1길 6';
+
+            const finalUrl = `https://maps.google.com/maps?q=${encodeURIComponent(queryParam)}&t=m&z=16&ie=UTF8&iwloc=&hl=ko&output=embed`;
+
+            // Create Iframe wrapper to handle loading errors visually if possible
+            const iframe = document.createElement('iframe');
+            iframe.src = finalUrl;
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.style.border = '0';
+            iframe.allowFullscreen = true;
+            iframe.loading = 'lazy';
+            iframe.referrerPolicy = 'no-referrer-when-downgrade';
+
+            // Simple visual placeholder while loading
+            iframe.style.opacity = '0';
+            iframe.onload = () => { iframe.style.transition = 'opacity 0.5s'; iframe.style.opacity = '1'; };
+            setTimeout(() => iframe.style.opacity = '1', 1000); // Force show after 1s
+
+            mapContainer.appendChild(iframe);
         }
 
-        // ==================== 연혁 불러오기 ====================
+        // ==================== CSS Injection for Modern History ====================
+        const historyStyle = document.createElement("style");
+        historyStyle.innerText = `
+            /* MODERN INFOGRAPHIC TIMELINE - RESET */
+            .timeline-container {
+                position: relative;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 60px 20px;
+                font-family: 'Pretendard', sans-serif;
+            }
+            
+            /* Center Line */
+            .timeline-line {
+                position: absolute;
+                left: 50%;
+                top: 0;
+                bottom: 0;
+                width: 4px;
+                background: #e5e7eb;
+                transform: translateX(-50%);
+                z-index: 0;
+            }
+
+            /* Row Layout */
+            .timeline-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 80px;
+                position: relative;
+                opacity: 0;
+                transform: translateY(30px);
+                transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .timeline-row.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            /* Columns */
+            .timeline-col {
+                width: 45%;
+                position: relative;
+                z-index: 1;
+            }
+            
+            /* Center Node */
+            .timeline-node {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: 20px;
+                height: 20px;
+                background: #dc2626;
+                border: 4px solid white;
+                box-shadow: 0 0 0 4px #e5e7eb;
+                border-radius: 50%;
+                z-index: 2;
+                transition: all 0.3s ease;
+            }
+            .timeline-row:hover .timeline-node {
+                transform: translate(-50%, -50%) scale(1.5);
+                box-shadow: 0 0 0 6px #fee2e2;
+            }
+
+            /* MODERN CARD STYLE */
+            .timeline-card {
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 16px;
+                padding: 30px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+                text-align: left !important; /* FORCE LEFT ALIGN */
+                transition: all 0.4s ease;
+                position: relative;
+            }
+            .timeline-card:hover {
+                box-shadow: 0 20px 40px rgba(220, 38, 38, 0.1);
+                border-color: #fca5a5;
+                transform: translateY(-5px);
+            }
+            
+            /* Arrow Connectors */
+            .timeline-card::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                width: 12px;
+                height: 12px;
+                background: white;
+                border-left: 1px solid #e5e7eb;
+                border-bottom: 1px solid #e5e7eb;
+                transform: translateY(-50%) rotate(45deg);
+            }
+            /* Left Side Card -> Arrow on Right */
+            .timeline-col.left .timeline-card::after {
+                right: -7px;
+                transform: translateY(-50%) rotate(-135deg);
+            }
+            /* Right Side Card -> Arrow on Left */
+            .timeline-col.right .timeline-card::after {
+                left: -7px;
+                transform: translateY(-50%) rotate(45deg);
+            }
+
+            /* Text Styling */
+            .timeline-year-label {
+                font-size: 3.5rem;
+                font-weight: 800;
+                color: #e5e7eb;
+                line-height: 1;
+                position: absolute;
+                top: -40px;
+                z-index: -1;
+                transition: all 0.3s;
+            }
+            .timeline-col.left .timeline-year-label { right: 0; }
+            .timeline-col.right .timeline-year-label { left: 0; }
+            
+            .timeline-row:hover .timeline-year-label {
+                color: #fee2e2;
+                transform: scale(1.05);
+            }
+
+            .event-item {
+                margin-bottom: 15px;
+                padding-left: 15px;
+                border-left: 3px solid #dc2626;
+            }
+            .event-item:last-child { margin-bottom: 0; }
+
+            .event-title {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: #111827;
+                word-break: keep-all;
+                line-height: 1.4;
+                margin-bottom: 4px;
+            }
+            .event-desc {
+                font-size: 0.95rem;
+                color: #4b5563;
+                line-height: 1.5;
+                word-break: keep-all;
+            }
+
+            /* Mobile */
+            @media (max-width: 768px) {
+                .timeline-line { left: 30px; transform: none; }
+                .timeline-row { flex-direction: column; align-items: flex-start; margin-bottom: 50px; }
+                .timeline-col { width: 100%; padding-left: 60px; }
+                .timeline-col.left, .timeline-col.right { padding-right: 0; }
+                .timeline-node { left: 30px; top: 30px; transform: translate(-50%, -50%); }
+                .timeline-card::after { display: none; }
+                .timeline-year-label { 
+                    position: relative; top: auto; left: auto; right: auto; 
+                    margin-bottom: 10px; font-size: 2.5rem; 
+                }
+                .timeline-row:hover .timeline-node { transform: translate(-50%, -50%) scale(1.2); }
+            }
+        `;
+        document.head.appendChild(historyStyle);
+
+        // ==================== 연혁 불러오기 (Modern Card) ====================
         async function loadHistory() {
             // FIX: Use initialized client 'window.sb'
             const db = window.sb || window.supabase;
@@ -522,6 +712,9 @@
 
                 loading.remove();
 
+                // Reset Line
+                timeline.innerHTML = '<div class="timeline-line"></div>';
+
                 const groupedByYear = {};
                 data.forEach(item => {
                     if (!groupedByYear[item.year]) groupedByYear[item.year] = [];
@@ -532,59 +725,56 @@
                 const currentYear = new Date().getFullYear();
 
                 years.forEach((year, index) => {
-                    const isRecent = parseInt(year) >= currentYear - 2;
-                    const isLast = index === years.length - 1;
                     const isOdd = index % 2 === 0;
                     const events = groupedByYear[year];
 
-                    const yearDiv = document.createElement('div');
-                    yearDiv.className = 'history-item-anim';
-                    yearDiv.style.cssText = 'display: flex; justify-content: space-between; margin-bottom: 60px; position: relative;';
-
-                    const yearHTML = `
-                        <div style="color: ${isRecent ? '#dc2626' : '#6b7280'}; margin-bottom: 5px;">
-                            <span style="font-size: 3.5rem; font-weight: 800; line-height: 1; letter-spacing: -2px;">${year}</span>
+                    // Generate Event List HTML
+                    const eventsHTML = events.map(e => `
+                        <div class="event-item">
+                            <div class="event-title">
+                                ${e.month ? `<span style="color:#dc2626; margin-right:6px;">${String(e.month).padStart(2, '0')}.</span>` : ''}
+                                ${e.title}
+                            </div>
+                            ${e.description ? `<div class="event-desc">${e.description}</div>` : ''}
                         </div>
-                    `;
+                    `).join('');
 
-                    const eventsHTML = events.map(event => {
-                        const monthText = event.month ? `${String(event.month).padStart(2, '0')}.` : '';
-                        return `
-                            <li style="margin-bottom: 20px; padding-left: 20px; border-left: 2px solid ${isRecent ? '#fee2e2' : '#f3f4f6'};">
-                                <div style="font-size: 1.1rem; font-weight: 700; color: #1f2937; margin-bottom: 4px;">
-                                    <span style="color: #dc2626; margin-right: 8px;">${monthText}</span>${event.title}
-                                </div>
-                                ${event.description ? `<div style="color: #6b7280; font-size: 0.95rem; line-height: 1.6;">${event.description}</div>` : ''}
-                            </li>
+                    // Timeline Row
+                    const row = document.createElement('div');
+                    row.className = 'timeline-row visible'; // Force visible immediately to avoid flickering
+
+                    if (isOdd) {
+                        // Left: Content, Right: Year/Empty
+                        row.innerHTML = `
+                            <div class="timeline-col left">
+                                <div class="timeline-year-label">${year}</div>
+                                <div class="timeline-card">${eventsHTML}</div>
+                            </div>
+                            <div class="timeline-node"></div>
+                            <div class="timeline-col right"></div>
                         `;
-                    }).join('');
+                    } else {
+                        // Right: Content, Left: Year/Empty
+                        row.innerHTML = `
+                            <div class="timeline-col left"></div>
+                            <div class="timeline-node"></div>
+                            <div class="timeline-col right">
+                                <div class="timeline-year-label">${year}</div>
+                                <div class="timeline-card">${eventsHTML}</div>
+                            </div>
+                        `;
+                    }
 
-                    const dotColor = isRecent ? '#dc2626' : '#9ca3af';
-                    const listHTML = `<ul style="list-style: none; padding: 0;">${eventsHTML}</ul>`;
-
-                    yearDiv.innerHTML = `
-                        <div style="width: 45%; text-align: right; padding-right: 40px;">
-                            ${isOdd ? yearHTML : listHTML}
-                        </div>
-                        <div style="position: absolute; left: 50%; top: 10px; width: 16px; height: 16px; background: white; border-radius: 50%; transform: translateX(-50%); border: 3px solid ${dotColor}; box-shadow: 0 0 0 4px white;"></div>
-                        <div style="width: 45%; padding-left: 40px;">
-                            ${isOdd ? listHTML : yearHTML}
-                        </div>
-                    `;
-
-                    timeline.appendChild(yearDiv);
+                    timeline.appendChild(row);
                 });
 
-                // Intersection Observer for Animation
+                // Animation Observer
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                        }
+                        if (entry.isIntersecting) entry.target.classList.add('visible');
                     });
                 }, { threshold: 0.1 });
-
-                document.querySelectorAll('.history-item-anim').forEach(item => observer.observe(item));
+                document.querySelectorAll('.timeline-row').forEach(r => observer.observe(r));
 
             } catch (error) {
                 console.error(error);

@@ -32,8 +32,8 @@
     </section>
 
     <!-- Content -->
-    <section class="page-content" style="padding: 80px 0">
-        <div class="container">
+    <section class="page-content" style="padding: 80px 0 150px 0">
+        <div style="width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 20px;">
             <div style="text-align: center; margin-bottom: 60px;">
                 <span
                     style="color: #dc2626; font-weight: 600; font-size: 14px; display: block; margin-bottom: 10px;">History</span>
@@ -82,6 +82,182 @@
             .history-item-anim.visible {
                 animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             }
+            
+            /* Infographic Timeline CSS */
+            .timeline-container {
+                position: relative;
+                max-width: 1280px; /* Wider layout for better text fitting */
+                margin: 0 auto;
+                padding: 60px 20px;
+            }
+            /* Central Line */
+            .timeline-line {
+                position: absolute;
+                left: 50%;
+                top: 0;
+                bottom: 0;
+                width: 4px;
+                background: #e5e7eb;
+                transform: translateX(-50%);
+                border-radius: 2px;
+            }
+            
+            .timeline-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center; /* Center align with node */
+                margin-bottom: 100px;
+                position: relative;
+                opacity: 0; /* JS handles visibility */
+            }
+            .timeline-row.visible {
+                animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+
+            .timeline-col {
+                width: 46%; /* Wide columns */
+                position: relative;
+            }
+            
+            /* Nodes (The "Infographic" Element) */
+            .timeline-node {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: 24px;
+                height: 24px;
+                background: white;
+                border: 4px solid #d1d5db;
+                border-radius: 50%;
+                z-index: 10;
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                box-shadow: 0 0 0 4px white;
+            }
+            /* Hover Effect on Row triggers Node */
+            .timeline-row:hover .timeline-node {
+                width: 32px;
+                height: 32px;
+                border-color: #dc2626;
+                box-shadow: 0 0 0 6px white, 0 0 20px rgba(220, 38, 38, 0.4);
+            }
+            .timeline-row.recent .timeline-node {
+                border-color: #dc2626;
+                background: #dc2626;
+                box-shadow: 0 0 0 4px white;
+            }
+
+            /* Content Card */
+            .timeline-card {
+                background: #ffffff;
+                border-radius: 20px;
+                padding: 40px;
+                box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); /* Soft large shadow */
+                border: 1px solid #e5e7eb; /* Visible border */
+                transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+                position: relative;
+                text-align: left !important; /* Force Left Alignment */
+            }
+            .timeline-card:hover {
+                transform: translateY(-8px) scale(1.01);
+                box-shadow: 0 25px 50px -12px rgba(220, 38, 38, 0.15); /* Warm glow */
+                border-color: rgba(220, 38, 38, 0.3);
+            }
+
+            /* Connecting Lines (Pseudo-elements) */
+            .timeline-card::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                width: 40px;
+                height: 2px;
+                background: #e5e7eb;
+                transition: background 0.3s;
+            }
+            .timeline-col.left .timeline-card::before {
+                right: -40px;
+            }
+            .timeline-col.right .timeline-card::before {
+                left: -40px;
+            }
+             .timeline-card:hover::before {
+                background: #dc2626;
+            }
+
+            /* Typography */
+            .timeline-year {
+                font-size: 5rem;
+                font-weight: 900;
+                line-height: 1;
+                letter-spacing: -3px;
+                color: #f3f4f6; /* Very subtle background text */
+                position: absolute;
+                top: -30px;
+                transition: all 0.4s;
+                z-index: -1;
+            }
+            .timeline-col.left .timeline-year { right: 20px; }
+            .timeline-col.right .timeline-year { left: 20px; }
+            
+            .timeline-row:hover .timeline-year {
+                color: #fee2e2;
+                transform: scale(1.1);
+            }
+
+            .timeline-event {
+                margin-bottom: 15px;
+                position: relative;
+                padding-left: 18px;
+                border-left: 3px solid #e5e7eb;
+                transition: border-color 0.3s;
+            }
+            .timeline-card:hover .timeline-event {
+                border-left-color: #dc2626;
+            }
+            .timeline-event:last-child { margin-bottom: 0; }
+            
+            .event-month {
+                color: #dc2626;
+                font-weight: 800;
+                font-size: 1rem;
+                margin-right: 8px;
+                display: inline-block;
+                width: 30px; 
+            }
+            .event-title {
+                color: #111827;
+                font-weight: 700;
+                font-size: 1.15rem;
+                word-break: keep-all; /* Fixed line breaks */
+                line-height: 1.4;
+            }
+            .event-desc {
+                font-size: 0.95rem;
+                color: #4b5563;
+                margin-top: 6px;
+                line-height: 1.6;
+                word-break: keep-all;
+            }
+
+            /* Mobile Responsive */
+            @media (max-width: 1024px) {
+                .timeline-container { width: 100%; padding: 40px 20px; }
+                .timeline-line { left: 30px; transform: none; }
+                .timeline-row { flex-direction: column; margin-bottom: 60px; align-items: flex-start; }
+                
+                .timeline-col { width: 100%; padding-left: 60px; }
+                .timeline-col.left, .timeline-col.right { text-align: left; padding-right: 0; }
+                
+                .timeline-node { left: 30px; transform: translate(-50%, -50%); top: 40px; }
+                
+                .timeline-year { 
+                    position: relative; top: auto; left: auto; right: auto;
+                    font-size: 3.5rem; color: #e5e7eb; margin-bottom: 20px; display: block;
+                }
+                
+                .timeline-card { padding: 25px; }
+                .timeline-card::before { display: none; } /* Hide connector on mobile */
+            }
         `;
         document.head.appendChild(styleSheet);
 
@@ -116,6 +292,9 @@
 
                 loading.remove();
 
+                // Clean previous content
+                timeline.innerHTML = '<div class="timeline-line"></div>'; // Add central line
+
                 const groupedByYear = {};
                 data.forEach(item => {
                     if (!groupedByYear[item.year]) groupedByYear[item.year] = [];
@@ -127,49 +306,65 @@
 
                 years.forEach((year, index) => {
                     const isRecent = parseInt(year) >= currentYear - 2;
-                    const isLast = index === years.length - 1;
-                    const isOdd = index % 2 === 0;
+                    const isOdd = index % 2 !== 0; // Alternating flag
                     const events = groupedByYear[year];
 
-                    const yearDiv = document.createElement('div');
-                    yearDiv.className = 'history-item-anim';
-                    yearDiv.style.cssText = 'display: flex; justify-content: space-between; margin-bottom: 60px; position: relative;';
+                    // Create Row
+                    const rowDiv = document.createElement('div');
+                    rowDiv.className = `timeline-row ${isRecent ? 'recent' : ''}`;
 
-                    const yearHTML = `
-                        <div style="color: ${isRecent ? '#dc2626' : '#6b7280'}; margin-bottom: 5px;">
-                            <span style="font-size: 3.5rem; font-weight: 800; line-height: 1; letter-spacing: -2px;">${year}</span>
-                        </div>
-                    `;
+                    // Year HTML
+                    const yearHTML = `<div class="timeline-year">${year}</div>`;
 
-                    const eventsHTML = events.map(event => {
-                        const monthText = event.month ? `${String(event.month).padStart(2, '0')}.` : '';
+                    // Events HTML (Card)
+                    const eventItems = events.map(event => {
+                        const monthText = event.month ? `${String(event.month).padStart(2, '0')}` : '';
                         return `
-                            <li style="margin-bottom: 20px; padding-left: 20px; border-left: 2px solid ${isRecent ? '#fee2e2' : '#f3f4f6'};">
-                                <div style="font-size: 1.1rem; font-weight: 700; color: #1f2937; margin-bottom: 4px;">
-                                    <span style="color: #dc2626; margin-right: 8px;">${monthText}</span>${event.title}
+                            <div class="timeline-event">
+                                <div class="event-title">
+                                    ${monthText ? `<span class="event-month">${monthText}</span>` : ''}
+                                    ${event.title}
                                 </div>
-                                ${event.description ? `<div style="color: #6b7280; font-size: 0.95rem; line-height: 1.6;">${event.description}</div>` : ''}
-                            </li>
+                                ${event.description ? `<div class="event-desc">${event.description}</div>` : ''}
+                            </div>
                         `;
                     }).join('');
 
-                    const dotColor = isRecent ? '#dc2626' : '#9ca3af';
-                    const listHTML = `<ul style="list-style: none; padding: 0;">${eventsHTML}</ul>`;
+                    const cardHTML = `<div class="timeline-card">${eventItems}</div>`;
 
-                    yearDiv.innerHTML = `
-                        <div style="width: 45%; text-align: right; padding-right: 40px;">
-                            ${isOdd ? yearHTML : listHTML}
-                        </div>
-                        <div style="position: absolute; left: 50%; top: 10px; width: 16px; height: 16px; background: white; border-radius: 50%; transform: translateX(-50%); border: 3px solid ${dotColor}; box-shadow: 0 0 0 4px white;"></div>
-                        <div style="width: 45%; padding-left: 40px;">
-                            ${isOdd ? listHTML : yearHTML}
-                        </div>
-                    `;
+                    // Construct Row Layout (Desktop: Year on one side, Content on other)
+                    // Odd index: Year Right, Content Left
+                    // Even index: Year Left, Content Right
+                    // (Adjust logic to preference, here Standard ZigZag)
 
-                    timeline.appendChild(yearDiv);
+                    // Construct Row Layout (Infographic Style: Alternating)
+                    if (isOdd) {
+                        // Content Left | Node | Empty Right
+                        // Year is inside the Left Col, positioned absolutely
+                        rowDiv.innerHTML = `
+                            <div class="timeline-col left">
+                                <div class="timeline-year">${year}</div>
+                                ${cardHTML}
+                            </div>
+                            <div class="timeline-node"></div>
+                            <div class="timeline-col right"></div>
+                        `;
+                    } else {
+                        // Empty Left | Node | Content Right
+                        rowDiv.innerHTML = `
+                            <div class="timeline-col left"></div>
+                            <div class="timeline-node"></div>
+                            <div class="timeline-col right">
+                                <div class="timeline-year">${year}</div>
+                                ${cardHTML}
+                            </div>
+                        `;
+                    }
+
+                    timeline.appendChild(rowDiv);
                 });
 
-                // Intersection Observer for Animation
+                // Intersection Observer (Target new class .timeline-row)
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -178,100 +373,269 @@
                     });
                 }, { threshold: 0.1 });
 
-                document.querySelectorAll('.history-item-anim').forEach(item => observer.observe(item));
+                document.querySelectorAll('.timeline-row').forEach(item => observer.observe(item));
 
             } catch (error) {
                 console.error(error);
             }
         }
 
-        // ==================== 안전한 실행 및 복구 로직 ====================
-        async function waitForSb(maxRetries = 30, interval = 200) {
-            return new Promise((resolve, reject) => {
-                let count = 0;
-
+        <script>
+        // Data Loading Logic
+            async function waitForSb() {
+            return new Promise((resolve) => {
                 const check = () => {
-                    count++;
-                    const db = window.sb;
-
-                    // 1. Normal Success: window.sb exists
-                    if (db && db.from) {
-                        resolve(db);
-                        return;
-                    }
-
-                    // 2. Recovery Attempt: Library exists but client missing
-                    if (window.supabase && window.supabase.createClient && window.SupabaseConfig) {
-                        console.warn('[History] window.sb missing. Attempting recovery...');
-                        try {
-                            const newClient = window.supabase.createClient(
-                                window.SupabaseConfig.url,
-                                window.SupabaseConfig.key
-                            );
-                            window.sb = newClient; // Save for others
-                            resolve(newClient);
-                            return;
-                        } catch (e) {
-                            console.error('[History] Recovery failed:', e);
-                        }
-                    }
-
-                    // 3. Timeout
-                    if (count >= maxRetries) {
-                        reject({
-                            message: 'Connection Timeout',
-                            details: `sb:${!!window.sb}, lib:${!!window.supabase}, cfg:${!!window.SupabaseConfig}`
-                        });
-                        return;
-                    }
-
-                    // Retry
-                    setTimeout(check, interval);
+                    if (window.sb && window.sb.from) resolve(window.sb);
+            else if (window.supabase) {
+                        const client = window.supabase.createClient(window.SupabaseConfig.url, window.SupabaseConfig.key);
+            window.sb = client;
+            resolve(client);
+                    } else setTimeout(check, 100);
                 };
-
-                check();
+            check();
             });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Show detailed error on UI if verify fails
-            const loadingEl = document.getElementById('history-loading');
+            // Inject New CSS Style
+            const style = document.createElement('style');
+            style.textContent = `
+            /* MODERN INFOGRAPHIC TIMELINE - RESET */
+            .timeline-container {
+                position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            font-family: 'Pretendard', sans-serif;
+                }
 
-            waitForSb()
-                .then((client) => {
-                    console.log('DB Ready (History Page), Loading data...');
-                    loadHistory();
-                })
-                .catch(err => {
-                    console.error('DB Init Critical Failure:', err);
-                    loadingEl.innerHTML = `
-                        <div style="color:#ef4444; background: #fee2e2; padding: 20px; border-radius: 8px; font-size: 14px;">
-                            <strong>데이터 로드 실패</strong><br>
-                            <span style="font-size:12px; color:#b91c1c;">${err.details || err}</span><br>
-                            <button onclick="location.reload()" style="margin-top:10px; padding: 5px 10px; background:white; border:1px solid #ef4444; border-radius:4px; cursor:pointer;">새로고침</button>
-                        </div>
-                    `;
-                });
+            /* Center Line */
+            .timeline-line {
+                position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #e5e7eb;
+            transform: translateX(-50%);
+            z-index: 0;
+                }
 
-            // Menu Fixes
+            /* Row Layout */
+            .timeline-row {
+                display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 80px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+                }
+            .timeline-row.visible {
+                opacity: 1;
+            transform: translateY(0);
+                }
 
+            /* Columns */
+            .timeline-col {
+                width: 45%;
+            position: relative;
+            z-index: 1;
+                }
+
+            /* Center Node */
+            .timeline-node {
+                position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: #dc2626;
+            border: 4px solid white;
+            box-shadow: 0 0 0 4px #e5e7eb;
+            border-radius: 50%;
+            z-index: 2;
+            transition: all 0.3s ease;
+                }
+            .timeline-row:hover .timeline-node {
+                transform: translate(-50%, -50%) scale(1.5);
+            box-shadow: 0 0 0 6px #fee2e2;
+                }
+
+            /* MODERN CARD STYLE */
+            .timeline-card {
+                background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            text-align: left !important; /* FORCE LEFT ALIGN */
+            transition: all 0.4s ease;
+            position: relative;
+                }
+            .timeline-card:hover {
+                box - shadow: 0 20px 40px rgba(220, 38, 38, 0.1);
+            border-color: #fca5a5;
+            transform: translateY(-5px);
+                }
+
+            /* Arrow Connectors */
+            .timeline-card::after {
+                content: '';
+            position: absolute;
+            top: 50%;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-left: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            transform: translateY(-50%) rotate(45deg);
+                }
+            /* Left Side Card -> Arrow on Right */
+            .timeline-col.left .timeline-card::after {
+                right: -7px;
+            transform: translateY(-50%) rotate(-135deg);
+                }
+            /* Right Side Card -> Arrow on Left */
+            .timeline-col.right .timeline-card::after {
+                left: -7px;
+            transform: translateY(-50%) rotate(45deg);
+                }
+
+            /* Text Styling */
+            .timeline-year-label {
+                font - size: 3.5rem;
+            font-weight: 800;
+            color: #e5e7eb;
+            line-height: 1;
+            position: absolute;
+            top: -40px;
+            z-index: -1;
+            transition: all 0.3s;
+                }
+            .timeline-col.left .timeline-year-label {right: 0; }
+            .timeline-col.right .timeline-year-label {left: 0; }
+
+            .timeline-row:hover .timeline-year-label {
+                color: #fee2e2;
+            transform: scale(1.05);
+                }
+
+            .event-item {
+                margin - bottom: 15px;
+            padding-left: 15px;
+            border-left: 3px solid #dc2626;
+                }
+            .event-item:last-child {margin - bottom: 0; }
+
+            .event-title {
+                font - size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            word-break: keep-all;
+            line-height: 1.4;
+            margin-bottom: 4px;
+                }
+            .event-desc {
+                font - size: 0.95rem;
+            color: #4b5563;
+            line-height: 1.5;
+            word-break: keep-all;
+                }
+
+            /* Mobile */
+            @media (max-width: 768px) {
+                    .timeline - line {left: 30px; transform: none; }
+            .timeline-row {flex - direction: column; align-items: flex-start; margin-bottom: 50px; }
+            .timeline-col {width: 100%; padding-left: 60px; }
+            .timeline-col.left, .timeline-col.right {padding - right: 0; }
+            .timeline-node {left: 30px; top: 30px; transform: translate(-50%, -50%); }
+            .timeline-card::after {display: none; }
+            .timeline-year-label {
+                position: relative; top: auto; left: auto; right: auto;
+            margin-bottom: 10px; font-size: 2.5rem; 
+                    }
+            .timeline-row:hover .timeline-node {transform: translate(-50%, -50%) scale(1.2); }
+                }
+            `;
+            document.head.appendChild(style);
+
+            waitForSb().then(db => {
+                loadHistory(db);
+            });
+
+            // Menu Fixes (Preserved)
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => {
                 const menu = item.querySelector('.dropdown-menu');
-                if (!menu) return;
-
-                // Hide on click
+            if (menu) {
                 menu.querySelectorAll('a.dropdown-item').forEach(l => l.addEventListener('click', () => menu.style.display = 'none'));
-
-                // Mouse logic
-                item.addEventListener('mouseleave', () => {
-                    menu.style.display = ''; menu.style.opacity = '';
-                });
+                    item.addEventListener('mouseleave', () => {menu.style.display = ''; menu.style.opacity = ''; });
+                }
             });
         });
-    </script>
 
-    <script src="js/subpage-canvas.js"></script>
+            async function loadHistory(db) {
+            try {
+                const {data} = await db.from('company_history').select('*').eq('active', true).order('year', {ascending: false }).order('sort_order', {ascending: true });
+
+            const timeline = document.getElementById('history-timeline');
+            document.getElementById('history-loading').remove();
+
+            if (!data || !data.length) {
+                timeline.innerHTML = '<p style="text-align:center; padding:40px;">등록된 연혁이 없습니다.</p>';
+            return;
+                }
+
+            timeline.innerHTML = '<div class="timeline-line"></div>';
+
+            const grouped = { };
+                data.forEach(item => {
+                    if (!grouped[item.year]) grouped[item.year] = [];
+            grouped[item.year].push(item);
+                });
+
+                Object.keys(grouped).sort((a,b) => b-a).forEach((year, idx) => {
+                    const isLeft = idx % 2 === 0; // Alternating
+                    const events = grouped[year].map(e => `
+            <div class="event-item">
+                <div class="event-title">${e.title}</div>
+                ${e.description ? `<div class="event-desc">${e.description}</div>` : ''}
+            </div>
+            `).join('');
+
+            const row = document.createElement('div');
+            row.className = 'timeline-row visible'; // Force visible for now
+
+            // If Left: Content Left, Year/Empty Right
+            // If Right: Empty Left, Content Right
+            if (isLeft) {
+                row.innerHTML = `
+                            <div class="timeline-col left">
+                                <div class="timeline-year-label">${year}</div>
+                                <div class="timeline-card">${events}</div>
+                            </div>
+                            <div class="timeline-node"></div>
+                            <div class="timeline-col right"></div>
+                        `;
+                    } else {
+                row.innerHTML = `
+                            <div class="timeline-col left"></div>
+                            <div class="timeline-node"></div>
+                            <div class="timeline-col right">
+                                <div class="timeline-year-label">${year}</div>
+                                <div class="timeline-card">${events}</div>
+                            </div>
+                        `;
+                    }
+            timeline.appendChild(row);
+                });
+
+            } catch (e) {console.error(e); }
+        }
+    </script>
 </body>
 
 </html>

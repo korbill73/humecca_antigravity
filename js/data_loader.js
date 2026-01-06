@@ -98,16 +98,41 @@ async function loadProductData(pageKey) {
         return;
     }
 
+    // --- Dynamic Pricing: Fetch Global Network Options for Hosting/Colocation ---
+    let networkOptions = [];
+    if (config.subcategory === 'hosting' || config.subcategory === 'colocation') {
+        // Fix: Use 2-step lookup (Parent -> Plans) to avoid missing 'category' column issue on product_plans
+        const { data: netProds } = await window.sb.from('products').select('id')
+            .eq('category', 'option').eq('subcategory', 'network');
+
+        let netProd = netProds ? netProds[0] : null;
+
+        if (netProd) {
+            const { data: options, error: optError } = await window.sb.from('product_plans')
+                .select('*')
+                .eq('product_id', netProd.id)
+                .eq('active', true)
+                .order('sort_order', { ascending: true });
+
+            if (!optError && options) {
+                networkOptions = options;
+            } else {
+                console.warn('Network options fetch failed or empty', optError);
+            }
+        }
+    }
+    // --------------------------------------------------------------------------
+
     if (!plans || plans.length === 0) {
         console.log('No active plans found.');
         if (container) container.innerHTML = '<div style="text-align:center; padding:40px; color:#999;">등록된 요금제가 없습니다.</div>';
         return;
     }
 
-    renderPlans(pageKey, plans, config);
+    renderPlans(pageKey, plans, config, networkOptions);
 }
 
-function renderPlans(pageKey, plans, config) {
+function renderPlans(pageKey, plans, config, networkOptions = []) {
     const container = document.getElementById(config.containerId) || document.querySelector('.pricing-grid-custom') || document.querySelector('.pricing-grid');
     if (!container) {
         console.warn('Container not found for rendering plans.');
@@ -116,14 +141,20 @@ function renderPlans(pageKey, plans, config) {
 
     container.innerHTML = ''; // Clear existing content
 
+    // [Reverted] Pre-process plans to strip "Hidden Tags" - User decided against using tags.
+    // plans.forEach(p => {
+    //     if (p.plan_name) p.plan_name = p.plan_name.replace(/\[숨김\]|\[HIDE\]/g, '').trim();
+    //     if (p.summary) p.summary = p.summary.replace(/\[숨김\]|\[HIDE\]/g, '').trim();
+    // });
+
     const type = config.renderType || 'addon';
 
     if (type === 'hosting') {
-        renderHosting(container, plans);
+        renderHosting(container, plans, networkOptions);
     } else if (type === 'vpn') {
         renderVpn(container, plans);
     } else if (type === 'colocation') {
-        renderColocation(container, plans);
+        renderColocation(container, plans, networkOptions);
     } else if (type === 'security') {
         renderSecurity(container, plans);
     } else {
@@ -357,13 +388,41 @@ function renderAddon(container, plans, pageKey) {
     });
 }
 
-function renderHosting(container, plans) {
+// --- Global Price Update Helper ---
+window.updatePrice = function (select, basePrice, period) {
+    const card = select.closest('.plan-card');
+    const displayEl = card.querySelector('.price-text'); // Need to wrap amount in span
+    const btn = card.querySelector('.js-open-modal');
+
+    const optionPrice = parseInt(select.value, 10) || 0;
+    const total = basePrice + optionPrice;
+
+    // Update Display
+    if (displayEl) {
+        displayEl.innerText = '₩' + total.toLocaleString();
+    }
+
+    // Update Button Data
+    const optionName = select.options[select.selectedIndex].text;
+    const baseName = btn.getAttribute('data-base-name') || btn.getAttribute('data-name');
+
+    // Store original name if not stored
+    if (!btn.getAttribute('data-base-name')) {
+        btn.setAttribute('data-base-name', baseName);
+    }
+
+    // Update data-name and data-price for Modal
+    btn.setAttribute('data-price', total);
+    btn.setAttribute('data-name', `${baseName} + [${optionName}]`);
+};
+
+function renderHosting(container, plans, networkOptions) {
     plans.forEach(p => {
         const specs = {
             CPU: p.cpu || '-',
             RAM: p.ram || '-',
             Storage: p.storage || '-',
-            Traffic: p.traffic || p.bandwidth || '-'
+            // Traffic: p.traffic || p.bandwidth || '-'  <-- Replace with Dropdown
         };
 
         const specHtml = Object.entries(specs).map(([k, v]) => `
@@ -373,22 +432,45 @@ function renderHosting(container, plans) {
             </div>
         `).join('');
 
-        const features = parseFeatures(p.features);
+        // --- Network Dropdown Builder ---
+        let networkHtml = '';
+        if (networkOptions && networkOptions.length > 0) {
+            const options = networkOptions.map(opt =>
+                `<option value="${opt.price}">${opt.plan_name} ${opt.price > 0 ? '(+' + opt.price.toLocaleString() + '원)' : ''}</option>`
+            ).join('');
+
+            networkHtml = `
+            <div class="spec-item" style="flex-direction:column; align-items:start; gap:5px;">
+                <span class="spec-label">Network / Bandwidth</span>
+                <select onchange="updatePrice(this, ${p.price}, '${p.period}')" 
+                    style="width:100%; padding:8px; border-radius:6px; border:1px solid #ddd; background:#f8fafc; font-size:0.9rem;">
+                    ${options}
+                </select>
+            </div>`;
+        } else {
+            // Fallback: If network options failed to load, DO NOT show legacy 100Mbps text.
+            // User explicitly requested removal.
+            // networkHtml = `
+            // <div class="spec-item">
+            //     <span class="spec-label">Traffic</span>
+            //     <span class="spec-value">${p.traffic || p.bandwidth || '-'}</span>
+            // </div>`;
+            networkHtml = ''; // Hide completely if option fetch fails
+        }
+
+        const displayPrice = formatPriceDynamic(p.price, p.period || '월'); // New Helper
+
+        // Filter out legacy "100Mbps", "1Gbps" from features text to avoid duplication
+        let featuresRaw = parseFeatures(p.features);
+        const features = featuresRaw.filter(f => {
+            const txt = f.toLowerCase();
+            return !txt.includes('100mbps') && !txt.includes('1gbps') && !txt.includes('network');
+        });
         const featureHtml = features.map(f => `<li><i class="fas fa-check"></i> ${f}</li>`).join('');
 
-        const displayPrice = formatPrice(p.price, p.period || '월');
-
-        // Spec string construction
-        let specStr = '';
-        if (p.cpu) specStr += `CPU: ${p.cpu} / `;
-        if (p.ram) specStr += `RAM: ${p.ram} / `;
-        if (p.storage) specStr += `SSD: ${p.storage} / `;
-        if (p.traffic) specStr += `Traffic: ${p.traffic}`;
-        specStr = specStr.replace(/ \/ $/, ''); // Trim trailing slash
-
         const escName = escapeHtml(p.plan_name);
-        const escSpec = escapeHtml(specStr);
 
+        // Pre-injection of base-name for updater
         const html = `
             <div class="plan-card popular">
                 ${p.badge ? `<span class="plan-badge">${p.badge}</span>` : ''}
@@ -396,12 +478,15 @@ function renderHosting(container, plans) {
                 <div class="plan-summary">${p.summary || ''}</div>
                 <div class="plan-price">${displayPrice}</div>
                 
-                <div class="specs-list">${specHtml}</div>
+                <div class="specs-list">
+                    ${specHtml}
+                    ${networkHtml} 
+                </div>
 
                 <ul class="plan-features">${featureHtml}</ul>
 
                 <button class="plan-btn solid js-open-modal" 
-                    data-name="${escName}" data-type="hosting" data-details="${escSpec}" data-price="${p.price}"
+                    data-base-name="${escName}" data-name="${escName}" data-type="hosting" data-details="" data-price="${p.price}"
                     style="width:100%; border:none; cursor:pointer;">신청하기</button>
             </div>
         `;
@@ -435,10 +520,35 @@ function renderVpn(container, plans) {
     });
 }
 
-function renderColocation(container, plans) {
+function renderColocation(container, plans, networkOptions) {
     plans.forEach(p => {
-        const displayPrice = formatPrice(p.price, p.period);
-        const features = parseFeatures(p.features);
+
+        // Network Dropdown
+        let networkHtml = '';
+        if (networkOptions && networkOptions.length > 0) {
+            const options = networkOptions.map(opt =>
+                `<option value="${opt.price}">${opt.plan_name} ${opt.price > 0 ? '(+' + opt.price.toLocaleString() + '원)' : ''}</option>`
+            ).join('');
+
+            networkHtml = `
+            <div class="spec-item" style="flex-direction:column; align-items:start; gap:5px; margin-bottom:15px; background:#f8fafc; padding:10px; border-radius:8px;">
+                <span class="spec-label" style="font-weight:700; color:#475569; margin-bottom:5px; display:block;"><i class="fas fa-network-wired"></i> Network Bandwidth</span>
+                <select onchange="updatePrice(this, ${p.price}, '${p.period}')" 
+                    style="width:100%; padding:8px; border-radius:6px; border:1px solid #e2e8f0; background:white; font-size:0.95rem; color:#1e293b; outline:none;">
+                    ${options}
+                </select>
+            </div>`;
+        }
+
+        const displayPrice = formatPriceDynamic(p.price, p.period);
+
+        // Filter out legacy "100Mbps", "1Gbps" from features text to avoid duplication
+        let featuresRaw = parseFeatures(p.features);
+        const features = featuresRaw.filter(f => {
+            const txt = f.toLowerCase();
+            return !txt.includes('100mbps') && !txt.includes('1gbps') && !txt.includes('network');
+        });
+
         const featureHtml = features.map(f => `<li><i class="fas fa-check"></i> ${f}</li>`).join('');
 
 
@@ -450,14 +560,28 @@ function renderColocation(container, plans) {
                 ${p.badge ? `<span class="plan-badge">${p.badge}</span>` : ''}
                 <h3 class="plan-title">${p.plan_name}</h3>
                 <div class="plan-price">${displayPrice}</div>
+                
+                ${networkHtml}
+
                 <ul class="plan-features">${featureHtml}</ul>
                 <button class="plan-btn solid js-open-modal"
-                    data-name="${escName}" data-type="colocation" data-details="${escSummary}" data-price="${p.price}"
+                    data-base-name="${escName}" data-name="${escName}" data-type="colocation" data-details="${escSummary}" data-price="${p.price}"
                     style="width:100%; border:none; cursor:pointer;">신청하기</button>
             </div>
         `;
         container.innerHTML += html;
     });
+}
+
+// Special Price Formatter for Dynamic Update (wraps amount in span)
+const formatPriceDynamic = (price, period) => {
+    if (typeof price === 'string' && isNaN(price.toString().replace(/,/g, ''))) return price;
+    if (price === 0) return '<span class="price-text">0원</span>';
+    if (!price || price === '문의') return '<span class="amount">문의</span>';
+
+    const num = Number(price.toString().replace(/,/g, ''));
+    // Important: We add class "price-text" to the amount number for easy JS targeting
+    return `<span class="amount price-text">₩${num.toLocaleString()}</span> <span class="period">/${period || '월'}</span>`;
 }
 
 // Helpers

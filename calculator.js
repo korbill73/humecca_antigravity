@@ -3,6 +3,7 @@
 // State
 let currentStep = 1;
 let selectedMain = null;
+let selectedNetwork = new Set();
 let selectedSecurity = new Set();
 let selectedAddons = new Set();
 let selectedSolutions = new Set();
@@ -10,6 +11,7 @@ let selectedTerm = 'term_0';
 
 // Cache for active filters
 let activeFilters = {
+    network: 'all',
     security: 'all',
     addon: 'all',
     solution: 'all'
@@ -22,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function initCalculator() {
     // Show Loading
     const loaderHtml = '<div style="color:white; text-align:center; padding:50px;">데이터를 불러오는 중...</div>';
-    ['product-list-main', 'product-list-security', 'product-list-addon', 'product-list-solution'].forEach(id => {
+    ['product-list-main', 'product-list-network', 'product-list-security', 'product-list-addon', 'product-list-solution'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerHTML = loaderHtml;
     });
@@ -35,7 +37,8 @@ async function initCalculator() {
     // Render Steps
     renderMainProducts('server'); // Default Tab for Step 1
 
-    // Render Dynamic Tabs & Lists for Steps 2,3,4
+    // Render Dynamic Tabs & Lists for Steps 2,3,4,5
+    setupDynamicStep(NETWORK_PRODUCTS, 'network');
     setupDynamicStep(SECURITY_PRODUCTS, 'security');
     setupDynamicStep(ADDON_PRODUCTS, 'addon');
     setupDynamicStep(SOLUTION_PRODUCTS, 'solution');
@@ -112,7 +115,11 @@ function filterBySubcategory(stepType, subcatCode) {
     let targetContainer = '';
     let selectionSet = null;
 
-    if (stepType === 'security') {
+    if (stepType === 'network') {
+        sourceList = NETWORK_PRODUCTS;
+        targetContainer = 'product-list-network';
+        selectionSet = selectedNetwork;
+    } else if (stepType === 'security') {
         sourceList = SECURITY_PRODUCTS;
         targetContainer = 'product-list-security';
         selectionSet = selectedSecurity;
@@ -293,8 +300,9 @@ function updateSummary() {
         });
     }
 
-    // 2. Others (Security, Addon, Solution)
+    // 2. Others (Network, Security, Addon, Solution)
     const allSets = [
+        { set: selectedNetwork, list: NETWORK_PRODUCTS, type: 'network' },
         { set: selectedSecurity, list: SECURITY_PRODUCTS, type: 'security' },
         { set: selectedAddons, list: ADDON_PRODUCTS, type: 'addon' },
         { set: selectedSolutions, list: SOLUTION_PRODUCTS, type: 'solution' }
@@ -631,6 +639,7 @@ function getCategoryDisplayName(item, type) {
     if (type === '보안 서비스') return '보안 서비스';
     if (type === '부가 서비스') return '부가 서비스';
     if (type === '기업 솔루션') return '기업 솔루션';
+    if (type === '네트워크 옵션') return '네트워크 옵션';
 
     // Main Product Logic: Use category or subcategory
     const map = {
@@ -693,6 +702,7 @@ window.populateQuote = function () {
     }
 
     const allSets = [
+        { set: selectedNetwork, list: NETWORK_PRODUCTS, type: '네트워크 옵션' },
         { set: selectedSecurity, list: SECURITY_PRODUCTS, type: '보안 서비스' },
         { set: selectedAddons, list: ADDON_PRODUCTS, type: '부가 서비스' },
         { set: selectedSolutions, list: SOLUTION_PRODUCTS, type: '기업 솔루션' }

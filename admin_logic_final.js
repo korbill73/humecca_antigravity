@@ -597,8 +597,12 @@ async function loadApplications() {
     // Helper to Determine Category Name from Type/ID/Name
     const getCategoryName = (type, name) => {
         const t = type ? String(type).toLowerCase() : '';
-        const n = name ? String(name).toLowerCase() : '';
-        const rawName = name ? String(name).trim() : '';
+        // [Fix] Strip Hidden Tags for Categorization Matching
+        let safeName = name ? String(name) : '';
+        safeName = safeName.replace(/\[숨김\]|\[HIDE\]/g, '').trim();
+
+        const n = safeName.toLowerCase();
+        const rawName = safeName;
 
         // 0. DB Lookup Priority (User Request: "Use DB Name match")
         // Try strict match first, then partial match if needed?
@@ -1350,9 +1354,8 @@ window.switchProductTab = (sub) => {
     if (activeTab) activeTab.classList.add('active');
 
     // 2. Show Content Area
-    ['hosting', 'vpn', 'colocation', 'service', 'security', 'solution'].forEach(id => {
-        const content = document.getElementById(`sub-${id}`);
-        if (content) content.style.display = (id === sub) ? 'block' : 'none';
+    ['hosting', 'vpn', 'colocation', 'service', 'security', 'solution', 'network'].forEach(id => {
+        const content = document.getElementById(`sub-${id}`); if (content) content.style.display = (id === sub) ? 'block' : 'none';
     });
 
     // 3. Render Data
@@ -1429,6 +1432,9 @@ async function renderProducts() {
             const subElem = document.getElementById('s-list-subtitle');
             if (subElem) subElem.innerText = `${config.name} 목록을 관리합니다.`;
         }
+    } else if (sub === 'network') {
+        category = 'option';
+        subcategory = 'network';
     }
 
     // 1. Get Product ID for this category
@@ -1474,8 +1480,10 @@ async function renderProducts() {
         else if (sub === 'vpn') typePrefix = 'v';
         else if (sub === 'colocation') typePrefix = 'c';
         else if (sub === 'security') typePrefix = 'sec';
+        else if (sub === 'security') typePrefix = 'sec';
         else if (sub === 'service') typePrefix = 's';
         else if (sub === 'solution') typePrefix = 'solution';
+        else if (sub === 'network') typePrefix = 'n';
 
         listEl.innerHTML += `
             <tr>
@@ -1711,6 +1719,7 @@ window.resetForm = (type) => {
         else if (type === 'colocation') prefix = 'c';
         else if (type === 'security') prefix = 'sec';
         else if (type === 'service') prefix = 's';
+        else if (type === 'network') prefix = 'n';
         else if (type === 'solution') {
             prefix = 'solution';
             document.getElementById('solution-category').value = 'groupware';
@@ -1739,8 +1748,10 @@ window.saveProduct = async (e, type) => {
         if (type === 'vpn') p = 'v';
         if (type === 'colocation') p = 'c';
         if (type === 'security') p = 'sec';
+        if (type === 'security') p = 'sec';
         if (type === 'service') p = 's';
         if (type === 'solution') p = 'solution';
+        if (type === 'network') p = 'n';
 
         const getVal = (id) => document.getElementById(id)?.value || '';
         const getCheck = (id) => document.getElementById(id)?.checked || false;
@@ -1868,7 +1879,7 @@ window.saveProduct = async (e, type) => {
 };
 
 // Bind existing forms (legacy support)
-['hosting', 'vpn', 'colocation', 'security', 'service', 'solution'].forEach(type => {
+['hosting', 'vpn', 'colocation', 'security', 'service', 'solution', 'network'].forEach(type => {
     const form = document.getElementById(`${type}-form`);
     if (form) {
         form.addEventListener('submit', (e) => saveProduct(e, type));
@@ -2518,5 +2529,71 @@ window.toggleProductForm = (type, isEdit = false) => {
         container.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 };
+
+
+
+// ==========================================
+// FIX: Network Support for Product ID Resolution
+// ==========================================
+window.getOrCreateProduct = async (type) => {
+    // [Fix] Check CATEGORIES config first (Priority)
+    if (CATEGORIES[type]) {
+        const conf = CATEGORIES[type];
+        return await getOrCreateHelper(conf.category, conf.subcategory, conf.name);
+    }
+
+    // Fallback Heuristics
+    let cat = 'idc', sub = 'hosting';
+    if (type === 'vpn') { cat = 'vpn'; sub = 'vpn-service'; }
+    else if (type === 'colocation') { cat = 'idc'; sub = 'colocation'; }
+    // Remove dangerous generic overrides that break explicit mapping
+    // else if (type.startsWith('security-')) { cat = 'security'; sub = type; } 
+
+    // Network Support (Explicit)
+    if (type === 'network') {
+        cat = 'option';
+        sub = 'network';
+    }
+
+    // Solution fallback
+    if (type.startsWith('solution')) {
+        cat = 'solution';
+        if (type === 'solution-naver') sub = 'naverworks';
+        else if (type === 'solution-website') sub = 'website';
+        else sub = 'solution'; // default
+    }
+
+    // Addon fallback
+    if (type.startsWith('addon-')) {
+        cat = 'addon'; // Corrected from 'service'
+        sub = type;
+    }
+
+    return await getOrCreateHelper(cat, sub, 'Unknown');
+};
+
+// Reuse helper to avoid duplicating insert logic
+async function getOrCreateHelper(cat, sub, name) {
+    console.log(`[Product Resolve] ${cat} / ${sub} (${name})`);
+
+    // Find existing
+    const { data: exist } = await window.sb.from('products').select('id, name').eq('category', cat).eq('subcategory', sub).maybeSingle();
+    if (exist) return exist;
+
+    // Create if not exists
+    console.log('[Product] Creating new group:', sub);
+    const { data: newProd, error } = await window.sb.from('products').insert([{
+        name: name || 'Unknown',
+        category: cat,
+        subcategory: sub,
+        description: `Auto-generated for ${sub}`
+    }]).select().single();
+
+    if (error) {
+        console.error('Failed to create product:', error);
+        return null;
+    }
+    return newProd;
+}
 
 

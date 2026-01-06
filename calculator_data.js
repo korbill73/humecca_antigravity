@@ -2,16 +2,25 @@
 
 // Global lists for calculator steps
 let MAIN_PRODUCTS = [];      // Step 1: Server, Colocation, VPN
-let SECURITY_PRODUCTS = [];  // Step 2: Security (DDoS, Firewall)
-let ADDON_PRODUCTS = [];     // Step 3: Addons (Backup, Monitor, Software)
-let SOLUTION_PRODUCTS = [];  // Step 4: Solutions (Groupware, MS365)
+let NETWORK_PRODUCTS = [];   // Step 2: Network (Bandwidth)
+let SECURITY_PRODUCTS = [];  // Step 3: Security (DDoS, Firewall)
+let ADDON_PRODUCTS = [];     // Step 4: Addons (Backup, Monitor, Software)
+let SOLUTION_PRODUCTS = [];  // Step 5: Solutions (Groupware, MS365)
 
-// Hardcoded Discounts (Standard Policy) - Step 5
+// Hardcoded Discounts (Standard Policy) - Step 6
 const DISCOUNTS = [
     { id: 'term_1', name: '1년 약정 (-5%)', rate: 0.05, months: 12 },
     { id: 'term_2', name: '2년 약정 (-10%)', rate: 0.10, months: 24 },
     { id: 'term_3', name: '3년 약정 (-15%)', rate: 0.15, months: 36 },
     { id: 'term_0', name: '무약정', rate: 0, months: 1 }
+];
+
+// [User Config] Excluded Items from Calculator
+// Add subcategories or keywords here to hide them from the calculator steps
+// This allows hiding items that are active in DB but hidden in website menus
+const EXCLUDED_KEYWORDS = [
+    // Example: 'v3_net_server', 'dbsafer'
+    // 'some_subcategory_code'
 ];
 
 /**
@@ -90,27 +99,50 @@ async function fetchCalculatorData() {
                 subcategory: product.subcategory
             };
 
+            const cat = item.category;
+            const sub = item.subcategory;
+
+            // [Filter] Check Excluded Keywords OR Tag [HIDE] / [숨김]
+            const shouldExclude = EXCLUDED_KEYWORDS.some(k =>
+                (sub && sub.includes(k)) ||
+                (item.name && item.name.includes(k)) ||
+                (item.product_name && item.product_name.includes(k))
+            );
+
+            if (shouldExclude) return;
+
+            // [New] Check for Hidden Tag in Summary or Name
+            if ((item.desc && (item.desc.includes('[숨김]') || item.desc.includes('[HIDE]'))) ||
+                (item.name && (item.name.includes('[숨김]') || item.name.includes('[HIDE]')))) {
+                console.log(`[Calculator] Hidden Item Skipped: ${item.name} (${item.id})`);
+                return; // Skip hidden items
+            }
+
             // Logic to Sort into Steps
-            const cat = product.category;
-            const sub = product.subcategory;
+            // The original `cat` and `sub` variables were based on `product.category` and `product.subcategory`.
+            // Now they are based on `item.category` and `item.subcategory` which are derived from `product`.
+            // This ensures consistency with the exclusion check.
+            // const cat = product.category; // This line is now redundant as `cat` is defined above
+            // const sub = product.subcategory; // This line is now redundant as `sub` is defined above
 
             // Step 1: Main (IDC: hosting/colocation, VPN: vpn-service)
             if ((cat === 'idc' && (sub === 'hosting' || sub === 'colocation')) || cat === 'vpn') {
                 MAIN_PRODUCTS.push(item);
             }
-            // Step 2: Security
+            // Step 2: Network Options (New Step)
+            else if (sub === 'network' || product.name.includes('Network')) {
+                NETWORK_PRODUCTS.push(item);
+            }
+            // Step 3: Security
             else if (cat === 'security') {
                 SECURITY_PRODUCTS.push(item);
             }
-            // Step 4: Solution
+            // Step 5: Solution (Step 4 is Solution in code, but UI says 4)
             else if (cat === 'solution') {
                 SOLUTION_PRODUCTS.push(item);
             }
-            // Step 3: Addons (Catch-all for 'addon' subcategory or Management)
+            // Step 4: Addons (Catch-all)
             else {
-                // e.g. cat='idc', sub='management' -> Addon
-                // e.g. cat='security', sub='addon' -> Security?? explicit check above handles 'security' cat
-                // Let's put everything else in Addons
                 ADDON_PRODUCTS.push(item);
             }
         });

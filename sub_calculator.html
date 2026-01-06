@@ -47,10 +47,11 @@
                         <!-- Navigation Steps -->
                         <div class="calc-steps">
                             <button class="calc-step-btn active" onclick="setStep(1)">1. 주상품 선택</button>
-                            <button class="calc-step-btn" onclick="setStep(2)">2. 보안</button>
-                            <button class="calc-step-btn" onclick="setStep(3)">3. 부가서비스</button>
-                            <button class="calc-step-btn" onclick="setStep(4)">4. 기업솔루션</button>
-                            <button class="calc-step-btn" onclick="setStep(5)">5. 기간/할인</button>
+                            <button class="calc-step-btn" onclick="setStep(2)">2. 네트워크</button>
+                            <button class="calc-step-btn" onclick="setStep(3)">3. 보안</button>
+                            <button class="calc-step-btn" onclick="setStep(4)">4. 부가서비스</button>
+                            <button class="calc-step-btn" onclick="setStep(5)">5. 기업솔루션</button>
+                            <button class="calc-step-btn" onclick="setStep(6)">6. 기간/할인</button>
                         </div>
 
                         <!-- Step 1: Main Product (Server, Colo, VPN) -->
@@ -64,44 +65,54 @@
                             <div id="product-list-main" class="calc-grid"></div>
                             <button class="btn btn-primary" onclick="setStep(2)"
                                 style="margin-top:20px; width:100%; padding:15px; font-size:1.1rem;">
-                                다음 단계 (보안 상품 선택) <i class="fas fa-arrow-right"></i>
+                                다음 단계 (네트워크 선택) <i class="fas fa-arrow-right"></i>
                             </button>
                         </div>
 
-                        <!-- Step 2: Security -->
+                        <!-- Step 2: Network (New) -->
                         <div id="step-2" class="calc-step-content" style="display:none;">
-                            <h2 class="section-title" style="color:white; font-size:1.5rem;">보안 상품 선택</h2>
-                            <p style="color:#94a3b8; margin-bottom:20px;">디도스 방어, 방화벽 등 보안 서비스를 선택하세요.</p>
-                            <div id="tabs-security" class="tabs" style="margin-bottom:20px; flex-wrap:wrap;"></div>
-                            <div id="product-list-security" class="calc-grid"></div>
+                            <h2 class="section-title" style="color:white; font-size:1.5rem;">네트워크 옵션 선택</h2>
+                            <p style="color:#94a3b8; margin-bottom:20px;">서버/코로케이션에 필요한 네트워크 대역폭을 선택하세요.</p>
+                            <div id="tabs-network" class="tabs" style="margin-bottom:20px; flex-wrap:wrap;"></div>
+                            <div id="product-list-network" class="calc-grid"></div>
                             <button class="btn btn-primary" onclick="setStep(3)" style="margin-top:20px;">다음 단계 <i
                                     class="fas fa-arrow-right"></i></button>
                         </div>
 
-                        <!-- Step 3: Addons -->
+                        <!-- Step 3: Security -->
                         <div id="step-3" class="calc-step-content" style="display:none;">
+                            <h2 class="section-title" style="color:white; font-size:1.5rem;">보안 상품 선택</h2>
+                            <p style="color:#94a3b8; margin-bottom:20px;">디도스 방어, 방화벽 등 보안 서비스를 선택하세요.</p>
+                            <div id="tabs-security" class="tabs" style="margin-bottom:20px; flex-wrap:wrap;"></div>
+                            <div id="product-list-security" class="calc-grid"></div>
+                            <button class="btn btn-primary" onclick="setStep(4)" style="margin-top:20px;">다음 단계 <i
+                                    class="fas fa-arrow-right"></i></button>
+                        </div>
+
+                        <!-- Step 4: Addons -->
+                        <div id="step-4" class="calc-step-content" style="display:none;">
                             <h2 class="section-title" style="color:white; font-size:1.5rem;">부가서비스 선택</h2>
                             <p style="color:#94a3b8; margin-bottom:20px;">백업, 모니터링, 라이선스 등을 추가하세요.</p>
 
                             <div id="tabs-addon" class="tabs" style="margin-bottom:20px; flex-wrap:wrap;"></div>
                             <div id="product-list-addon" class="calc-grid"></div>
-                            <button class="btn btn-primary" onclick="setStep(4)" style="margin-top:20px;">다음 단계 <i
+                            <button class="btn btn-primary" onclick="setStep(5)" style="margin-top:20px;">다음 단계 <i
                                     class="fas fa-arrow-right"></i></button>
                         </div>
 
-                        <!-- Step 4: Solutions -->
-                        <div id="step-4" class="calc-step-content" style="display:none;">
+                        <!-- Step 5: Solutions -->
+                        <div id="step-5" class="calc-step-content" style="display:none;">
                             <h2 class="section-title" style="color:white; font-size:1.5rem;">기업 솔루션 선택</h2>
                             <p style="color:#94a3b8; margin-bottom:20px;">그룹웨어, MS365 등 기업용 솔루션을 선택하세요.</p>
 
                             <div id="tabs-solution" class="tabs" style="margin-bottom:20px; flex-wrap:wrap;"></div>
                             <div id="product-list-solution" class="calc-grid"></div>
-                            <button class="btn btn-primary" onclick="setStep(5)" style="margin-top:20px;">다음 단계 <i
+                            <button class="btn btn-primary" onclick="setStep(6)" style="margin-top:20px;">다음 단계 <i
                                     class="fas fa-arrow-right"></i></button>
                         </div>
 
-                        <!-- Step 5: Term -->
-                        <div id="step-5" class="calc-step-content" style="display:none;">
+                        <!-- Step 6: Term -->
+                        <div id="step-6" class="calc-step-content" style="display:none;">
                             <h2 class="section-title" style="color:white; font-size:1.5rem;">약정 기간 할인</h2>
                             <p style="color:#94a3b8; margin-bottom:20px;">장기 계약 시 할인 혜택이 적용됩니다.</p>
                             <div class="calc-grid" id="term-list"></div>

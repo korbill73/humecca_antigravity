@@ -459,6 +459,7 @@
                 <div class="tab active" onclick="switchProductTab('hosting')" id="tab-hosting">서버 호스팅</div>
                 <div class="tab" onclick="switchProductTab('vpn')" id="tab-vpn">VPN 전용선</div>
                 <div class="tab" onclick="switchProductTab('colocation')" id="tab-colocation">코로케이션</div>
+                <div class="tab" onclick="switchProductTab('network')" id="tab-network">네트워크 옵션</div>
                 <div class="tab" onclick="switchProductTab('security')" id="tab-security">보안 서비스</div>
                 <div class="tab" onclick="switchProductTab('solution')" id="tab-solution">기업 솔루션</div>
                 <div class="tab" onclick="switchProductTab('service')" id="tab-service">부가서비스</div>
@@ -683,6 +684,65 @@
                         </div>
                         <div style="text-align: right; margin-top:20px;">
                             <button type="submit" class="btn btn-primary" id="btn-save-vpn">상품 저장</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Network Options Sub -->
+            <div id="sub-network" class="sub-content" style="display:none;">
+                <div class="card" style="margin-bottom: 30px;">
+                    <div class="card-header">
+                        <h3 class="card-title">네트워크 회선 옵션 목록 (공통)</h3>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th width="50">#</th>
+                                    <th>옵션명 (속도)</th>
+                                    <th>추가 요금</th>
+                                    <th>상태</th>
+                                    <th>관리</th>
+                                </tr>
+                            </thead>
+                            <tbody id="network-list-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">네트워크 옵션 등록/수정</h3>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="resetForm('network')"
+                            style="margin-left: auto;">
+                            <i class="fas fa-undo"></i> 초기화
+                        </button>
+                    </div>
+                    <form id="network-form">
+                        <input type="hidden" id="n-id-hidden">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-group">
+                                <label>옵션명 (속도)</label>
+                                <input type="text" id="n-name" class="form-control" placeholder="예: 1Gbps (Dedicated)"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label>추가 요금 (숫자)</label>
+                                <input type="text" id="n-price" class="form-control" placeholder="예: 50,000" required>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top:15px;">
+                            <div class="form-group">
+                                <label>정렬 순서</label>
+                                <input type="number" id="n-order" class="form-control" value="1">
+                            </div>
+                            <div class="form-group" style="padding-top:30px;">
+                                <label><input type="checkbox" id="n-active" checked> 사용 활성화</label>
+                            </div>
+                        </div>
+                        <div style="text-align: right; margin-top:20px;">
+                            <button type="submit" class="btn btn-primary">저장</button>
                         </div>
                     </form>
                 </div>
